@@ -148,13 +148,15 @@ def main_dialogue() -> DialogueFlow:
 		'So, what would you like to do?\n '
 		'I can get to styling you or I can answer your question about dress-codes.`': {
 			'<[dress, code]>': {
-				'`Okay, I can answer your questions about dress codes.`': 'end'
+				'`Okay, I can answer your questions about dress codes.\n`': 'end'
 			},
 			'<{style, styling, clothes}>': {
 				'`Okay, I can get started styling you!\n '
-				'In order to give you good recommendations, I need to get to know you and your personal style first.\n '
+				'In order to give you good recommendations, '
+				'I need to get to know you and your personal style first.\n '
 				'To start, I wanna learn more about your lifestyle and hobbies.\n '
-				'Anything you share will affect my recommendations later, but anyway, let\'s get started.`': 'end'
+				'Anything you share will affect my recommendations later, but anyway, '
+				'let\'s get started.`': 'hobbies_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.\n`': 'clothing_transition'
@@ -165,7 +167,51 @@ def main_dialogue() -> DialogueFlow:
 	# let's talk about Babble
 	babble_transition = {
 		'state': 'babble_transition',
+		'`That movie tho`': 'end'
 	}
+
+	# dress code transition
+	dresscode_transition = {
+		'state': 'dresscode_transition',
+		'`What dress code are you wondering about? Or what event are you going to that requires a dress code?`': {
+			'<"black tie">': {
+				'`Got it. You have a black tie event right?\n '
+				'Black tie events are usually a formal event that require men to wear a tuxedo\n '
+				'and women to wear an evening gown.`': 'end'
+			},
+			'<"white tie">': {
+				'`You\'re going to a white tie event right?\n '
+				'White tie events are the most formal dress code and usually require men to wear a black tailcoat,\n '
+				'a white bow tie, and black trousers, and women to wear a floor-length formal gown.`': 'end'
+			},
+			'<"cocktail">': {
+				'`Got it. You have a cocktail event right?\n '
+				'Cocktail events are a semi-formal event where men typically wear a suit and tie\n '
+				'and women wear a cocktail dress or a dressy skirt and blouse.`': 'end'
+			},
+			'<"business formal">': {
+				'`Got it. You have a business formal event right?\n '
+				'Business formal events are for professional settings, such as a job interview, '
+				'where men typically wear a suit and tie and women wear a suit, dress or blouse and skirt.`': 'end'
+			},
+			'<"business casual">': {
+				'`You\'re going to a business casual event right?\n '
+				'Business casual events still require professional attire, '
+				'such as slacks and a button-down shirt for men and a skirt or '
+				'dress pants with a blouse or sweater for women.': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t understand`': 'dresscode_transition'
+			}
+		}
+	}
+
+	# let's talk about hobbies
+	hobbies_transition = {
+		'start': 'hobbies_transition',
+		'`So, you do things right?`': 'end'
+	}
+
 
 	# macro references ============================================
 	macros = {
@@ -180,6 +226,8 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(choice_transition)
 	df.load_transitions(clothing_transition)
 	df.load_transitions(babble_transition)
+	df.load_transitions(dresscode_transition)
+	df.load_transitions(hobbies_transition)
 
 	df.add_macros(macros)
 
