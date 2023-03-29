@@ -1,20 +1,27 @@
+import pickle
+import macros
+import re
 import pandas as pd
 from typing import Dict, Any, List
 from emora_stdm import Macro, Ngrams, DialogueFlow
 
-# variables ======================================================
 
-# macros ======================================================
 
 # the dialogue ======================================================
 def main_dialogue() -> DialogueFlow:
 	# introduction to the bot and what she does
 	introduction_transition = {
 		'state': 'start',
-		'`Hi, my name is Becca! I\'m a personal stylist bot created just for you! \n'
-		'I\'m here to help you look good and feel good about you and your clothes. \n'
-		'And just an F.Y.I. the information you share with me will stay with me ;) \n'
-		'So, let\'s get started! `': 'choice_transition'
+		'`What\'s your name?`': {
+			# get the user's name -- to either create or return their dictionary
+			'#GET_NAME': {
+				# return "nice to meet you" or "welcome back" message
+				'#RETURN_WELCOME_MESG': 'choice_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'start'
+			}
+		}
 	}
 
 	# do you wanna talk about clothes or babble?
@@ -38,24 +45,19 @@ def main_dialogue() -> DialogueFlow:
 	# let's talk about clothes -- introduction
 	clothing_transition = {
 		'state': 'clothing_transition',
-		'`But wait, you\'ve got two options. \n'
-		'If you want, we can talk about any dress-code specific events you\'re going to attend or \n'
-		'we can just jump right into me getting to know you more. \n'
-		'This is so I can give you better style recommendations later. \n'
-		'What do you want to do?`': {
+		'`If you want, I can help you define what to wear to a dress-code specific event \n'
+		'or we can just start talking about you. But before I can start styling you,'
+		' I need to get to know you and your lifestyle first. \n'
+		'To start I wanna know more about your hobbies. \n What do you want to do?`': {
 			'<[dress, code]>': {
 				'`Okay, we can talk about your upcoming event.`': 'dresscode_transition'
 			},
-			'<{style, clothes}>': {
-				'`Okay, we can get to styling you. \n'
-				'In order to give you good recommendations, I need to get to know you and your personal style first. \n'
-				'To start, I wanna get to know your lifestyle and interests. \n'
-				'Anything you share with me will affect my recommendations later, '
-				'but anyway, let\'s get started. `': 'end'
+			'<{style, styling}>': {
+				'`Okay, we can get to styling you.`': 'hobbies_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'clothing_transition'
 			}
-		},
-		'error': {
-			'`Sorry, I don\'t understand.`': 'clothing_transition'
 		}
 	}
 
@@ -68,7 +70,8 @@ def main_dialogue() -> DialogueFlow:
 	# dress-code topic
 	dresscode_transition = {
 		'state': 'dresscode_transition',
-		'`I know that a lot of young people have a hard time understanding the rules of a dress-code specific events. \n'
+		'`Okay, let\'s talk about dress codes. \n'
+		'I know that a lot of young people have a hard time defining what to wear to a dress-code specific event. \n'
 		'I\'ll help you decipher it! What event are you going to?`': {
 			'<"black tie">': {
 				'`Got it. You have a black tie event right? '
@@ -102,9 +105,16 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# macro references ======================================================
-	macros = {
+	# hobbies transition
+	hobbies_transition = {
+		'state': 'hobbies_transition',
+		'`Let\'s talk about hobbies.`': 'end'
+	}
 
+	# macro references ======================================================
+	main_macros = {
+		'GET_NAME': macros.MacroGetName(),
+		'RETURN_WELCOME_MESG': macros.MacroWelcomeMessage(),
 	}
 
 	# ======================================================
@@ -114,8 +124,9 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(clothing_transition)
 	df.load_transitions(babble_transition)
 	df.load_transitions(dresscode_transition)
+	df.load_transitions(hobbies_transition)
 
-	df.add_macros(macros)
+	df.add_macros(main_macros)
 
 	return df
 
