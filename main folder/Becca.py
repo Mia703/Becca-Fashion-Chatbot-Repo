@@ -85,4 +85,51 @@ def save(df:DialogueFlow, varfile:str):
 
 
 def load(df:DialogueFlow, varfile:str):
-	
+	global users_dictionary
+
+	with open(varfile, 'rb') as handle:
+		d = pickle.load(handle)
+		df.vars().update(d)
+		users_dictionary = pickle.load(handle)
+		print(users_dictionary)
+		df.run()
+		save(df, varfile)
+
+
+# clear the dictionary
+def clear_dictionary (dict_name: Dict):
+	dict_name.clear()
+
+
+# dialogue ============================================
+def main_dialogue() -> DialogueFlow:
+	introduction_transition = {
+		'state': 'start',
+		'`What\'s your name?`': {
+			'#GET_NAME': {
+				'#RETURN_WELCOME_MESG': 'end'
+			}
+		}
+	}
+
+	# macro references ============================================
+	macros = {
+		'GET_NAME': MacroGetName(),
+		'RETURN_WELCOME_MESG': MacroWelcomeMessage(),
+
+	}
+
+	# ============================================
+	df = DialogueFlow('start', end_state='end')
+	df.load_transitions(introduction_transition)
+
+	df.add_macros(macros)
+
+	return df
+
+
+
+# run dialogue ======================================================
+if __name__ == '__main__':
+	#main_dialogue().run()
+	save(main_dialogue(), './resources/users-pickle.pkl')
