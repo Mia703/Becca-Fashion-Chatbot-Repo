@@ -74,7 +74,7 @@ class MacroWelcomeMessage(Macro):
 
 # pickle functions ============================================
 
-def save(df:DialogueFlow, varfile:str):
+def save(df: DialogueFlow, varfile: str):
 	global users_dictionary
 
 	with open(varfile, 'wb') as handle:
@@ -128,8 +128,7 @@ def main_dialogue() -> DialogueFlow:
 	return df
 
 
-
 # run dialogue ======================================================
 if __name__ == '__main__':
-	#main_dialogue().run()
-	save(main_dialogue(), './resources/users-pickle.pkl')
+	# save(main_dialogue(), 'users-pickle.pkl')
+	load(main_dialogue(), 'users-pickle.pkl')
