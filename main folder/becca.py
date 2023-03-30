@@ -219,7 +219,6 @@ def main_dialogue() -> DialogueFlow:
 	macros = {
 		'GET_NAME': MacroGetName(),
 		'RETURN_WELCOME_MESG': MacroWelcomeMessage(),
-
 	}
 
 	# ============================================
