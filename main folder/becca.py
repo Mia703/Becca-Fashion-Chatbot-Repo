@@ -145,7 +145,7 @@ def main_dialogue() -> DialogueFlow:
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'But I also know a lot of young people have a hard time figuring out'
 		' what to wear to for a specific dress-code.\n '
-		'So, what would you like to do?\n '
+		'So, what would you like to do? '
 		'I can get to styling you or I can answer your question about dress-codes.`': {
 			'<[dress, code]>': {
 				'`Okay, I can answer your questions about dress codes.\n`': 'end'
@@ -156,7 +156,7 @@ def main_dialogue() -> DialogueFlow:
 				'I need to get to know you and your personal style first.\n '
 				'To start, I wanna learn more about your lifestyle and hobbies.\n '
 				'Anything you share will affect my recommendations later, but anyway, '
-				'let\'s get started.`': 'hobbies_transition'
+				'let\'s get started!\n\n`': 'hobbies_transition'
 				# TODO: fix transition; it's not hopping to hobbies_transition,
 				#  it's expecting user input which causes error
 			},
@@ -210,8 +210,42 @@ def main_dialogue() -> DialogueFlow:
 
 	# let's talk about hobbies
 	hobbies_transition = {
-		'start': 'hobbies_transition',
-		'`So, you do things right?`': 'end'
+		'state': 'hobbies_transition',
+		'`What\'s your favourite hobby?`': {
+			'[$USER_HOBBY=#ONT(enrichment)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(sports)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(enrichment)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(social)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(creative)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(collecting)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(domestic)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(making)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(outdoor)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'[$USER_HOBBY=#ONT(observation)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'hobbies_transition'
+			}
+		}
 	}
 
 
@@ -223,6 +257,9 @@ def main_dialogue() -> DialogueFlow:
 
 	# ============================================
 	df = DialogueFlow('start', end_state='end')
+
+	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
+
 	df.load_transitions(introduction_transition)
 	df.load_transitions(choice_transition)
 	df.load_transitions(clothing_transition)
