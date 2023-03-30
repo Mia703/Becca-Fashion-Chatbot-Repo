@@ -157,6 +157,8 @@ def main_dialogue() -> DialogueFlow:
 				'To start, I wanna learn more about your lifestyle and hobbies.\n '
 				'Anything you share will affect my recommendations later, but anyway, '
 				'let\'s get started.`': 'hobbies_transition'
+				# TODO: fix transition; it's not hopping to hobbies_transition,
+				#  it's expecting user input which causes error
 			},
 			'error': {
 				'`Sorry, I don\'t understand.\n`': 'clothing_transition'
