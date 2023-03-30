@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/main folder/resources/Styles.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/main folder/resources/events.csv">
           <value>
             <Attribute>
