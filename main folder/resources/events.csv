@@ -17,8 +17,8 @@ black-tie,dress shirt studs
 black-tie,dress shirt with french cuffs
 black-tie,dress watch
 black-tie,dressy heels
-black-tie,embelished bolero
-black-tie,embelished jacket
+black-tie,embellished bolero
+black-tie,embellished jacket
 black-tie,formal scarf
 black-tie,full-length evening gown
 black-tie,fur shawl
@@ -26,7 +26,7 @@ black-tie,fur wrap
 black-tie,hairpin
 black-tie,patent leather dress shoes
 black-tie,pocket square
-black-tie,statement jewlry
+black-tie,statement jewelry
 black-tie,strappy sandals
 black-tie,suspenders
 black-tie,tights
@@ -53,7 +53,7 @@ business casual,khakis
 business casual,knee-length skirt
 business casual,leather belt
 business casual,loafers
-business casual,longsleeve
+business casual,long sleeve
 business casual,maxi skirt
 business casual,pants
 business casual,patterned socks
@@ -83,7 +83,7 @@ business casual,woven belt
 business formal,blazer
 business formal,blouse
 business formal,boots
-business formal,brifcase
+business formal,briefcase
 business formal,button-down shirt
 business formal,button-down shirt
 business formal,cardigan
@@ -105,7 +105,7 @@ business formal,jacket
 business formal,knee-length dress
 business formal,knee-length skirt
 business formal,leather belt
-business formal,longsleeve
+business formal,long sleeve
 business formal,maxi dress
 business formal,maxi skirt
 business formal,necktie
@@ -134,15 +134,6 @@ business formal,trench coat
 business formal,vest
 business formal,watch
 business formal,wingtip shoes
-casual,coat
-casual,dress
-casual,hat
-casual,hoodie
-casual,jacket
-casual,jeans
-casual,leggings
-casual,longsleeve
-casual,socks
 cocktail,blazer
 cocktail,blouse
 cocktail,bodysuit
@@ -154,11 +145,11 @@ cocktail,button-down shirt
 cocktail,button-down shirt
 cocktail,clutch purse
 cocktail,cufflinks
-cocktail,cummerband
+cocktail,cummerbund
 cocktail,dress shirt
 cocktail,dress watch
 cocktail,dressy sandals
-cocktail,embelished jacket
+cocktail,embellished jacket
 cocktail,high heels
 cocktail,jumpsuit
 cocktail,mock neck sweater
@@ -177,7 +168,7 @@ cocktail,slacks
 cocktail,socks
 cocktail,sport coat
 cocktail,statement belt
-cocktail,statement jewlry
+cocktail,statement jewelry
 cocktail,suit
 cocktail,sweater vest
 cocktail,tie
@@ -255,7 +246,7 @@ semi-formal,dressy jumpsuit
 semi-formal,jacket
 semi-formal,jeans
 semi-formal,leather belt
-semi-formal,longsleeve
+semi-formal,long sleeve
 semi-formal,pocket square
 semi-formal,polo shirt
 semi-formal,pumps
@@ -292,8 +283,8 @@ white-tie,cummerbund
 white-tie,dress pants
 white-tie,dress shirt studs
 white-tie,dress watch
-white-tie,embelished bolero
-white-tie,embelished jacket
+white-tie,embellished bolero
+white-tie,embellished jacket
 white-tie,evening heels
 white-tie,formal gloves
 white-tie,full-length ball gown
@@ -303,7 +294,7 @@ white-tie,above elbow gloves
 white-tie,nylon tights
 white-tie,patent leather dress shoes
 white-tie,silk tights
-white-tie,statement jewlry
+white-tie,statement jewelry
 white-tie,tailcoat with silk
 white-tie,velvet shawl
 white-tie,velvet wrap
