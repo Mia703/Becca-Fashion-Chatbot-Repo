@@ -1,6 +1,7 @@
 # imports ============================================
 import pickle
 import re
+import random
 import pandas as pd
 from typing import Dict, Any, List
 from emora_stdm import Macro, Ngrams, DialogueFlow
@@ -142,6 +143,31 @@ class MacroReturnAgeResponse(Macro):
 		else:
 			return str('Omg, you\'re old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
 
+
+
+# save the user's occupation
+class MacroSaveOccupation(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+		# print(vars['USER_OCCUPATION'])
+
+		# save the user's occupation
+		users_dictionary[current_user]['occupation'] = vars['USER_OCCUPATION']
+		print(users_dictionary)
+
+		occupation = vars['USER_OCCUPATION']
+
+		# return a random response to the user's occupation
+		occupation_responses = ['Oh, cool! You\'re a ', 
+								'That\'s interesting! You work as a ', 
+								'I\'ve always been fascinated by being a ', 
+								'I bet you see and do a lot of interesting things as a ', 
+								'That sound like a really important job, as a ']
+
+		return str(random.choice(occupation_responses) + occupation + '.')
+
 # pickle functions ============================================
 
 def save(df: DialogueFlow, varfile: str):
@@ -236,10 +262,14 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_occupation_transition',
 		'`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
 			'[$USER_OCCUPATION=#ONT(education)]': {
-				'`Oh, cool! You\'re a`$USER_OCCUPATION`?`': 'end'
+				'#GET_OCCUPATION`How do you like it?`': {
+					'error': {
+						
+					}
+				}
 			},
 			'error': {
-				'`Sorry, I don\'t know that occupation.`': 'get_occupation_transition'
+				'`I don\'t know much about that field, but it sounds like you must have a lot of expertise!`': 'end'
 			}
 		}
 	}
@@ -250,6 +280,7 @@ def main_dialogue() -> DialogueFlow:
 		'RETURN_WELCOME_MESG': MacroWelcomeMessage(),
 		'GET_AGE': MacroSaveAge(),
 		'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
+		'GET_OCCUPATION': MacroSaveOccupation(),
 	}
 
 	# ============================================
