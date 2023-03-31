@@ -51,6 +51,9 @@
 		"market research analyst", "marketing specialist", "event planner", "online merchant", "personal financial advisor", 
 		"project management specialist", "regulatory affairs specialist", "search marketing strategist", "security management specialist", 
 		"sustainability specialist", "tax examiner", "tax preparer", "training specialist", "wholesale buyer"],
-		
+		"community": ["social worker", "clergy", "social service specialist", "community health counselor", "religious education director", 
+		"religious activities director", "career counselor", "health education specialist", "healthcare social worker", "marriage therapist", 
+		"family therapist", "substance abuse social worker", "mental health counselor", "probation officer", "correctional treatment specialist", 
+		"rehabilitation counselor", "religious worker", "social worker", "behavioral disorder counselor"]
 	}
 }
