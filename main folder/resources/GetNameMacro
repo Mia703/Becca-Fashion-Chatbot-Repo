@@ -1,0 +1,39 @@
+class MacroGetName(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        r = re.compile(r"(call me|my name is|i am|i'm|i like|i love)*(mr|mrs|ms|dr)?(?:^|\s)([a-z']+)(?:\s([a-z']+))?")
+        m = r.search(ngrams.text())
+        if m is None: return False
+
+        subject_verb, title, firstname, lastname = None, None, None, None
+        if m.group(1):
+            subject_verb = m.group(1)
+            if m.group(2):
+                title = m.group(2)
+                if m.group(4):
+                    firstname = m.group(3)
+                    lastname = m.group(4)
+                else:
+                    firstname = m.group()
+                    lastname = m.group(3)
+            else:
+                firstname = m.group(3)
+                lastname = m.group(4)
+        else:
+            if m.group(2):
+                title = m.group(2)
+                if m.group(4):
+                    firstname = m.group(3)
+                    lastname = m.group(4)
+                else:
+                    firstname = m.group()
+                    lastname = m.group(3)
+            else:
+                firstname = m.group(3)
+                lastname = m.group(4)
+
+        vars['SUBJECT_VERB'] = subject_verb
+        vars['TITLE'] = title
+        vars['FIRSTNAME'] = firstname
+        vars['LASTNAME'] = lastname
+
+        return True
