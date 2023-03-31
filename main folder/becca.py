@@ -12,6 +12,7 @@ current_user = ""
 
 # macros ============================================
 
+
 # saves and returns the user's name
 class MacroGetName(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -88,33 +89,39 @@ class MacroWelcomeMessage(Macro):
 			return str('Welcome back ' + current_user.capitalize() + '!\n ')
 
 
-
-# calculate and save the user's age
+# saves the user's age
 class MacroSaveAge(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
-		# r = re.compile(r"([0-9]+)")
-		# m = r.search(ngrams.text())
+		r = re.compile(r"([0-9]+)")
+		m = r.search(ngrams.text())
 
-		m = re.search("([0-9]+)", ngrams.text())
-
+		# if there is no match, return false
 		if m is None: 
 			return False
-		else:
-			age = None
 
-			if m.group():
-				age = m.group()
-				print('User\'s Age = ' + age)
-				vars['USER_AGE'] = age
+		# else, there is a match
+		# set the var 'age' to None
+		age = None
 
-			return True
-			
-			
+		# if m isn't empty -- true
+		if m.group():
+			# assign 'age' to the match
+			age = m.group()
+
+		# save the user's age as an int
+		users_dictionary[current_user]['age'] = int(age)
+		
+		# save the user's age in a var for dialogue
+		vars['USER_AGE'] = age
+
+		return True
 
 
+class MacroReturnAgeRespons(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 
 
 # pickle functions ============================================
@@ -190,14 +197,14 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'clothing_transition',
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
-		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!`': 'basic_info_transition'
+		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n `': 'basic_info_transition'
 	}
 
 	
 	# personal information -- basic questions
 	basic_info_transition = {
 		'state': 'basic_info_transition',
-		'`What year were you born?`': {
+		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
 				'`owow` $USER_AGE': 'end'
 			}
