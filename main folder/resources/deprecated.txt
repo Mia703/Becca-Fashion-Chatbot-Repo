@@ -1,0 +1,82 @@
+	# dress code transition
+	dresscode_transition = {
+		'state': 'dresscode_transition',
+		'`What dress code are you wondering about? Or what event are you going to that requires a dress code?`': {
+			'<"black tie">': {
+				'`Got it. You have a black tie event right?\n '
+				'Black tie events are usually a formal event that require men to wear a tuxedo\n '
+				'and women to wear an evening gown.`': 'end'
+			},
+			'<"white tie">': {
+				'`You\'re going to a white tie event right?\n '
+				'White tie events are the most formal dress code and usually require men to wear a black tailcoat,\n '
+				'a white bow tie, and black trousers, and women to wear a floor-length formal gown.`': 'end'
+			},
+			'<"cocktail">': {
+				'`Got it. You have a cocktail event right?\n '
+				'Cocktail events are a semi-formal event where men typically wear a suit and tie\n '
+				'and women wear a cocktail dress or a dressy skirt and blouse.`': 'end'
+			},
+			'<"business formal">': {
+				'`Got it. You have a business formal event right?\n '
+				'Business formal events are for professional settings, such as a job interview, '
+				'where men typically wear a suit and tie and women wear a suit, dress or blouse and skirt.`': 'end'
+			},
+			'<"business casual">': {
+				'`You\'re going to a business casual event right?\n '
+				'Business casual events still require professional attire, '
+				'such as slacks and a button-down shirt for men and a skirt or '
+				'dress pants with a blouse or sweater for women.': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t understand`': 'dresscode_transition'
+			}
+		}
+	}
+
+====================
+# let's talk about hobbies
+	hobbies_transition = {
+		'state': 'hobbies_transition',
+		'`What\'s your favourite hobby?`': {
+			# helps improve or enrich your mind
+			'[$USER_HOBBY=#ONT(enrichment)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# a physical activity
+			'[$USER_HOBBY=#ONT(sports)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# a hobby that involves friends
+			'[$USER_HOBBY=#ONT(social)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# creating something
+			'[$USER_HOBBY=#ONT(creative)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# collecting something
+			'[$USER_HOBBY=#ONT(collecting)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# chores that are hobbies
+			'[$USER_HOBBY=#ONT(domestic)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# making an object
+			'[$USER_HOBBY=#ONT(making)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# hobbies that happen outdoors
+			'[$USER_HOBBY=#ONT(outdoor)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# hobbies that involve just looking at something
+			'[$USER_HOBBY=#ONT(observation)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'hobbies_transition'
+			}
+		}
+	}
