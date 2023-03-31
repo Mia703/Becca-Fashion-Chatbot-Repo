@@ -2,7 +2,7 @@
 	"ontology": {
 		"occupation": ["administrative", "engineering", "arts", "business", "community", "computer", 
 			"construction", "education", "farming", "food", "healthcare", "installation", "legal", "life", "maintenance", 
-			"management", "military", "production", "protection", "sales", "transportation"],
+			"management", "military", "production", "protection", "sales", "services", "transportation"],
 		"administrative": ["bookkeeper", "brokerage clerk", "communications equipment operator", 
 			"correspondence clerk", "customer service representative", "data entry keyer", 
 			"desktop publisher", "dispatcher", "file clerk", "financial clerks", "administrative worker", 
@@ -123,10 +123,24 @@
 			"investment fund manager", "legislator", "lodging manager", "loss prevention manager", "manager", "marketing manager", "natural sciences manager", 
 			"personal service managers", "public relations manager", "purchasing manager", "quality control systems manager", "regulatory affairs manager", "sales manager", 
 			"security manager", "spa manager", "supply chain manager", "water resource specialist", "wind energy development manager", "wind energy operations manager"],
-		"military": [],
-		"production": [],
-		"protection": [],
-		"sales": [],
-		"transportation": []
+		"military": ["air crew member", "air crew officer", "armored assault vehicle crew member", "armored assault vehicle officer", "infantry", "infantry officer", 
+			"military officer", "special force", "special forces officer"],
+		"production": ["baker", "biofuels processing technician", "biomass plant technician", "computer numerically controlled tool operator", "computer numerically controlled tool programmer", 
+			"dental laboratory technician", "electromechanical equipment assembler", "food batchmaker", "food processing workers", "furniture finisher", "gas plant operator", 
+			"helpers--production worker", "hydroelectric plant technician", "jeweler", "machinist", "medical appliance technician", "model makers wood", "nuclear power reactor operator", 
+			"ophthalmic laboratory technician", "patternmakers wood", "potters manufacturing", "power plant operator", "printing press operator", "production workers", 
+			"semiconductor processing technician", "sewer", "sewing machine operator", "team assembler", "tire builder", "upholsterer", "woodworkers"],
+		"protection": ["animal control worker", "bailiff", "firefighter", "correctional officer", "protection worker", "security worker", "intelligence analyst", 
+			"parking enforcement worker", "protection worker", "retail loss prevention specialist", "school bus monitor", "security guard", "transportation security screener"],
+		"sales": ["advertising sales agent", "cashier", "insurance sales agent", "model", "parts salesperson", "real estate broker", "real estate sales agent", "retail salesperson", 
+			"sales workers", "sales engineer", "telemarketer", "travel agent"],
+		"services": ["recreation attendant", "animal caretaker", "animal trainer", "bellhop", "barber", "childcare worker", "concierge", "costume attendant", 
+			"crematory operator", "embalmer", "exercise instructor", "personal service worker", "funeral attendant", "gambling dealer", "gambling service workers", 
+			"hairstylist", "makeup artist", "manicurist", "pedicurist", "mortician", "motion picture projectionist", "nanny", "services worker", "recreation worker", 
+			"residential advisor", "shampooer", "skincare specialist", "travel guide"],
+		"transportation": ["air traffic controller", "aircraft service attendant", "airfield operations specialist", "aviation inspector", "bus drivers school", "commercial pilot", 
+			"dredge operator", "driver", "sales worker", "flight attendant", "light truck driver", "locomotive engineer", "material moving workers", "motor vehicle operators", 
+			"motorboat operator", "parking attendant", "passenger attendant", "rail transportation workers", "recycling coordinator", "ship engineer", "taxi driver", "traffic technician", 
+			"transportation inspector", "transportation workers", "wellhead pumper"]
 	}
 }
