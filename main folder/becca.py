@@ -152,21 +152,39 @@ class MacroSaveOccupation(Macro):
 		global current_user
 
 		# print(vars['USER_OCCUPATION'])
+		user_occupation = vars['USER_OCCUPATION']
 
 		# save the user's occupation
-		users_dictionary[current_user]['occupation'] = vars['USER_OCCUPATION']
+		users_dictionary[current_user]['occupation'] = user_occupation
 		print(users_dictionary)
 
-		occupation = vars['USER_OCCUPATION']
+		
 
 		# return a random response to the user's occupation
-		occupation_responses = ['Oh, cool! You\'re a ', 
-								'That\'s interesting! You work as a ', 
-								'I\'ve always been fascinated by being a ', 
-								'I bet you see and do a lot of interesting things as a ', 
-								'That sound like a really important job, as a ']
+		responses = ['Oh, cool! You\'re a ', 
+					'That\'s interesting! You work as a ', 
+					'I\'ve always been fascinated by being a ', 
+					'I bet you see and do a lot of interesting things as a ', 
+					'That sound like a really important job, as a ']
 
-		return str(random.choice(occupation_responses) + occupation + '.')
+		return str(random.choice(responses) + user_occupation + '.')
+
+
+# randomly responds to the user's occupation
+class MacroOccupationResponse(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		# randomly return a response to push the conversation forward
+		responses = ['What is your favorite part of your job?', 
+					'What do you do at work on a daily basis?', 
+					'What\'s the best thing about your job?', 
+					'Can you tell me more about what you do?', 
+					'How did you get into that field?']
+
+		# TODO: insert emoji unicode
+		return str('Oh, okay! For me, I love my job!\n As a fashion bot, '
+		'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. ;) '
+		'What about you? ' + random.choice(responses))
+
 
 # pickle functions ============================================
 
@@ -264,7 +282,7 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_OCCUPATION=#ONT(education)]': {
 				'#GET_OCCUPATION`How do you like it?`': {
 					'error': {
-						
+						'#RETURN_OCC_RESPONSE': 'end'
 					}
 				}
 			},
@@ -281,6 +299,7 @@ def main_dialogue() -> DialogueFlow:
 		'GET_AGE': MacroSaveAge(),
 		'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
 		'GET_OCCUPATION': MacroSaveOccupation(),
+		'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
 	}
 
 	# ============================================
