@@ -215,17 +215,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'clothing_transition',
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
-		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n`': 'basic_info_transition'
+		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n`': 'get_age_transition'
 	}
 
 	
 	# personal information -- basic questions
-	basic_info_transition = {
-		'state': 'basic_info_transition',
+
+	# 1 -- get user's age
+	get_age_transition = {
+		'state': 'get_age_transition',
 		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
-				'#RETURN_AGE_RESPONSE '
-				'`Can I ask for you occupation too? If you\'re a student, you can just say student.`': 'end'
+				'#RETURN_AGE_RESPONSE': 'get_occupation_transition'
+			}
+		}
+	}
+
+	# 2 -- get user's occupation
+	get_occupation_transition = {
+		'state': 'get_occupation_transition',
+		'`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
+			'[$USER_OCCUPATION=#ONT(education)]': {
+				'`Oh, cool! You\'re a`$USER_OCCUPATION`?`': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t know that occupation.`': 'get_occupation_transition'
 			}
 		}
 	}
@@ -248,7 +262,8 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(choice_transition)
 	df.load_transitions(babble_transition)
 	df.load_transitions(clothing_transition)
-	df.load_transitions(basic_info_transition)
+	df.load_transitions(get_age_transition)
+	df.load_transitions(get_occupation_transition)
 
 	df.add_macros(macros)
 
