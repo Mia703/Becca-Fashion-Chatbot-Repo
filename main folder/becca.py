@@ -115,14 +115,32 @@ class MacroSaveAge(Macro):
 		users_dictionary[current_user]['age'] = int(age)
 		
 		# save the user's age in a var for dialogue
+		# if needed
+		# TODO: maybe remove? not really using...
 		vars['USER_AGE'] = age
 
 		return True
 
 
-class MacroReturnAgeRespons(Macro):
+# returns a response to the user's age
+class MacroReturnAgeResponse(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
 
+		user_age = users_dictionary[current_user]['age']
+
+		if user_age < 18:
+			return str('You\'re so young! You sure you should be using my services?\n')
+
+		if user_age >= 18 and user_age <= 25:
+			return str('Oh, okay! You\'re a young adult. I can defintely help you!\n')
+
+		elif user_age >= 26 and user_age <= 30:
+			return str('So, your an adult adult. I can still help!\n')
+		
+		else:
+			return str('Omg, you\'re old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
 
 # pickle functions ============================================
 
@@ -197,7 +215,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'clothing_transition',
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
-		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n `': 'basic_info_transition'
+		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n`': 'basic_info_transition'
 	}
 
 	
@@ -206,7 +224,8 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'basic_info_transition',
 		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
-				'`owow` $USER_AGE': 'end'
+				'#RETURN_AGE_RESPONSE '
+				'`Can I ask for you occupation too? If you\'re a student, you can just say student.`': 'end'
 			}
 		}
 	}
@@ -216,6 +235,7 @@ def main_dialogue() -> DialogueFlow:
 		'GET_NAME': MacroGetName(),
 		'RETURN_WELCOME_MESG': MacroWelcomeMessage(),
 		'GET_AGE': MacroSaveAge(),
+		'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
 	}
 
 	# ============================================
