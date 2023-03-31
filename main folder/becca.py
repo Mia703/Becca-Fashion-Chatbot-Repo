@@ -242,6 +242,7 @@ def main_dialogue() -> DialogueFlow:
 	df = DialogueFlow('start', end_state='end')
 
 	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
+	df.knowledge_base().load_json_file('./resources/occupation_ontology.json')
 
 	df.load_transitions(introduction_transition)
 	df.load_transitions(choice_transition)
