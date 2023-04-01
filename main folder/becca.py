@@ -81,7 +81,7 @@ class MacroWelcomeMessage(Macro):
 			'. My name is Becca! '
 			'I\'m a personal stylist bot created just for you.\n '
 			'I\'m here to help you look good and feel good about yourself and your clothes.\n '
-			'And just an F.Y.I. the information you share with me will stay with me ;)\n '
+			'And just an F.Y.I. the information you share with me will stay with me. \U0001F92B\n '
 			'So, let\'s get started!')
 
 		# else, the user is already in the dictionary -- returning user
@@ -144,7 +144,6 @@ class MacroReturnAgeResponse(Macro):
 			return str('Omg, you\'re old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
 
 
-
 # save the user's occupation
 class MacroSaveOccupation(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -182,7 +181,7 @@ class MacroOccupationResponse(Macro):
 
 		# TODO: insert emoji unicode
 		return str('Oh, okay! For me, I love my job!\n As a fashion bot, '
-		'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. ;) '
+		'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. \U0001F609 '
 		'What about you? ' + random.choice(responses))
 
 
@@ -260,11 +259,11 @@ def main_dialogue() -> DialogueFlow:
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
 		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n`': 'get_age_transition'
+		# TODO: if user is not a new user skip to recommendation transition -- THE FUTURE
 	}
 
 	
 	# personal information -- basic questions
-
 	# 1 -- get user's age
 	get_age_transition = {
 		'state': 'get_age_transition',
@@ -279,13 +278,249 @@ def main_dialogue() -> DialogueFlow:
 	get_occupation_transition = {
 		'state': 'get_occupation_transition',
 		'`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
-			'[$USER_OCCUPATION=#ONT(education)]': {
+			'[$USER_OCCUPATION=#ONT(administrative)]': {
 				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
 					'error': {
-						'#RETURN_OCC_RESPONSE': 'end'
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
 					}
 				}
 			},
+			'[$USER_OCCUPATION=#ONT(engineering)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(arts)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(business)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(community)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(computer)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(construction)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(education)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(farming)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(food)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(healthcare)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(installation)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(legal)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(life)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(maintenance)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(management)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(military)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(production)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(protection)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(sales)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(services)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+			'[$USER_OCCUPATION=#ONT(transportation)]': {
+				'#GET_OCCUPATION`How do you like it?`': {
+					# don't really care what the user says here
+					'error': {
+						'#RETURN_OCC_RESPONSE': {
+							# don't really care what the user says here either
+							'error': 'end'
+						}
+					}
+				}
+			},
+
 			'error': {
 				'`I don\'t know much about that field, but it sounds like you must have a lot of expertise!`': 'end'
 			}
