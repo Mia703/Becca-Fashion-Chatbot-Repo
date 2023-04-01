@@ -173,16 +173,30 @@ class MacroSaveOccupation(Macro):
 class MacroOccupationResponse(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		# randomly return a response to push the conversation forward
-		responses = ['What is your favorite part of your job?', 
-					'What do you do at work on a daily basis?', 
-					'What\'s the best thing about your job?', 
-					'Can you tell me more about what you do?', 
-					'How did you get into that field?']
+		responses = ['what is your favorite part of your job?', 
+					'what do you do at work on a daily basis?', 
+					'what\'s the best thing about your job?', 
+					'more about what you do?', 
+					'how you got into that field?']
 
-		# TODO: insert emoji unicode
-		return str('Oh, okay! For me, I love my job!\n As a fashion bot, '
+		# can you tell me more...
+		# return str('Oh, okay! For me, I love my job!\n As a fashion bot, '
+		# 'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. \U0001F609 '
+		# 'What about you? ' + random.choice(responses))
+
+		return str('Can you tell me' + random.choice(responses) + ' For me, I love my job!\n As a fashion bot, '
 		'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. \U0001F609 '
-		'What about you? ' + random.choice(responses))
+		'What about you?')
+
+
+
+# saves the user's hobbies
+class MacroSaveHobby(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+		print(vars['USER_HOBBY'])
 
 
 # pickle functions ============================================
@@ -195,7 +209,6 @@ def save(df: DialogueFlow, varfile: str):
 		d = {k: v for k, v in df.vars().items() if not k.startswith('_')}
 		pickle.dump(d, handle, protocol=pickle.HIGHEST_PROTOCOL)
 		pickle.dump(users_dictionary, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
 
 
 def load(df: DialogueFlow, varfile: str):
@@ -264,7 +277,7 @@ def main_dialogue() -> DialogueFlow:
 
 	
 	# personal information -- basic questions
-	# 1 -- get user's age
+	# -- get user's age
 	get_age_transition = {
 		'state': 'get_age_transition',
 		'`To be direct, how old are you?`': {
@@ -274,7 +287,7 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# 2 -- get user's occupation
+	# -- get user's occupation
 	get_occupation_transition = {
 		'state': 'get_occupation_transition',
 		'`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
@@ -284,7 +297,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -295,7 +308,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -306,7 +319,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -317,7 +330,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -328,7 +341,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -339,7 +352,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -350,7 +363,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -361,7 +374,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -372,7 +385,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -383,7 +396,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -394,7 +407,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -405,7 +418,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -416,7 +429,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -427,7 +440,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -438,7 +451,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -449,7 +462,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -460,7 +473,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -471,7 +484,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -482,7 +495,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -493,7 +506,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -504,7 +517,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
@@ -515,14 +528,61 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'end'
+							'error': 'get_hobby_transition'
 						}
 					}
 				}
 			},
-
 			'error': {
 				'`I don\'t know much about that field, but it sounds like you must have a lot of expertise!`': 'end'
+			}
+		}
+	}
+
+	# -- get user's hobbies
+	get_hobby_transition = {
+		'state': 'get_hobby_transition',
+		# TODO: test if you can save multiple ontology matches 
+		# i.e.: can I save corquet and books, from 2 dif categories, at the same time?
+		'`What do you do when your not working? In other words, what are some of your hobbies?`': {
+			# learning = things that someone would learn for furn
+			'[$USER_HOBBY=#ONT(learning)]': {
+				'`Oh, nice. I also love` $USER_HOBBY #GET_HOBBY': 'end'
+			},
+			# sports = a physical activity
+			'[$USER_HOBBY=#ONT(sports)]': {
+				'`Oh, nice. I also love` $USER_HOBBY #GET_HOBBY': 'end'
+			},
+			# games = card/board games and the like
+			'[$USER_HOBBY=#ONT(games)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# creative = creating something; an artistic hobby
+			'[$USER_HOBBY=#ONT(creative)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# collecting = antyhing a person could collect
+			'[$USER_HOBBY=#ONT(collecting)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# domestic = chores that are hobbies
+			'[$USER_HOBBY=#ONT(domestic)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# making = making an object; tinkering
+			'[$USER_HOBBY=#ONT(making)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# outdoor = hobbies that happen outdoors; that aren't sports
+			'[$USER_HOBBY=#ONT(outdoor)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			# observation = hobbies that involve just looking at something
+			'[$USER_HOBBY=#ONT(observation)]': {
+				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'hobbies_transition'
 			}
 		}
 	}
@@ -535,13 +595,14 @@ def main_dialogue() -> DialogueFlow:
 		'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
 		'GET_OCCUPATION': MacroSaveOccupation(),
 		'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
+		'GET_HOBBY': MacroSaveHobby(),
 	}
 
 	# ============================================
 	df = DialogueFlow('start', end_state='end')
 
-	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
 	df.knowledge_base().load_json_file('./resources/occupation_ontology.json')
+	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
 
 	df.load_transitions(introduction_transition)
 	df.load_transitions(choice_transition)
@@ -549,6 +610,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(clothing_transition)
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
+	df.load_global_nlu(get_hobby_transition)
 
 	df.add_macros(macros)
 
