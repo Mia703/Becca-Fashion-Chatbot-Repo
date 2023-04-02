@@ -11,6 +11,8 @@ from emora_stdm import Macro, Ngrams, DialogueFlow
 users_dictionary = {}
 current_user = ""
 
+color_names_dataframe = pd.read_csv('./resources/color_names_no_duplicates.csv')
+
 
 # macros ============================================
 
@@ -198,6 +200,18 @@ class MacroSaveHobby(Macro):
 		print(users_dictionary)
 
 
+# save the user's favourite colours 
+class MacroSaveColor(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global color_names_dataframe
+
+		# prints the first 5 and the last 5 rows of the dataframe
+		print(color_names_dataframe)
+
+		# prints the entire dataframe
+		# print(color_names_dataframe.to_string())
+
+
 # pickle functions ============================================
 
 def save(df: DialogueFlow, varfile: str):
@@ -233,7 +247,8 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'choice_transition'
+				# '#RETURN_WELCOME_MESG': 'choice_transition'
+				'#RETURN_WELCOME_MESG': 'get_color_transition'
 			}
 		}
 	}
@@ -592,7 +607,9 @@ def main_dialogue() -> DialogueFlow:
 
 	get_color_transition = {
 		'state': 'get_color_transition',
-		'`What are some of your favourite colours?`': 'end'
+		'`What are some of your favorite colors?`': {
+			'#GET_COLOR': 'end'
+		}
 	}
 	# macro references ============================================
 	macros = {
@@ -603,6 +620,7 @@ def main_dialogue() -> DialogueFlow:
 		'GET_OCCUPATION': MacroSaveOccupation(),
 		'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
 		'GET_HOBBY': MacroSaveHobby(),
+		'GET_COLOR': MacroSaveColor(),
 	}
 
 	# ============================================
