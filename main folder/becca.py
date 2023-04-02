@@ -132,10 +132,10 @@ class MacroReturnAgeResponse(Macro):
 		user_age = users_dictionary[current_user]['age']
 
 		if user_age < 18:
-			return str('You\'re so young! You sure you should be using my services?\n')
+			return str('You\'re so young! You sure you should be using my services? \U0001F928\n')
 
 		if user_age >= 18 and user_age <= 25:
-			return str('Oh, okay! You\'re a young adult. I can defintely help you!\n')
+			return str('Oh, okay! You\'re a young adult. I can definitely help you!\n')
 
 		elif user_age >= 26 and user_age <= 30:
 			return str('So, your an adult adult. I can still help!\n')
@@ -154,7 +154,7 @@ class MacroSaveOccupation(Macro):
 		user_occupation = vars['USER_OCCUPATION']
 
 		# save the user's occupation
-		users_dictionary[current_user]['occupation'] = user_occupation
+		users_dictionary[current_user]['occupation'] = str(user_occupation).lower()
 		print(users_dictionary)
 
 		
@@ -173,21 +173,16 @@ class MacroSaveOccupation(Macro):
 class MacroOccupationResponse(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		# randomly return a response to push the conversation forward
-		responses = ['what is your favorite part of your job?', 
-					'what do you do at work on a daily basis?', 
-					'what\'s the best thing about your job?', 
-					'more about what you do?', 
-					'how you got into that field?']
+		responses = ['What is your favorite part of your job?', 
+					'What do you do at work on a daily basis?', 
+					'What\'s the best thing about your job?', 
+					'Can you tell me more about what you do?', 
+					'How you got into that field?']
 
-		# can you tell me more...
-		# return str('Oh, okay! For me, I love my job!\n As a fashion bot, '
-		# 'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. \U0001F609 '
-		# 'What about you? ' + random.choice(responses))
-
-		return str('Can you tell me' + random.choice(responses) + ' For me, I love my job!\n As a fashion bot, '
-		'I\'m always looking for new ways to better communicate and connect with my users,\n especially since I was just born yesterday. \U0001F609 '
-		'What about you?')
-
+		# tell me more...
+		return str('Oh, okay! For me, I love my job!\n '
+		'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
+		'especially since I was born a month ago. \U0001F609 ' + random.choice(responses))
 
 
 # saves the user's hobbies
@@ -196,7 +191,7 @@ class MacroSaveHobby(Macro):
 		global users_dictionary
 		global current_user
 
-		print(vars['USER_HOBBY'])
+		print('User\'s hobby = ' + vars['USER_HOBBY'])
 
 
 # pickle functions ============================================
@@ -374,7 +369,9 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': {
+								'`Oh, nice`': 'get_hobby_transition'
+							}
 						}
 					}
 				}
@@ -544,7 +541,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_hobby_transition',
 		# TODO: test if you can save multiple ontology matches 
 		# i.e.: can I save corquet and books, from 2 dif categories, at the same time?
-		'`What do you do when your not working? In other words, what are some of your hobbies?`': {
+		'`What do you do when you\'re not working? In other words, what are some of your hobbies?`': {
 			# learning = things that someone would learn for furn
 			'[$USER_HOBBY=#ONT(learning)]': {
 				'`Oh, nice. I also love` $USER_HOBBY #GET_HOBBY': 'end'
@@ -561,7 +558,7 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_HOBBY=#ONT(creative)]': {
 				'`Oh, nice. I also love` $USER_HOBBY': 'end'
 			},
-			# collecting = antyhing a person could collect
+			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
 				'`Oh, nice. I also love` $USER_HOBBY': 'end'
 			},
@@ -610,7 +607,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(clothing_transition)
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
-	df.load_global_nlu(get_hobby_transition)
+	df.load_transitions(get_hobby_transition)
 
 	df.add_macros(macros)
 
