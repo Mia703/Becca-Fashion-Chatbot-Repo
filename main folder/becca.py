@@ -4,6 +4,7 @@ import re
 import random
 import pandas as pd
 from typing import Dict, Any, List
+from collections import defaultdict
 from emora_stdm import Macro, Ngrams, DialogueFlow
 
 # variables ============================================
@@ -66,13 +67,13 @@ class MacroWelcomeMessage(Macro):
 				name=str(current_user.capitalize()),
 				age=0,
 				occupation="",
-				fav_colours=[],
-				not_fav_colours=[],
-				hobbies=[],
-				fav_clothes=[],
-				not_fav_clothes=[],
-				style=[],
-				current_outfit={}
+				hobbies_list=[],
+				fav_colors_list=[],
+				not_fav_colors_list=[],
+				fav_clothes_list=[],
+				not_fav_clothes_list=[],
+				style_list=[],
+				current_outfit_dict={}
 			)
 
 			print(users_dictionary)
@@ -157,8 +158,6 @@ class MacroSaveOccupation(Macro):
 		users_dictionary[current_user]['occupation'] = str(user_occupation).lower()
 		print(users_dictionary)
 
-		
-
 		# return a random response to the user's occupation
 		responses = ['Oh, cool! You\'re a ', 
 					'That\'s interesting! You work as a ', 
@@ -191,7 +190,12 @@ class MacroSaveHobby(Macro):
 		global users_dictionary
 		global current_user
 
-		print('User\'s hobby = ' + vars['USER_HOBBY'])
+		# prints only one match -- print(vars['USER_HOBBY'])
+		user_hobby = str(vars['USER_HOBBY'])
+
+		# save the user's occupation
+		# users_dictionary[current_user]['hobbies_list'].append("hello")
+		print(users_dictionary)
 
 
 # pickle functions ============================================
@@ -289,6 +293,7 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_OCCUPATION=#ONT(administrative)]': {
 				'#GET_OCCUPATION`How do you like it?`': {
 					# don't really care what the user says here
+					# TODO: what happens if the user says they hate their job???
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
@@ -536,47 +541,47 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
 	# -- get user's hobbies
 	get_hobby_transition = {
 		'state': 'get_hobby_transition',
-		# TODO: test if you can save multiple ontology matches 
-		# i.e.: can I save corquet and books, from 2 dif categories, at the same time?
+		# FIXME: how do I save multiple ontology matches? - It only returns the last match
 		'`What do you do when you\'re not working? In other words, what are some of your hobbies?`': {
 			# learning = things that someone would learn for furn
 			'[$USER_HOBBY=#ONT(learning)]': {
-				'`Oh, nice. I also love` $USER_HOBBY #GET_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# sports = a physical activity
 			'[$USER_HOBBY=#ONT(sports)]': {
-				'`Oh, nice. I also love` $USER_HOBBY #GET_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# games = card/board games and the like
 			'[$USER_HOBBY=#ONT(games)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# creative = creating something; an artistic hobby
 			'[$USER_HOBBY=#ONT(creative)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# domestic = chores that are hobbies
 			'[$USER_HOBBY=#ONT(domestic)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# making = making an object; tinkering
 			'[$USER_HOBBY=#ONT(making)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# outdoor = hobbies that happen outdoors; that aren't sports
 			'[$USER_HOBBY=#ONT(outdoor)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			# observation = hobbies that involve just looking at something
 			'[$USER_HOBBY=#ONT(observation)]': {
-				'`Oh, nice. I also love` $USER_HOBBY': 'end'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'hobbies_transition'
@@ -584,6 +589,11 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
+	get_color_transition = {
+		'state': 'get_color_transition',
+		'`What are some of your favourite colours?`': 'end'
+	}
 	# macro references ============================================
 	macros = {
 		'GET_NAME': MacroGetName(),
@@ -608,6 +618,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
 	df.load_transitions(get_hobby_transition)
+	df.load_transitions(get_color_transition)
 
 	df.add_macros(macros)
 
