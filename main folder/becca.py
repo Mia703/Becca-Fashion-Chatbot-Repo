@@ -142,10 +142,10 @@ class MacroReturnAgeResponse(Macro):
 			return str('Oh, okay! You\'re a young adult. I can definitely help you!\n')
 
 		elif user_age >= 26 and user_age <= 30:
-			return str('So, your an adult adult. I can still help!\n')
+			return str('So, your an adult adult. I can still help you though!\n')
 		
 		else:
-			return str('Omg, you\'re old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
+			return str('Omg, you\'re so old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
 
 
 # save the user's occupation
@@ -179,12 +179,12 @@ class MacroOccupationResponse(Macro):
 					'What do you do at work on a daily basis?', 
 					'What\'s the best thing about your job?', 
 					'Can you tell me more about what you do?', 
-					'How you got into that field?']
+					'How did you get into that field?']
 
 		# tell me more...
 		return str('Oh, okay! For me, I love my job!\n '
 		'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
-		'especially since I was born a month ago. \U0001F609 ' + random.choice(responses))
+		'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
 
 # saves the user's hobbies
@@ -313,7 +313,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_current_outfit_transition'
+				'#RETURN_WELCOME_MESG': 'get_hobby_transition_one'
 			}
 		}
 	}
@@ -377,7 +377,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -388,7 +388,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -399,7 +399,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -410,7 +410,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -421,7 +421,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -432,7 +432,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -443,7 +443,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -455,7 +455,7 @@ def main_dialogue() -> DialogueFlow:
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
 							'error': {
-								'`Oh, nice`': 'get_hobby_transition'
+								'`Oh, nice`': 'get_hobby_transition_one'
 							}
 						}
 					}
@@ -467,7 +467,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -478,7 +478,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -489,7 +489,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -500,7 +500,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -511,7 +511,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -522,7 +522,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -533,7 +533,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -544,7 +544,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -555,7 +555,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -566,7 +566,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -577,7 +577,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -588,7 +588,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -599,7 +599,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -610,7 +610,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': 'get_hobby_transition'
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -622,59 +622,151 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# TODO: -- get user's hobbies
-	get_hobby_transition = {
-		'state': 'get_hobby_transition',
-		# FIXME: how do I save multiple ontology matches? - It only returns the last match
-		'`What do you do when you\'re not working? In other words, what are some of your hobbies?`': {
-			# learning = things that someone would learn for furn
-			'[$USER_HOBBY=#ONT(learning)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+	# -- get user's hobby 1
+	get_hobby_transition_one = {
+		'state': 'get_hobby_transition_one',
+		'`Ah, I see! Speaking of... what do you do when you\'re not working?`': {
+			# get hobby #1
+			# learning = things that someone would learn for fun
+			'[$USER_HOBBY=#ONT(learning)]': 'get_hobby_transition_two',
 			# sports = a physical activity
-			'[$USER_HOBBY=#ONT(sports)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(sports)]': 'get_hobby_transition_two',
 			# games = card/board games and the like
-			'[$USER_HOBBY=#ONT(games)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(games)]': 'get_hobby_transition_two',
 			# creative = creating something; an artistic hobby
-			'[$USER_HOBBY=#ONT(creative)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(creative)]': 'get_hobby_transition_two',
 			# collecting = anything a person could collect
-			'[$USER_HOBBY=#ONT(collecting)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(collecting)]': 'get_hobby_transition_two',
 			# domestic = chores that are hobbies
-			'[$USER_HOBBY=#ONT(domestic)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(domestic)]': 'get_hobby_transition_two',
 			# making = making an object; tinkering
-			'[$USER_HOBBY=#ONT(making)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(making)]': 'get_hobby_transition_two',
 			# outdoor = hobbies that happen outdoors; that aren't sports
-			'[$USER_HOBBY=#ONT(outdoor)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(outdoor)]': 'get_hobby_transition_two',
 			# observation = hobbies that involve just looking at something
-			'[$USER_HOBBY=#ONT(observation)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
-			},
+			'[$USER_HOBBY=#ONT(observation)]': 'get_hobby_transition_two',
 			'error': {
-				'`Sorry, I don\'t understand.`': 'hobbies_transition'
+				'`Sorry, I don\'t understand.`': 'get_hobby_transition_one'
 			}
 		}
 	}
 
 
-	# TODO: -- get user's favourite colours
-	get_fav_color_transition = {
+	# -- get user's hobby 2
+	get_hobby_transition_two = {
+		'state': 'get_hobby_transition_two',
+		'`Interesting! What I\'m not working I like to read syfy-romance books.\n '
+		'What other activities do you like to do for fun?`': {
+			# get hobby #2
+			# learning = things that someone would learn for fun
+			'[$USER_HOBBY=#ONT(learning)]': {
+				'`Ooooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# sports = a physical activity
+			'[$USER_HOBBY=#ONT(sports)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# games = card/board games and the like
+			'[$USER_HOBBY=#ONT(games)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# creative = creating something; an artistic hobby
+			'[$USER_HOBBY=#ONT(creative)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# collecting = anything a person could collect
+			'[$USER_HOBBY=#ONT(collecting)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# domestic = chores that are hobbies
+			'[$USER_HOBBY=#ONT(domestic)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# making = making an object; tinkering
+			'[$USER_HOBBY=#ONT(making)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# outdoor = hobbies that happen outdoors; that aren't sports
+			'[$USER_HOBBY=#ONT(outdoor)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			# observation = hobbies that involve just looking at something
+			'[$USER_HOBBY=#ONT(observation)]': {
+				'`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`.\n `': 'get_hobby_transition_three'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_hobby_transition_two'
+			}
+		}
+	}
+
+
+	# -- get user's hobby 3
+	get_hobby_transition_three = {
+		'state': 'get_hobby_transition_three',
+		'`Are there any other hobbies you\'re really passionate about?`': {
+			# get hobby 3
+			# learning = things that someone would learn for fun
+			'[$USER_HOBBY=#ONT(learning)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# sports = a physical activity
+			'[$USER_HOBBY=#ONT(sports)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# games = card/board games and the like
+			'[$USER_HOBBY=#ONT(games)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# creative = creating something; an artistic hobby
+			'[$USER_HOBBY=#ONT(creative)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# collecting = anything a person could collect
+			'[$USER_HOBBY=#ONT(collecting)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# domestic = chores that are hobbies
+			'[$USER_HOBBY=#ONT(domestic)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# making = making an object; tinkering
+			'[$USER_HOBBY=#ONT(making)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# outdoor = hobbies that happen outdoors; that aren't sports
+			'[$USER_HOBBY=#ONT(outdoor)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			# observation = hobbies that involve just looking at something
+			'[$USER_HOBBY=#ONT(observation)]': {
+				'`Nice.`': 'get_fav_color_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_hobby_transition_three'
+			}
+		}
+	}
+
+	# -- get user's favourite colour
+	get_fav_color_transition_one = {
 		'state': 'get_fav_color_transition',
-		'`What are some of your favorite colors?`': {
-			'#GET_FAV_COLOR': 'end'
+		# favourite colour #1
+		'`While on the subject of things we like, it just occured to me that I don\'t know your favorite color?!\n '
+		' What is it?`': {
+			'': 'get_fav_color_transition_two'
+		}
+	}
+
+	get_fav_color_transition_two = {
+		'state': 'get_fav_color_transition_two',
+		# favourite clothing colour #2
+		'`Oh, really? My favorite colour is pink.\n '
+		'It\'s so cute and works for a variety of fashion situations.\n '
+		'Is there another color you love to wear?`': {
+			'': {
+				'`Lol, nice. I like`$USER_COLOR`too.`$USER_COLOR`always stands out to me.`': 'get_not_fav_color_transition'
+			}
 		}
 	}
 
@@ -749,9 +841,14 @@ def main_dialogue() -> DialogueFlow:
 
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
-	df.load_transitions(get_hobby_transition)
+	
+	df.load_transitions(get_hobby_transition_one)
+	df.load_transitions(get_hobby_transition_two)
+	df.load_transitions(get_hobby_transition_three)
 
-	df.load_transitions(get_fav_color_transition)
+	df.load_transitions(get_fav_color_transition_one)
+	df.load_transitions(get_fav_color_transition_two)
+
 	df.load_global_nlu(get_not_fav_color_transition)
 
 	df.load_transitions(get_style_transition)
