@@ -645,6 +645,27 @@ def main_dialogue() -> DialogueFlow:
 		'`What are some colors you hate or colors you would love to avoid?`': 'end'
 	}
 
+	# FIXME: add to df.load_transitions()
+	get_style_transition = {
+		'state': 'get_style_transition',
+	}
+
+
+	get_fav_clothing_transition = {
+		'state': 'get_fav_clothing_transition',
+	}
+
+
+	get_not_fav_clothing_transition = {
+		'state': 'get_not_fav_clothing_transition',
+	}
+
+
+	get_current_outfit_transition = {
+		'state': 'get_current_outfit_transition',
+	}
+
+
 	# macro references ============================================
 	macros = {
 		'GET_NAME': MacroGetName(),
