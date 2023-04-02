@@ -11,6 +11,7 @@ from emora_stdm import Macro, Ngrams, DialogueFlow
 users_dictionary = {}
 current_user = ""
 
+# imports the csv file
 color_names_dataframe = pd.read_csv('./resources/color_names_no_duplicates.csv')
 
 
@@ -201,15 +202,42 @@ class MacroSaveHobby(Macro):
 
 
 # save the user's favourite colours 
-class MacroSaveColor(Macro):
+class MacroSaveFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
 		global color_names_dataframe
 
 		# prints the first 5 and the last 5 rows of the dataframe
-		print(color_names_dataframe)
+		# print(color_names_dataframe)
 
 		# prints the entire dataframe
 		# print(color_names_dataframe.to_string())
+
+		# TODO: search the dataframe for the colours the user listed -- reference deprecated.txt
+		return str(ngrams.text())
+
+		# TODO: save the colours to the user's dictionary
+
+
+
+class MacroSaveNotFavoriteColor(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+		global color_names_dataframe
+
+		# prints the first 5 and the last 5 rows of the dataframe
+		# print(color_names_dataframe)
+
+		# prints the entire dataframe
+		# print(color_names_dataframe.to_string())
+
+		# TODO: search the dataframe for the colours the user listed -- reference deprecated.txt
+		return str(ngrams.text())
+
+		# TODO: save the colours to the user's dictionary
+
 
 
 # pickle functions ============================================
@@ -248,7 +276,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_color_transition'
+				'#RETURN_WELCOME_MESG': 'get_fav_color_transition'
 			}
 		}
 	}
@@ -564,39 +592,39 @@ def main_dialogue() -> DialogueFlow:
 		'`What do you do when you\'re not working? In other words, what are some of your hobbies?`': {
 			# learning = things that someone would learn for furn
 			'[$USER_HOBBY=#ONT(learning)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# sports = a physical activity
 			'[$USER_HOBBY=#ONT(sports)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# games = card/board games and the like
 			'[$USER_HOBBY=#ONT(games)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# creative = creating something; an artistic hobby
 			'[$USER_HOBBY=#ONT(creative)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# domestic = chores that are hobbies
 			'[$USER_HOBBY=#ONT(domestic)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# making = making an object; tinkering
 			'[$USER_HOBBY=#ONT(making)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# outdoor = hobbies that happen outdoors; that aren't sports
 			'[$USER_HOBBY=#ONT(outdoor)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			# observation = hobbies that involve just looking at something
 			'[$USER_HOBBY=#ONT(observation)]': {
-				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_color_transition'
+				'`Oh, nice. I also love` $USER_HOBBY\n ': 'get_fav_color_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'hobbies_transition'
@@ -605,12 +633,18 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	get_color_transition = {
-		'state': 'get_color_transition',
+	get_fav_color_transition = {
+		'state': 'get_fav_color_transition',
 		'`What are some of your favorite colors?`': {
-			'#GET_COLOR': 'end'
+			'#GET_FAV_COLOR': 'end'
 		}
 	}
+
+	get_not_fav_color_transition = {
+		'state': 'get_not_fav_color_transition',
+		'`What are some colors you hate or colors you would love to avoid?`': 'end'
+	}
+
 	# macro references ============================================
 	macros = {
 		'GET_NAME': MacroGetName(),
@@ -620,7 +654,8 @@ def main_dialogue() -> DialogueFlow:
 		'GET_OCCUPATION': MacroSaveOccupation(),
 		'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
 		'GET_HOBBY': MacroSaveHobby(),
-		'GET_COLOR': MacroSaveColor(),
+		'GET_FAV_COLOR': MacroSaveFavoriteColor(),
+		'GET_NOT_FAV_COLOR': MacroSaveNotFavoriteColor(),
 	}
 
 	# ============================================
@@ -636,7 +671,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
 	df.load_transitions(get_hobby_transition)
-	df.load_transitions(get_color_transition)
+	df.load_transitions(get_fav_color_transition)
 
 	df.add_macros(macros)
 
