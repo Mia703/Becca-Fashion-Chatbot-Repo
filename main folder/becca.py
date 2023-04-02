@@ -220,7 +220,7 @@ class MacroSaveFavoriteColor(Macro):
 		# TODO: save the colours to the user's dictionary
 
 
-
+# save the user's not favourite colours
 class MacroSaveNotFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -240,7 +240,44 @@ class MacroSaveNotFavoriteColor(Macro):
 
 
 
-# pickle functions ============================================
+# saves the user's favourite styles
+class MacroSaveStyle(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+
+# saves the user's favourite clothing items
+class MacroSaveFavoriteClothing(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+
+# saves the user's not favourite clothing items
+class MacroSaveNotFavoriteClothing(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+
+
+# saves the user's current outfit
+class MacroSaveOutfit(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+
+		print(ngrams)
+		print(vars)
+		print(args)
+
+		return "hello"
+
+
+
+# pickle
+#  functions ============================================
 
 def save(df: DialogueFlow, varfile: str):
 	global users_dictionary
@@ -276,7 +313,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_fav_color_transition'
+				'#RETURN_WELCOME_MESG': 'get_current_outfit_transition'
 			}
 		}
 	}
@@ -585,7 +622,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's hobbies
+	# TODO: -- get user's hobbies
 	get_hobby_transition = {
 		'state': 'get_hobby_transition',
 		# FIXME: how do I save multiple ontology matches? - It only returns the last match
@@ -633,6 +670,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
+	# TODO: -- get user's favourite colours
 	get_fav_color_transition = {
 		'state': 'get_fav_color_transition',
 		'`What are some of your favorite colors?`': {
@@ -640,29 +678,42 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+	# TODO: -- get user's not favourite colours
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
 		'`What are some colors you hate or colors you would love to avoid?`': 'end'
 	}
 
-	# FIXME: add to df.load_transitions()
+	# TODO: -- get user's preferred styles
 	get_style_transition = {
 		'state': 'get_style_transition',
+		'`What styles do you prefer?`': 'end'
 	}
 
 
+	# TODO: -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
+		'`What are some of clothing items you wear often?`': 'end'
 	}
 
 
+	# TODO: -- get user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
+		'`What are some clothing items that you try to avoid?`': 'end'
 	}
 
 
+	# TODO: -- get user's current outfit
 	get_current_outfit_transition = {
 		'state': 'get_current_outfit_transition',
+		'`What are you currently wearing?`': {
+			# I don't care what the user says here
+			'error': {
+				'`Okay.` #GET_CURR_OUTFIT': 'end'
+			}
+		}
 	}
 
 
@@ -677,6 +728,10 @@ def main_dialogue() -> DialogueFlow:
 		'GET_HOBBY': MacroSaveHobby(),
 		'GET_FAV_COLOR': MacroSaveFavoriteColor(),
 		'GET_NOT_FAV_COLOR': MacroSaveNotFavoriteColor(),
+		'GET_STYLE': MacroSaveStyle(),
+		'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
+		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
+		'GET_CURR_OUTFIT': MacroSaveOutfit(),
 	}
 
 	# ============================================
@@ -686,13 +741,25 @@ def main_dialogue() -> DialogueFlow:
 	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
 
 	df.load_transitions(introduction_transition)
+
 	df.load_transitions(choice_transition)
 	df.load_transitions(babble_transition)
+
 	df.load_transitions(clothing_transition)
+
 	df.load_transitions(get_age_transition)
 	df.load_transitions(get_occupation_transition)
 	df.load_transitions(get_hobby_transition)
+
 	df.load_transitions(get_fav_color_transition)
+	df.load_global_nlu(get_not_fav_color_transition)
+
+	df.load_transitions(get_style_transition)
+
+	df.load_transitions(get_fav_clothing_transition)
+	df.load_transitions(get_not_fav_clothing_transition)
+
+	df.load_transitions(get_current_outfit_transition)
 
 	df.add_macros(macros)
 
