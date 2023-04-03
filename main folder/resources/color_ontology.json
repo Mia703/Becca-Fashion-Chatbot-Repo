@@ -1,0 +1,18 @@
+{
+	"ontology": {
+		"colors": [
+			"red",
+			"orange",
+			"yellow",
+			"green",
+			"blue",
+			"violet"
+		],
+		"red": [],
+		"orange": [],
+		"yellow": [],
+		"green": [],
+		"blue": [],
+		"violet": []
+	}
+}
