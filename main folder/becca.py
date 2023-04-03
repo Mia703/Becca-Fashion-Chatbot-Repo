@@ -12,7 +12,7 @@ users_dictionary = {}
 current_user = ""
 
 # imports the csv file
-color_names_dataframe = pd.read_csv('./resources/color_names_no_duplicates.csv')
+color_names_dataframe = pd.read_csv('./resources/color_names.csv')
 
 
 # macros ============================================
