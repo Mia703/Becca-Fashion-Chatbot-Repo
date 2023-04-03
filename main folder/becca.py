@@ -251,21 +251,28 @@ class MacroSaveNotFavoriteColor(Macro):
 		global color_names_df
 
 		# get the user's not favourite colour
-		# user_colour_name = star(vars[''])
+		user_colour_name = str(vars['USER_NOT_COLOR'])
+		
+		# search the dataframe for colour name
+		# -- returns a dataframe with th row of the colour
+		df_results = color_names_df.loc[color_names_df['Name'] == user_colour_name]
 
-		# search the dataframe for the HEX code of the colour name
-		# user_colour_hex = 0;
+		# get the index of the row
+		color_index = list(df_results.index.values)[0]
+
+		# save the HEX code
+		color_hex = df_results["Hex"][color_index]
 
 		# access the user's dictionary
-		# user_nested_dictionary = users_dictionary[current_user]
+		user_nested_dictionary = users_dictionary[current_user]
 
 		# access the user's not favourite colour list
-		# user_nested_list = user_nested_dictionary["not_fav_colors_list"]
+		user_nested_list = user_nested_dictionary["not_fav_colors_list"]
 
 		# append the HEX code to the list
-		# user_nested_list.append(user_colour_hex)
+		user_nested_list.append(color_hex)
 
-		# print(users_dictionary)
+		print(users_dictionary)
 
 
 
@@ -356,7 +363,8 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'get_style_transition'
+				# '#RETURN_WELCOME_MESG': 'choice_transition'
+				'#RETURN_WELCOME_MESG': 'get_not_fav_color_transition'
 			}
 		}
 	}
@@ -404,7 +412,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_age_transition',
 		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
-				'#RETURN_AGE_RESPONSE': 'get_occupation_transition'
+				'#RETURN_AGE_RESPONSE': 'get_not_fav_color_transition'
 			}
 		}
 	}
@@ -851,22 +859,28 @@ def main_dialogue() -> DialogueFlow:
 		# favourite colour #2
 		'`Is there another color you love to wear?`': {
 			'[$USER_COLOR=#ONT(red)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
-				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice.' 
+				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_fav_color_transition_two'
@@ -874,10 +888,44 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# TODO: -- get user's not favourite colours
+	# -- get user's not favourite colours
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
-		'`What are some colors you hate or colors you would love to avoid?`': 'end'
+		'`Out of curiosity, are there any color that you really dislike or wouldn\'t wear?`': {
+			'[$USER_NOT_COLOR=#ONT(red)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'[$USER_NOT_COLOR=#ONT(orange)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'[$USER_NOT_COLOR=#ONT(yellow)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'[$USER_NOT_COLOR=#ONT(green)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'[$USER_NOT_COLOR=#ONT(blue)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'[$USER_NOT_COLOR=#ONT(violet)]': {
+				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
+				'To be honest, I\'m not that picky about colors, '
+				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_not_fav_color_transition'
+			}
+		}
 	}
 
 
@@ -1027,7 +1075,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(get_fav_color_transition_one)
 	df.load_transitions(get_fav_color_transition_two)
 
-	df.load_global_nlu(get_not_fav_color_transition)
+	df.load_transitions(get_not_fav_color_transition)
 
 	df.load_transitions(get_style_transition)
 
