@@ -12,7 +12,7 @@ users_dictionary = {}
 current_user = ""
 
 # imports the csv file
-color_names_dataframe = pd.read_csv('./resources/color_names.csv')
+color_names_df = pd.read_csv('./resources/color_names.csv')
 
 
 # macros ============================================
@@ -213,13 +213,23 @@ class MacroSaveFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
-		global color_names_dataframe
+		global color_names_df
 
 		# get the user's colour
-		user_colour_name = str(vars['USER_COLOR'])
+		user_color_name = str(vars['USER_COLOR'])
 
-		# TODO: search the dataframe for the HEX code of the colour name
-		user_colour_hex = 0
+		# search the dataframe for colour name 
+		# -- returns a dataframe with the row of the colour
+		df_results = color_names_df.loc[color_names_df['Name'] == user_color_name]
+		# print(df_results)
+
+		# get the index of the row
+		color_index = list(df_results.index.values)[0]
+		# print(color_index)
+		
+		# save the HEX code
+		color_hex = df_results["Hex"][color_index]
+		# print(color_hex)
 
 		# access the user's dictionary
 		user_nested_dictionary = users_dictionary[current_user]
@@ -228,7 +238,7 @@ class MacroSaveFavoriteColor(Macro):
 		user_nested_list = user_nested_dictionary["fav_colors_list"]
 
 		# append the HEX code to the list
-		user_nested_list.append(user_colour_hex)
+		user_nested_list.append(color_hex)
 
 		print(users_dictionary)
 
@@ -238,7 +248,7 @@ class MacroSaveNotFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
-		global color_names_dataframe
+		global color_names_df
 
 		# get the user's not favourite colour
 		# user_colour_name = star(vars[''])
@@ -331,8 +341,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_hobby_transition_one'
+				'#RETURN_WELCOME_MESG': 'choice_transition'
 			}
 		}
 	}
@@ -473,9 +482,7 @@ def main_dialogue() -> DialogueFlow:
 					'error': {
 						'#RETURN_OCC_RESPONSE': {
 							# don't really care what the user says here either
-							'error': {
-								'`Oh, nice`': 'get_hobby_transition_one'
-							}
+							'error': 'get_hobby_transition_one'
 						}
 					}
 				}
@@ -744,39 +751,39 @@ def main_dialogue() -> DialogueFlow:
 			# get hobby 3
 			# learning = things that someone would learn for fun
 			'[$USER_HOBBY=#ONT(learning)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# sports = a physical activity
 			'[$USER_HOBBY=#ONT(sports)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# games = card/board games and the like
 			'[$USER_HOBBY=#ONT(games)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# creative = creating something; an artistic hobby
 			'[$USER_HOBBY=#ONT(creative)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# domestic = chores that are hobbies
 			'[$USER_HOBBY=#ONT(domestic)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# making = making an object; tinkering
 			'[$USER_HOBBY=#ONT(making)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# outdoor = hobbies that happen outdoors; that aren't sports
 			'[$USER_HOBBY=#ONT(outdoor)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			# observation = hobbies that involve just looking at something
 			'[$USER_HOBBY=#ONT(observation)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition'
+				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_hobby_transition_three'
@@ -786,30 +793,36 @@ def main_dialogue() -> DialogueFlow:
 
 	# -- get user's favourite colour
 	get_fav_color_transition_one = {
-		'state': 'get_fav_color_transition',
+		'state': 'get_fav_color_transition_one',
 		# favourite colour #1
-		'`While on the subject of things we like, it just occured to me that I don\'t know your favorite color?!\n '
+		'`While on the subject of things we like, it just occurred to me that I don\'t know your favorite color?!\n '
 		' What is it?`': {
 			'[$USER_COLOR=#ONT(red)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
-				'`Oh, really? My favorite color is pink. It\'s so cute and works for a variety of fashion situations.`': 'get_fav_color_transition_two'
+				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_fav_color_transition'
+				'`Sorry, I don\'t understand.`': 'get_fav_color_transition_one'
 			}
 		}
 	}
@@ -819,22 +832,22 @@ def main_dialogue() -> DialogueFlow:
 		# favourite colour #2
 		'`Is there another color you love to wear?`': {
 			'[$USER_COLOR=#ONT(red)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
-				'`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
+				'#GET_FAV_COLOR`Lol, nice. I like`$USER_COLOR`too, it always stands out to me.`': 'end'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_fav_color_transition_two'
@@ -903,7 +916,7 @@ def main_dialogue() -> DialogueFlow:
 
 	df.knowledge_base().load_json_file('./resources/occupation_ontology.json')
 	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
-	df.knowledge_base().load_json_file('./resources/color_ontology.json')
+	df.knowledge_base().load_json_file('./resources/color_names_ontology.json')
 
 	df.load_transitions(introduction_transition)
 
