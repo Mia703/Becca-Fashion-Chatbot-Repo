@@ -264,6 +264,20 @@ class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
+		
+		# get the user's style
+		user_hobby = str(vars['USER_STYLE'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's styles list
+		user_nested_list = user_nested_dictionary["styles_list"]
+
+		# append the style to the list
+		user_nested_list.append(user_style)
+
+		print(users_dictionary)
 
 
 # saves the user's favourite clothing items
@@ -848,10 +862,43 @@ def main_dialogue() -> DialogueFlow:
 		'`What are some colors you hate or colors you would love to avoid?`': 'end'
 	}
 
-	# TODO: -- get user's preferred styles
 	get_style_transition = {
 		'state': 'get_style_transition',
-		'`What styles do you prefer?`': 'end'
+				'state': 'get_fav_color_transition',
+		'`While on the subject of things we like, it just occured to me that I don\'t know your favorite color?!\n '
+		' What is it?`': {
+			'[$USER_STYLE=#ONT(sporty)]': {
+				'`I\m a fan of the sporty aesthetic as well. People who dress sporty are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(bohemian)]': {
+				'`I\m a fan of the bohemian aesthetic as well. People who wear bohemian clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(grunge)]': {
+				'`I\m a fan of the grunge aesthetic as well. People who dress grungey are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(preppy)]': {
+				'`I\m a fan of the preppy aesthetic as well. People who dress preppy are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(punk)]': {
+				'`I\m a fan of the punk aesthetic as well. People who wear punk clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(streetwear)]': {
+				'`I\m a fan of the streerwear aesthetic as well. People who wear streetwear are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(classic)]': {
+				'`I\m a fan of the classic aesthetic as well. People who dress classicly are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(casual)]': {
+				'`I\m a fan of the casual aesthetic as well. People who dress casually are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(ethnic)]': {
+				'`I\m a fan of the ethnic aesthetic as well. People who wear ethnic clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_style_transition'
+			}
+		}
+		#'`What styles do you prefer?`': 'end'
 	}
 
 
