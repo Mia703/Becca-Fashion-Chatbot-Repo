@@ -278,16 +278,17 @@ class MacroSaveStyle(Macro):
 		# get the user's style
 		user_hobby = str(vars['USER_STYLE'])
 
+
 		# access the user's dictionary
-		user_nested_dictionary = users_dictionary[current_user]
+		# user_nested_dictionary = users_dictionary[current_user]
 
-		# access the user's styles list
-		user_nested_list = user_nested_dictionary["styles_list"]
+		# # access the user's styles list
+		# user_nested_list = user_nested_dictionary["styles_list"]
 
-		# append the style to the list
-		user_nested_list.append(user_style)
+		# # append the style to the list
+		# user_nested_list.append(user_style)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # saves the user's favourite clothing items
@@ -355,7 +356,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'choice_transition'
+				'#RETURN_WELCOME_MESG': 'get_style_transition'
 			}
 		}
 	}
@@ -408,7 +409,8 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# -- get user's occupation
+
+	# -- gets the user's occupation
 	get_occupation_transition = {
 		'state': 'get_occupation_transition',
 		'`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
@@ -662,7 +664,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's hobby 1
+	# -- gets the user's hobby 1
 	get_hobby_transition_one = {
 		'state': 'get_hobby_transition_one',
 		'`Ah, I see! Speaking of... what do you do when you\'re not working?`': {
@@ -710,7 +712,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's hobby 2
+	# -- gets the user's hobby 2
 	get_hobby_transition_two = {
 		'state': 'get_hobby_transition_two',
 		'`What other activities do you like to do for fun?`': {
@@ -758,7 +760,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's hobby 3
+	# -- gets the user's hobby 3
 	get_hobby_transition_three = {
 		'state': 'get_hobby_transition_three',
 		'`Are there any other hobbies you\'re really passionate about?`': {
@@ -805,7 +807,8 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# -- get user's favourite colour
+
+	# -- gets the user's favourite colour #1
 	get_fav_color_transition_one = {
 		'state': 'get_fav_color_transition_one',
 		# favourite colour #1
@@ -841,6 +844,8 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
+	# -- gets the user's favourite colour #2
 	get_fav_color_transition_two = {
 		'state': 'get_fav_color_transition_two',
 		# favourite colour #2
@@ -875,79 +880,83 @@ def main_dialogue() -> DialogueFlow:
 		'`What are some colors you hate or colors you would love to avoid?`': 'end'
 	}
 
+
+	# -- gets the user's favourite styles
+	# FIXME: is there a way to only return the ontology headings when matched (i.e.: sporty, bohemian, etc.)?
 	get_style_transition = {
 		'state': 'get_style_transition',
 		'`Another thing I\'d love to know about you is how you like to dress\n '
-		' What\'s your favorite style? For example, sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, ethnic, etc.!`': {
+		' What\'s your favorite style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'`I\m a fan of the `$USER_STYLE` aesthetic as well. People who dress sporty are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress sporty are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear bohemian clothing are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear bohemian clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress grungey are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress grungey are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress preppy are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress preppy are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear punk clothing are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear punk clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear streetwear are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear streetwear are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress classicly are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress classicly are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress casually are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress casually are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear ethnic clothing are effortlessly chic.`': 'get_syle_transition'
+				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear ethnic clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_style_transition'
 			}
 		}
-		#'`What styles do you prefer?`': 'end'
 	}
 	
+
+	# gets the user's favourite styles #2
+	# FIXME: is there a way to only return the ontology headings when matched (i.e.: sporty, bohemian, etc.)?
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
 		'`Is there another style you like to wear?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_style_transition_two'
 			}
 		}
-		#'`What styles do you prefer?`': 'end'
 	}
 
 	# TODO: -- get user's preferred clothing items (generic)
@@ -999,6 +1008,7 @@ def main_dialogue() -> DialogueFlow:
 	df.knowledge_base().load_json_file('./resources/occupation_ontology.json')
 	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
 	df.knowledge_base().load_json_file('./resources/color_names_ontology.json')
+	df.knowledge_base().load_json_file('./resources/styles_ontology.json')
 
 	df.load_transitions(introduction_transition)
 
