@@ -11,8 +11,11 @@ from emora_stdm import Macro, Ngrams, DialogueFlow
 users_dictionary = {}
 current_user = ""
 
-# imports the csv file
+# import colour names csv file
 color_names_df = pd.read_csv('./resources/color_names.csv')
+
+# import styles csv file
+styles_df = pd.read_csv('./resources/styles.csv')
 
 
 # macros ============================================
@@ -281,21 +284,18 @@ class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
-		
-		# get the user's style
-		user_hobby = str(vars['USER_STYLE'])
+		global styles_df
 
+		# get the user's style or the clothing item associated with the style
+		user_style = str(vars['USER_STYLE'])
+		print(user_style)
 
-		# access the user's dictionary
-		# user_nested_dictionary = users_dictionary[current_user]
+		print(styles_df)
+		# search the dataframe for the style
+		# -- returns a dataframe with the row of the clothing item or style
+		# df_results = styles_df.loc[styles_df['Clothing'] == user_style]
+		# print(df_results)
 
-		# # access the user's styles list
-		# user_nested_list = user_nested_dictionary["styles_list"]
-
-		# # append the style to the list
-		# user_nested_list.append(user_style)
-
-		# print(users_dictionary)
 
 
 # saves the user's favourite clothing items
@@ -364,7 +364,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_not_fav_color_transition'
+				'#RETURN_WELCOME_MESG': 'get_style_transition'
 			}
 		}
 	}
@@ -933,34 +933,43 @@ def main_dialogue() -> DialogueFlow:
 	# FIXME: is there a way to only return the ontology headings when matched (i.e.: sporty, bohemian, etc.)?
 	get_style_transition = {
 		'state': 'get_style_transition',
-		'`Another thing I\'d love to know about you is how you like to dress\n '
-		' What\'s your favorite style?`': {
+		'`Another thing I\'d love to know about you is how you like to dress. I\'m always curious about people\'s fashion preferences.\n '
+		' Can you tell me a bit about your personal style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress sporty are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the sporty aesthetic as well. '
+				'People who dress sporty are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear bohemian clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the bohemian aesthetic as well. '
+				'People who wear bohemian clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress grungey are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the grunge aesthetic as well. '
+				'People who wear grungey clothes are effortlessly cool.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress preppy are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the preppy aesthetic as well. '
+				'People who wear preppy clothes effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear punk clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the punk aesthetic as well. '
+				'People who wear punk clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear streetwear are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the streewear aesthetic as well. '
+				'People who wear streetwear are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress classicly are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the classic aesthetic as well. '
+				'People who dress classicly are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who dress casually are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the casual aesthetic as well. '
+				'People who dress casually are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`I\'m a fan of the`$USER_STYLE`aesthetic as well. People who wear ethnic clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the ethnic aesthetic as well. '
+				'People who wear ethnic clothing are effortlessly chic.`': 'get_style_transition_two'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_style_transition'
