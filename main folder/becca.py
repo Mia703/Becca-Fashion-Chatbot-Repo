@@ -274,6 +274,20 @@ class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
+		
+		# get the user's style
+		user_hobby = str(vars['USER_STYLE'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's styles list
+		user_nested_list = user_nested_dictionary["styles_list"]
+
+		# append the style to the list
+		user_nested_list.append(user_style)
+
+		print(users_dictionary)
 
 
 # saves the user's favourite clothing items
@@ -861,12 +875,80 @@ def main_dialogue() -> DialogueFlow:
 		'`What are some colors you hate or colors you would love to avoid?`': 'end'
 	}
 
-	# TODO: -- get user's preferred styles
 	get_style_transition = {
 		'state': 'get_style_transition',
-		'`What styles do you prefer?`': 'end'
+		'`Another thing I\'d love to know about you is how you like to dress\n '
+		' What\'s your favorite style? For example, sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, ethnic, etc.!`': {
+			'[$USER_STYLE=#ONT(sporty)]': {
+				'`I\m a fan of the `$USER_STYLE` aesthetic as well. People who dress sporty are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(bohemian)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear bohemian clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(grunge)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress grungey are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(preppy)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress preppy are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(punk)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear punk clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(streetwear)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear streetwear are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(classic)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress classicly are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(casual)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who dress casually are effortlessly chic.`': 'get_syle_transition'
+			},
+			'[$USER_STYLE=#ONT(ethnic)]': {
+				'`I\'m a fan of the `$USER_STYLE` aesthetic as well. People who wear ethnic clothing are effortlessly chic.`': 'get_syle_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_style_transition'
+			}
+		}
+		#'`What styles do you prefer?`': 'end'
 	}
-
+	
+	get_style_transition_two = {
+		'state': 'get_style_transition_two',
+		'`Is there another style you like to wear?`': {
+			'[$USER_STYLE=#ONT(sporty)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(bohemian)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(grunge)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(preppy)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(punk)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(streetwear)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(classic)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(casual)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'[$USER_STYLE=#ONT(ethnic)]': {
+				'`Good choice. The versitality of `$USER_STYLE` clothes is unmatched!`': 'get_syle_transition_two'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_style_transition_two'
+			}
+		}
+		#'`What styles do you prefer?`': 'end'
+	}
 
 	# TODO: -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
