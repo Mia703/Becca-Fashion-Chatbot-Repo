@@ -189,7 +189,7 @@ class MacroOccupationResponse(Macro):
 		'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
 		'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
-
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # saves the user's hobbies
 class MacroSaveHobby(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -278,8 +278,7 @@ class MacroSaveNotFavoriteColor(Macro):
 		print(users_dictionary)
 
 
-
-# saves the user's favourite styles
+# TODO: saves the user's favourite styles
 class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -297,23 +296,21 @@ class MacroSaveStyle(Macro):
 		# print(df_results)
 
 
-
-# saves the user's favourite clothing items
+# TODO: saves the user's favourite clothing items
 class MacroSaveFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
 
-# saves the user's not favourite clothing items
+# TODO: saves the user's not favourite clothing items
 class MacroSaveNotFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
 
-
-# saves the user's current outfit
+# TODO: saves the user's current outfit
 class MacroSaveOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -352,7 +349,7 @@ def load(df: DialogueFlow, varfile: str):
 		save(df, varfile)
 
 
-# clear the dictionary
+# clears the dictionary
 def clear_dictionary(dict_name: Dict):
 	dict_name.clear()
 
@@ -363,8 +360,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'get_style_transition'
+				'#RETURN_WELCOME_MESG': 'choice_transition'
 			}
 		}
 	}
@@ -412,7 +408,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_age_transition',
 		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
-				'#RETURN_AGE_RESPONSE': 'get_not_fav_color_transition'
+				'#RETURN_AGE_RESPONSE': 'get_occupation_transition'
 			}
 		}
 	}
@@ -824,27 +820,27 @@ def main_dialogue() -> DialogueFlow:
 		' What is it?`': {
 			'[$USER_COLOR=#ONT(red)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
 				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
-				'It\'s so cute and works for a variety of fashion situations.\n `': 'get_fav_color_transition_two'
+				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_fav_color_transition_one'
@@ -888,6 +884,7 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
 	# -- get user's not favourite colours
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
@@ -929,12 +926,11 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- gets the user's favourite styles
-	# FIXME: is there a way to only return the ontology headings when matched (i.e.: sporty, bohemian, etc.)?
+	# TODO: -- gets the user's favourite styles
 	get_style_transition = {
 		'state': 'get_style_transition',
 		'`Another thing I\'d love to know about you is how you like to dress. I\'m always curious about people\'s fashion preferences.\n '
-		' Can you tell me a bit about your personal style?`': {
+		'Can you tell me a bit about your personal style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`I\'m a fan of the sporty aesthetic as well. '
 				'People who dress sporty are effortlessly chic.`': 'get_style_transition_two'
@@ -978,8 +974,7 @@ def main_dialogue() -> DialogueFlow:
 	}
 	
 
-	# gets the user's favourite styles #2
-	# FIXME: is there a way to only return the ontology headings when matched (i.e.: sporty, bohemian, etc.)?
+	# TODO: -- gets the user's favourite styles #2
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
 		'`Is there another style you like to wear?`': {
