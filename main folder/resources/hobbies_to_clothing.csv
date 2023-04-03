@@ -1,31 +1,114 @@
 Interest,Clothing
-Astronomy,"Sweater, Sweatshirt, Hat"
-Backpacking,"Jacket, Windbreaker, Hiking Boots, Backpack, Water Bottle"
-Baseball,"Baseball Cap, Jersey, Cleats"
-Basketball,"Basketball Shoes, Basketball Shorts, Headband, Tank Top"
-Beach,"Swimsuit, Sunglasses, Sunhat, Beach Towel, Sandals"
-Biking,"Padded Shorts, Cycling Jersey, Helmet, Sunglasses, Water Bottle"
-Boxing,"Boxing Gloves, Hand Wraps, Boxing Shorts, Boxing Shoes"
-Camping,"Tent, Sleeping Bag, Headlamp"
-Cooking,"Apron, Chef's Hat, Oven Mitts"
-Dancing,"Dance Shoes, Leotard"
-Fishing,"Fishing Hat, Fishing Rod, Waders, Fishing Vest"
-Fitness,"Athletic Leggings, Sports Bra, Tank Top, Running Shoes, Gym Bag"
-Gardening,"Gardening Gloves, Sun Hat"
-Golf,"Golf Shoes, Golf Glove, Golf Bag"
-Hiking,"Hiking Boots, Trail Pants, Fleece Jacket, Backpack, Trekking Poles"
-Horseback Riding,"Riding Boots, Riding Helmet, Riding Pants, Riding Gloves"
-Kayaking,"Life Jacket, Dry Bag, Waterproof Phone Case"
-Mountain Climbing,"Climbing Shoes, Climbing Helmet, Chalk Bag"
-Music,"Band T-shirt, Leather Jacket, Jeans, Headphones"
-Painting,"Smock, jeans"
-Photography,"Camera, Lens, Tripod, Camera Bag, Memory Card"
-Running,"Running Shoes, Moisture-Wicking Socks, Headband, Shorts, Water Bottle"
-Skiing,"Ski Jacket, Ski Pants, Gloves, Goggles, Ski Helmet"
-Snowboarding,"Snowboard Boots, Jacket, Pants, Snowboard helemt"
-Soccer,"Soccer Cleats, Shin Guards, Soccer Socks, Soccer Shorts"
+Astronomy,Sweater
+Astronomy,Sweatshirt
+Astronomy,Hat
+Backpacking,Jacket
+Backpacking,Windbreaker
+Backpacking,Hiking Boots
+Backpacking,Backpack
+Backpacking,Water Bottle
+Baseball,Baseball Cap
+Baseball,Jersey
+Baseball,Cleats
+Basketball,Basketball Shoes
+Basketball,Basketball Shorts
+Basketball,Headband
+Basketball,Tank Top
+Beach,Swimsuit
+Beach,Sunglasses
+Beach,Sunhat
+Beach,Beach Towel
+Beach,Sandals
+Biking,Padded Shorts
+Biking,Cycling Jersey
+Biking,Helmet
+Biking,Sunglasses
+Biking,Water Bottle
+Boxing,Boxing Gloves
+Boxing,Hand Wraps
+Boxing,Boxing Shorts
+Boxing,Boxing Shoes
+Camping,Tent
+Camping,Sleeping Bag
+Camping,Headlamp
+Cooking,Apron
+Cooking,Chef's Hat
+Cooking,Oven Mitts
+Dancing,Dance Shoes
+Dancing,Leotard
+Fishing,Fishing Hat
+Fishing,Fishing Rod
+Fishing,Waders
+Fishing,Fishing Vest
+Fitness,Athletic Leggings
+Fitness,Sports Bra
+Fitness,Tank Top
+Fitness,Running Shoes
+Fitness,Gym Bag
+Gardening,Gardening Gloves
+Gardening,Sun Hat
+Golf,Golf Shoes
+Golf,Golf Glove
+Golf,Golf Bag
+Hiking,Hiking Boots
+Hiking,Trail Pants
+Hiking,Fleece Jacket
+Hiking,Backpack
+Hiking,Trekking Poles
+Horseback Riding,Riding Boots
+Horseback Riding,Riding Helmet
+Horseback Riding,Riding Pants
+Horseback Riding,Riding Gloves
+Kayaking,Life Jacket
+Kayaking,Dry Bag
+Kayaking,Waterproof Phone Case
+Mountain Climbing,Climbing Shoes
+Mountain Climbing,Climbing Helmet
+Mountain Climbing,Chalk Bag
+Music,Band T-shirt
+Music,Leather Jacket
+Music,Jeans
+Music,Headphones
+Painting,Smock
+Painting,Jeans
+Photography,Camera
+Photography,Lens
+Photography,Tripod
+Photography,Camera Bag
+Photography,Memory Card
+Running,Running Shoes
+Running,Moisture-Wicking Socks
+Running,Headband
+Running,Shorts
+Running,Water Bottle
+Skiing,Ski Jacket
+Skiing,Ski Pants
+Skiing,Gloves
+Skiing,Goggles
+Skiing,Ski Helmet
+Snowboarding,Snowboard Boots
+Snowboarding,Jacket
+Snowboarding,Pants
+Snowboarding,Snowboard Helmet
+Soccer,Soccer Cleats
+Soccer,Shin Guards
+Soccer,Soccer Socks
+Soccer,Soccer Shorts
 Surfing,Wetsuit
-Swimming,"Swimsuit, Goggles, Swim Cap, Flip Flops, Beach Towel"
-Tennis,"Tennis Shoes, Tennis Bag, Tennis Visor"
-Volleyball,"Volleyball Shoes, Knee Pads, Shorts, Tank Top"
-Yoga,"Yoga Pants, Yoga Mat, Tank Top, Yoga Blocks, Yoga Strap"
+Swimming,Swimsuit
+Swimming,Goggles
+Swimming,Swim Cap
+Swimming,Flip Flops
+Swimming,Beach Towel
+Tennis,Tennis Shoes
+Tennis,Tennis Bag
+Tennis,Tennis Visor
+Volleyball,Volleyball Shoes
+Volleyball,Knee Pads
+Volleyball,Shorts
+Volleyball,Tank Top
+Yoga,Yoga Pants
+Yoga,Yoga Mat
+Yoga,Tank Top
+Yoga,Yoga Blocks
+Yoga,Yoga Strap
