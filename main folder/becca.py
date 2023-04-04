@@ -2,6 +2,7 @@
 import pickle
 import re
 import random
+import json
 import pandas as pd
 from typing import Dict, Any, List
 from collections import defaultdict
@@ -189,6 +190,7 @@ class MacroOccupationResponse(Macro):
 		'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
 		'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
+
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
 # saves the user's hobbies
 class MacroSaveHobby(Macro):
@@ -203,14 +205,14 @@ class MacroSaveHobby(Macro):
 		user_nested_dictionary = users_dictionary[current_user]
 
 		# access the user's hobby list
-		user_nested_list = user_nested_dictionary["hobbies_list"]
+		user_nested_list = user_nested_dictionary['hobbies_list']
 
 		# append the hobby to the list
 		user_nested_list.append(user_hobby)
 
 		print(users_dictionary)
 
-
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's favourite colours 
 class MacroSaveFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -231,21 +233,21 @@ class MacroSaveFavoriteColor(Macro):
 		# print(color_index)
 		
 		# save the HEX code
-		color_hex = df_results["Hex"][color_index]
+		color_hex = df_results['Hex'][color_index]
 		# print(color_hex)
 
 		# access the user's dictionary
 		user_nested_dictionary = users_dictionary[current_user]
 
 		# access the user's favourite colour list
-		user_nested_list = user_nested_dictionary["fav_colors_list"]
+		user_nested_list = user_nested_dictionary['fav_colors_list']
 
 		# append the HEX code to the list
 		user_nested_list.append(color_hex)
 
 		print(users_dictionary)
 
-
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's not favourite colours
 class MacroSaveNotFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -257,28 +259,27 @@ class MacroSaveNotFavoriteColor(Macro):
 		user_colour_name = str(vars['USER_NOT_COLOR'])
 		
 		# search the dataframe for colour name
-		# -- returns a dataframe with th row of the colour
+		# -- returns a dataframe with the row of the colour
 		df_results = color_names_df.loc[color_names_df['Name'] == user_colour_name]
 
 		# get the index of the row
 		color_index = list(df_results.index.values)[0]
 
 		# save the HEX code
-		color_hex = df_results["Hex"][color_index]
+		color_hex = df_results['Hex'][color_index]
 
 		# access the user's dictionary
 		user_nested_dictionary = users_dictionary[current_user]
 
 		# access the user's not favourite colour list
-		user_nested_list = user_nested_dictionary["not_fav_colors_list"]
+		user_nested_list = user_nested_dictionary['not_fav_colors_list']
 
 		# append the HEX code to the list
 		user_nested_list.append(color_hex)
 
 		print(users_dictionary)
 
-
-# TODO: saves the user's favourite styles
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -286,30 +287,46 @@ class MacroSaveStyle(Macro):
 		global styles_df
 
 		# get the user's style or the clothing item associated with the style
-		user_style = str(vars['USER_STYLE'])
-		print(user_style)
+		user_style_item = str(vars['USER_STYLE'])
 
-		print(styles_df)
-		# search the dataframe for the style
-		# -- returns a dataframe with the row of the clothing item or style
-		# df_results = styles_df.loc[styles_df['Clothing'] == user_style]
+		# search the dataframe for the item
+		# -- returns a dataframe with the row of the colour
+		df_results = styles_df.loc[styles_df['Clothing'] == user_style_item]
 		# print(df_results)
 
+		# get the index of the row
+		style_index = list(df_results.index.values)[0]
 
+		# save the style name
+		style_name = df_results['Style'][style_index]
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's style list
+		user_nested_list = user_nested_dictionary['style_list']
+
+		# append the style name to the list
+		user_nested_list.append(style_name)
+
+		print(users_dictionary)
+
+
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # TODO: saves the user's favourite clothing items
 class MacroSaveFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
-
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # TODO: saves the user's not favourite clothing items
 class MacroSaveNotFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
-
+# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # TODO: saves the user's current outfit
 class MacroSaveOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -344,7 +361,11 @@ def load(df: DialogueFlow, varfile: str):
 		d = pickle.load(handle)
 		df.vars().update(d)
 		users_dictionary = pickle.load(handle)
-		print(users_dictionary)
+
+		# print(users_dictionary)
+		pretty = json.dumps(users_dictionary, indent=4)
+		print(pretty)
+
 		df.run()
 		save(df, varfile)
 
@@ -389,6 +410,8 @@ def main_dialogue() -> DialogueFlow:
 	babble_transition = {
 		'state': 'babble_transition',
 		'`That movie tho`': 'end'
+		# TODO: anywhere in the conversation insert "summary" indicator 
+		# which will prompt the system to give a summary of the film
 	}
 
 
@@ -397,7 +420,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'clothing_transition',
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
-		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n\n`': 'get_age_transition'
+		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n`': 'get_age_transition'
 		# TODO: if user is not a new user skip to recommendation transition -- THE FUTURE
 	}
 
@@ -409,6 +432,9 @@ def main_dialogue() -> DialogueFlow:
 		'`To be direct, how old are you?`': {
 			'#GET_AGE': {
 				'#RETURN_AGE_RESPONSE': 'get_occupation_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_age_transition'
 			}
 		}
 	}
@@ -855,27 +881,27 @@ def main_dialogue() -> DialogueFlow:
 		# favourite colour #2
 		'`Is there another color you love to wear?`': {
 			'[$USER_COLOR=#ONT(red)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
-				'#GET_FAV_COLOR`Lol, nice.' 
+				'#GET_FAV_COLOR`Lol, nice. ' 
 				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'error': {
@@ -885,39 +911,39 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's not favourite colours
+	# -- get user's not favourite colours # 1
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
 		'`Out of curiosity, are there any color that you really dislike or wouldn\'t wear?`': {
 			'[$USER_NOT_COLOR=#ONT(red)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors,\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'[$USER_NOT_COLOR=#ONT(orange)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors,\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'[$USER_NOT_COLOR=#ONT(yellow)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'[$USER_NOT_COLOR=#ONT(green)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors,\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'[$USER_NOT_COLOR=#ONT(blue)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors,\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'[$USER_NOT_COLOR=#ONT(violet)]': {
 				'#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? ' 
-				'To be honest, I\'m not that picky about colors, '
-				'but I always try to avoid bright oranges and neons.`': 'get_style_transition'
+				'To be honest, I\'m not that picky about colors,\n '
+				'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_not_fav_color_transition'
@@ -926,87 +952,79 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# TODO: -- gets the user's favourite styles
-	get_style_transition = {
-		'state': 'get_style_transition',
+	# -- gets the user's favourite styles
+	get_style_transition_one = {
+		'state': 'get_style_transition_one',
 		'`Another thing I\'d love to know about you is how you like to dress. I\'m always curious about people\'s fashion preferences.\n '
 		'Can you tell me a bit about your personal style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'#GET_STYLE`I\'m a fan of the sporty aesthetic as well. '
-				'People who dress sporty are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'#GET_STYLE`I\'m a fan of the bohemian aesthetic as well. '
-				'People who wear bohemian clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'#GET_STYLE`I\'m a fan of the grunge aesthetic as well. '
-				'People who wear grungey clothes are effortlessly cool.`': 'get_style_transition_two'
+				'#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'#GET_STYLE`I\'m a fan of the preppy aesthetic as well. '
-				'People who wear preppy clothes effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'#GET_STYLE`I\'m a fan of the punk aesthetic as well. '
-				'People who wear punk clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`I\'m a fan of the streewear aesthetic as well. '
-				'People who wear streetwear are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'#GET_STYLE`I\'m a fan of the classic aesthetic as well. '
-				'People who dress classicly are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'#GET_STYLE`I\'m a fan of the casual aesthetic as well. '
-				'People who dress casually are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`I\'m a fan of the ethnic aesthetic as well. '
-				'People who wear ethnic clothing are effortlessly chic.`': 'get_style_transition_two'
+				'#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_style_transition'
+				'`Sorry, I don\'t understand`': 'get_style_transition_one'
 			}
 		}
 	}
 	
 
-	# TODO: -- gets the user's favourite styles #2
+	# -- gets the user's favourite styles #2
+	# TODO: add a statement here from Becca
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
 		'`Is there another style you like to wear?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.?\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'`Good choice. The versatility of`$USER_STYLE`clothes is unmatched!`': 'get_fav_clothing_transition'
+				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_style_transition_two'
+				'`Sorry, I don\'t understand`': 'get_style_transition_two'
 			}
 		}
 	}
@@ -1081,7 +1099,8 @@ def main_dialogue() -> DialogueFlow:
 
 	df.load_transitions(get_not_fav_color_transition)
 
-	df.load_transitions(get_style_transition)
+	df.load_transitions(get_style_transition_one)
+	df.load_transitions(get_style_transition_two)
 
 	df.load_transitions(get_fav_clothing_transition)
 	df.load_transitions(get_not_fav_clothing_transition)
