@@ -1,5 +1,6 @@
 {
 	"ontology": {
+		"events": ["black tie", "business casual", "business formal", "cocktail", "formal", "outdoor", "semi formal", "white tie"],
 		"black tie": ["button-down shirt", "evening gown", "gloves", "high heels", "shoes", "socks", "suit", "tie",
 			"tuxedo", "vest", "boutonniere", "bow tie", "cufflinks", "cummerbund", "dress shirt studs",
 			"dress shirt with french cuffs", "dress watch", "dressy heels", "embellished bolero", "embellished jacket",
