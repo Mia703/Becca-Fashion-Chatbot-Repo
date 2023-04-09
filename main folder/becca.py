@@ -290,7 +290,7 @@ class MacroSaveStyle(Macro):
 		user_style_item = str(vars['USER_STYLE'])
 
 		# search the dataframe for the item
-		# -- returns a dataframe with the row of the colour
+		# -- returns a dataframe with the row of the item
 		df_results = styles_df.loc[styles_df['Clothing'] == user_style_item]
 		# print(df_results)
 
@@ -313,18 +313,46 @@ class MacroSaveStyle(Macro):
 
 
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
-# TODO: saves the user's favourite clothing items
+# saves the user's favourite clothing items
 class MacroSaveFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
+		# get the user's favorite clothing item from the 'clothing_items_ontology.json'
+		user_fav_item = str(vars['USER_FAV_CLOTHING'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's favorite clothes list
+		user_nested_list = user_nested_dictionary['fav_clothes_list']
+
+		# append the clothing item name to the list
+		user_nested_list.append(user_fav_item)
+
+		print(users_dictionary)
+
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
-# TODO: saves the user's not favourite clothing items
+# saves the user's not favourite clothing items
 class MacroSaveNotFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
+
+		# get the user's clothing item from the 'clothing_items_ontology.json'
+		user_not_fav_item = str(vars['USER_FAV_CLOTHING'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's not favorite clothes list
+		user_nested_list = user_nested_dictionary['not_fav_clothes_list']
+
+		# append the clothing item name to the list
+		user_nested_list.append(user_not_fav_item)
+
+		print(users_dictionary)
 
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
 # TODO: saves the user's current outfit
@@ -1029,17 +1057,51 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# TODO: -- get user's preferred clothing items (generic)
+
+	# -- gets the user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
-		'`What are some of clothing items you wear often?`': 'end'
+		'`What are some of clothing items you wear often?`': {
+			'[$USER_FAV_CLOTHING=#ONT(basics)]': {
+				'#GET_FAV_CLOTHING`The necessities are important! I\'ll admit I\'m honestly quite the basic girl myself lol.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(dressy)]': {
+				'#GET_FAV_CLOTHING`I like to dress up too! Imo, overdressed is always best.\n `': 'get_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(casual)]': {
+				'#GET_FAV_CLOTHING`Casual\'s nice, but I\'m personally an overdresser. The grocery store is my runway!\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(outerwear)]': {
+				'#GET_FAV_CLOTHING`I don\'t typically wear a lot of outerwear because I live in Atlanta and it\'s usually warm here!\n `': 'get_not_fav_clothing_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_fav_clothing_transition'
+			}
+		}
 	}
 
 
-	# TODO: -- get user's not preferred clothing items (generic)
+	# gets the user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
-		'`What are some clothing items that you try to avoid?`': 'end'
+		'`What are some clothing items that you try to avoid?`': {
+			'[$USER_NOT_FAV_CLOTHING=#ONT(basics)]': {
+				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'get_current_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(dressy)]': {
+				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'get_current_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(casual)]': {
+				'#GET_NOT_FAV_CLOTHING`I\'m glad that we\'re on the same page. Casual is boring.\n `': 'get_current_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(outerwear)]': {
+				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'get_current_outfit_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_not_fav_clothing_transition'
+			}
+		}
+
 	}
 
 
