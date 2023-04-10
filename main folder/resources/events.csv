@@ -1,6 +1,301 @@
-﻿Name,Description
-black tie,this is a formal event that usually requires men to wear a tuxedo and women to wear an evening gown
-white tie,"this is the most formal dress code and usually requires men to wear a black tailcoat, white bow tie, and black trousers, and women to wear a floor-length formal gown"
-cocktail,this is a semi-formal event where men typically wear a suit and tie and women wear a cocktail dress or a dressy skirt and blouse
-business formal,"this is a dress code for professional settings, such as a job interview, where men typically wear a suit and tie and women wear a suit, dress or blouse and skirt"
-business casual,"this dress code is less formal than business formal but still requires professional attire, such as slacks and a button-down shirt for men and a skirt or dress pants with a blouse or sweater for women"
+Dress Code, Clothing
+black tie,button-down shirt
+black tie,evening gown
+black tie,gloves
+black tie,high heels
+black tie,shoes
+black tie,socks
+black tie,suit
+black tie,tie
+black tie,tuxedo
+black tie,vest
+black-tie,boutonniere
+black-tie,bow tie
+black-tie,cufflinks
+black-tie,cummerbund
+black-tie,dress shirt studs
+black-tie,dress shirt with french cuffs
+black-tie,dress watch
+black-tie,dressy heels
+black-tie,embellished bolero
+black-tie,embellished jacket
+black-tie,formal scarf
+black-tie,full-length evening gown
+black-tie,fur shawl
+black-tie,fur wrap
+black-tie,hairpin
+black-tie,patent leather dress shoes
+black-tie,pocket square
+black-tie,statement jewelry
+black-tie,strappy sandals
+black-tie,suspenders
+black-tie,tights
+black-tie,tuxedo jacket with satin lapels
+black-tie,velvet shawl
+black-tie,velvet wrap
+black-tie,waistcoat
+business casual,blazer
+business casual,blouse
+business casual,boots
+business casual,button-down shirt
+business casual,button-down shirt
+business casual,cardigan
+business casual,chinos
+business casual,coat
+business casual,dress
+business casual,dress pants
+business casual,dress socks
+business casual,flats
+business casual,hat
+business casual,jacket
+business casual,jeans
+business casual,khakis
+business casual,knee-length skirt
+business casual,leather belt
+business casual,loafers
+business casual,long sleeve
+business casual,maxi skirt
+business casual,pants
+business casual,patterned socks
+business casual,polo shirt
+business casual,polo shirt
+business casual,pumps
+business casual,raincoat
+business casual,scarf
+business casual,shawl
+business casual,shirt
+business casual,shoes
+business casual,silk scarf
+business casual,skirt
+business casual,slacks
+business casual,slip-on shoes
+business casual,socks
+business casual,sport coat
+business casual,stockings
+business casual,sweater
+business casual,tie
+business casual,tights
+business casual,tote bag
+business casual,trench coat
+business casual,v-neck cardigan
+business casual,v-neck sweater
+business casual,woven belt
+business formal,blazer
+business formal,blouse
+business formal,boots
+business formal,briefcase
+business formal,button-down shirt
+business formal,button-down shirt
+business formal,cardigan
+business formal,closed-toe dress shoes
+business formal,clutch purse
+business formal,coat
+business formal,cufflinks
+business formal,dark colored suit
+business formal,double-breasted suit jacket
+business formal,dress
+business formal,dress pants
+business formal,dress socks
+business formal,dress vest
+business formal,evening gloves
+business formal,fedora
+business formal,hat
+business formal,homburg
+business formal,jacket
+business formal,knee-length dress
+business formal,knee-length skirt
+business formal,leather belt
+business formal,long sleeve
+business formal,maxi dress
+business formal,maxi skirt
+business formal,necktie
+business formal,overcoat
+business formal,pant suit
+business formal,pashmina shawl
+business formal,pashmina wrap
+business formal,pleated pants
+business formal,pocket square
+business formal,pumps
+business formal,sheath dress
+business formal,shirt
+business formal,shoes
+business formal,silk scarf
+business formal,skirt suit
+business formal,slacks
+business formal,socks
+business formal,stockings
+business formal,suit
+business formal,tie
+business formal,tie bar
+business formal,tie clip
+business formal,tights
+business formal,topcoat
+business formal,trench coat
+business formal,vest
+business formal,watch
+business formal,wingtip shoes
+cocktail,blazer
+cocktail,blouse
+cocktail,bodysuit
+cocktail,bolero
+cocktail,boots
+cocktail,bow tie
+cocktail,brooch
+cocktail,button-down shirt
+cocktail,button-down shirt
+cocktail,clutch purse
+cocktail,cufflinks
+cocktail,cummerbund
+cocktail,dress shirt
+cocktail,dress watch
+cocktail,dressy sandals
+cocktail,embellished jacket
+cocktail,high heels
+cocktail,jumpsuit
+cocktail,mock neck sweater
+cocktail,pantsuit
+cocktail,patterned dress socks
+cocktail,patterned tie
+cocktail,pencil skirt
+cocktail,pocket square
+cocktail,pocket watch
+cocktail,poncho
+cocktail,shawl
+cocktail,shoes
+cocktail,silk tie
+cocktail,skirt
+cocktail,slacks
+cocktail,socks
+cocktail,sport coat
+cocktail,statement belt
+cocktail,statement jewelry
+cocktail,suit
+cocktail,sweater vest
+cocktail,tie
+cocktail,tights
+cocktail,trousers
+cocktail,turtleneck
+cocktail,wrap
+formal,bow tie
+formal,button-down shirt
+formal,clutch purse
+formal,coat
+formal,cufflinks
+formal,cummerbund
+formal,dress
+formal,dress shirt
+formal,dress watch
+formal,full-length evening gown
+formal,fur stole
+formal,hairpin
+formal,hat
+formal,high heels
+formal,jacket
+formal,pocket square
+formal,scarf
+formal,shawl
+formal,shirt
+formal,shoes
+formal,skirt
+formal,socks
+formal,strappy sandals
+formal,tie
+formal,tuxedo
+formal,vest
+formal,waistcoat
+outdoor,athletic shorts
+outdoor,backpack
+outdoor,baseball cap
+outdoor,beanie
+outdoor,cardigan
+outdoor,cargo pants
+outdoor,button-down shirt
+outdoor,cross-body bag
+outdoor,dress
+outdoor,hiking boots
+outdoor,jeans
+outdoor,joggers
+outdoor,khakis
+outdoor,leggings
+outdoor,lightweight jacket
+outdoor,scarf
+outdoor,shoes
+outdoor,shorts
+outdoor,sneakers
+outdoor,socks
+outdoor,sunglasses
+outdoor,sweatpants
+outdoor,sweatshirt
+outdoor,swimsuit
+outdoor,tracksuit
+outdoor,waterproof jacket
+outdoor,wide-brimmed hat
+outdoor,windbreaker
+outdoor,yoga pants
+semi-formal,blazer
+semi-formal,blazer
+semi-formal,button-down shirt
+semi-formal,button-down shirt
+semi-formal,cardigan
+semi-formal,clutch purse
+semi-formal,cocktail dress
+semi-formal,cufflinks
+semi-formal,dress pants
+semi-formal,dressy flats
+semi-formal,dressy jumpsuit
+semi-formal,jacket
+semi-formal,jeans
+semi-formal,leather belt
+semi-formal,long sleeve
+semi-formal,pocket square
+semi-formal,polo shirt
+semi-formal,pumps
+semi-formal,sandals
+semi-formal,shawl
+semi-formal,shirt
+semi-formal,shoes
+semi-formal,skirt
+semi-formal,slacks
+semi-formal,socks
+semi-formal,knee length dress
+semi-formal,sports jacket
+semi-formal,suit
+semi-formal,sweater
+semi-formal,sweater vest
+semi-formal,tie
+semi-formal,tie bar
+semi-formal,trench coat
+semi-formal,tuxedo
+semi-formal,vest
+semi-formal,wrap
+white tie,button-down shirt
+white tie,evening gown
+white tie,gloves
+white tie,high heels
+white tie,shoes
+white tie,socks
+white tie,suit
+white tie,tie
+white tie,tuxedo
+white-tie,bow tie
+white-tie,clutch purse
+white-tie,cummerbund
+white-tie,dress pants
+white-tie,dress shirt studs
+white-tie,dress watch
+white-tie,embellished bolero
+white-tie,embellished jacket
+white-tie,evening heels
+white-tie,formal gloves
+white-tie,full-length ball gown
+white-tie,fur shawl
+white-tie,fur wrap
+white-tie,above elbow gloves
+white-tie,nylon tights
+white-tie,patent leather dress shoes
+white-tie,silk tights
+white-tie,statement jewelry
+white-tie,tailcoat with silk
+white-tie,velvet shawl
+white-tie,velvet wrap
+white-tie,waistcoat
