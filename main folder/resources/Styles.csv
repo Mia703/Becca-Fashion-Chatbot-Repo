@@ -1,271 +1,270 @@
 ﻿Style,Clothing,Category
-sporty,sneakers,shoes
-sporty,joggers,bottoms
-sporty,sweatpants,bottoms
-sporty,leggings,bottoms
-sporty,tank top,top
-sporty,t-shirt,top
-sporty,hoodie,top
-sporty,sweatshirt,top
-sporty,athletic shorts,bottoms
-sporty,baseball cap,accessory
-sporty,visor,accessory
-sporty,Windbreaker,coat
-sporty,track jacket,coat
-sporty,athletic socks,accessory
-sporty,yoga pants,bottoms
-sporty,fanny pack,accessory
-sporty,crossbody bag,accessory
-sporty,athletic skirt,bottoms
-sporty,athletic dress,dress
-bohemian,maxi dress,dress
-bohemian,maxi skirt,bottoms
-bohemian,crochet top,top
-bohemian,crochet dress,dress
-bohemian,bell-bottom pants,bottoms
-bohemian,kimono,dress
-bohemian,duster jacket,coat
-bohemian,off-the-shoulder top,top
-bohemian,off-the-shoulder dress,dress
-bohemian,fringe shirt,top
-bohemian,fringe pants,bottoms
-bohemian,fringe skirt,bottoms
-bohemian,fringe dress,dress
-bohemian,embroidered shirt,top
-bohemian,embroidered pants,bottoms
-bohemian,embroidered skirt,bottoms
-bohemian,embroidered dress,dress
-bohemian,flowy blouse,top
-bohemian,flowy dress,dress
-bohemian,flowy skirt,bottoms
-bohemian,oversized sunglasses,accessory
-bohemian,floppy hat,accessory
-bohemian,beaded jewelry,accessory
-bohemian,frayed denim shorts,bottoms
-bohemian,frayed denim jeans,bottoms
-bohemian,lace blouse,top
-bohemian,lace dress,dress
-bohemian,ruffled blouse,top
-bohemian,ruffled dress ,dress
-bohemian,ruffled skirt,bottoms
-bohemian,floppy hat,accessory
-bohemian,paisley shirt,top
-bohemian,paisley pants,bottoms
-bohemian,floral shirt,top
-bohemian,floral skirt,bottoms
-bohemian,floral pants,bottoms
-bohemian,floral dress,dress
-bohemian,paisley dress,dress
-bohemian,paisley skirt,bottoms
-bohemian,geometric shirt,top
-bohemian,geometric pants,bottoms
-bohemian,geometric dress,dress
-bohemian,geometric skirt,bottoms
-bohemian,maxi romper,dress
-bohemian,jumpsuit,dress
-bohemian,fedora,accessory
-bohemian,tassel shirt,top
-bohemian,tassel pants,bottoms
-bohemian,tassel skirt,bottoms
-bohemian,fringed vest,top
-bohemian,embroidered denim jacket,coat
-bohemian,moccasin style shoes,shoes
-bohemian,Wide-leg pants,bottoms
-bohemian,lace-up sandals,shoes
-bohemian,layered necklaces,accessory
-bohemian,crop top,top
-bohemian,patchwork bag,accessory
-bohemian,patchwork jeans,bottoms
-bohemian,patchwork jacket,coat
-bohemian,printed headscarf,accessory
-bohemian,tie-dye dress,dress
-bohemian,tie-dye shirt,top
-bohemian,tie-dye skirt,bottoms
-bohemian,tie-dye pants,bottoms
-grunge,flannel shirt,top
-grunge,distressed denim jeans,bottoms
-grunge,oversized t-shirt,top
-grunge,combat boots,shoes
-grunge,leather jackets,coat
-grunge,beanie hat,accessory
-grunge,fishnet stocking,bottoms
-grunge,oversized sweater,top
-grunge,plaid skirt,bottoms
-grunge,vintage band t-shirt,top
-grunge,denim jacket,coat
-grunge,high-top sneaker,shoes
-grunge,choker necklace,accessory
-grunge,doc marten boots,shoes
-grunge,acid wash denim jacket,coat
-grunge,acid wash denim jeans,bottoms
-grunge,leather pants,bottoms
-grunge,distressed band tishirt,top
-grunge,leather jackets,coat
-grunge,bandana,accessory
-grunge,ripped fishnet tights,bottoms
-grunge,hoodie,top
-grunge,denim shorts,bottoms
-grunge,oversized flannel jacket,coat
-grunge,military jacket,coat
-preppy,button-up shirt,top
-preppy,polo shirt,top
-preppy,blazer,coat
-preppy,sweater,top
-preppy,khaki pants,bottoms
-preppy,khaki skirt,bottoms
-preppy,bermuda shorts,bottoms
-preppy,loafers,shoes
-preppy,boat shoes,shoes
-preppy,trench coat,coat
-preppy,pleated skirt,bottoms
-preppy,cardigan,top
-preppy,chinos,shoes
-preppy,polo dress,dress
-preppy,cable knit scarf,accessory
-preppy,turtleneck sweater,top
-preppy,oxford shoes,shoes
-preppy,peacoat,coat
-preppy,rugby shirt,top
-preppy,tote bag,accessory
-preppy,creneck sweatshirt,top
-preppy,capri pants,bottoms
-preppy,boatneck shirt,top
-preppy,boatneck dress,dress
-punk,leather jacket,coat
-punk,band t-shirt,top
-punk,combat boots,shoes
-punk,ripped jeans,bottoms
-punk,graphic t-shirt,top
-punk,fishnet stockings,bottoms
-punk,plaid shirt,top
-punk,studded belt,accessory
-punk,denim vest,top
-punk,leather pants,bottoms
-punk,biker jacket,coat
-punk,beanie hat,accessory
-punk,choker necklace,accessory
-punk,hoodie,top
-punk,military jacket,coat
-punk,distressed t-shirt,top
-punk,leather skirt,bottoms
-punk,high top sneaker,shoes
-punk,denim jakcet,coat
-punk,faux fur jacket,coat
-punk,vinyl skirt,bottoms
-punk,sleeveless shirt,top
-punk,biker boots,shoes
-streetwear,hoodie,top
-streetwear,sneakers,shoes
-streetwear,logo t-shirt,top
-streetwear,joggers,bottoms
-streetwear,denim jacket,coat
-streetwear,snapback hat,accessory
-streetwear,cargo pants,bottoms
-streetwear,oversized t-shirt,top
-streetwear,tracksuit,dress
-streetwear,graphic sweatshirt,top
-streetwear,high-top sneaker,shoes
-streetwear,distressed denim jeans,bottoms
-streetwear,bomber jacket,coat
-streetwear,bucket hat,accessory
-streetwear,track jacket,coat
-streetwear,skate shoes,shoes
-streetwear,Windbreaker,coat
-streetwear,oversized hoodie,top
-streetwear,Wide-leg pants,bottoms
-streetwear,graphic t-shirt,top
-streetwear,cargo shorts,bottoms
-streetwear,cargo jacket,coat
-streetwear,cargo skirt,bottoms
-streetwear,coach jacket,coat
-streetwear,baseball cap,accessory
-streetwear,denim jacket,coat
-streetwear,combat boots,shoes
-streetwear,leather jacket,coat
-streetwear,printed socks,accessory
-streetwear,camouflage shirt,top
-streetwear,camouflage pants,bottoms
-streetwear,camouflage skirt,bottoms
-streetwear,patchwork jacket,coat
-streetwear,patchwork jeans,bottoms
-streetwear,vintage t-shirt,top
-streetwear,basketball shorts,bottoms
-streetwear,track pants,bottoms
-streetwear,utility vest,top
-classic,tailored blazer,top
-classic,cashmere sweater,top
-classic,tweed jacket,coat
-classic,loafers,shoes
-classic,trench coat,coat
-classic,pearl jewlry,accessory
-classic,shift dress,dress
-classic,penny loafer,shoes
-classic,Wide-leg pants,bottoms
-classic,tailored trousers,bottoms
-classic,slacks,bottoms
-classic,button-up shirt,top
-classic,pencil skirt,bottoms
-classic,oxford shirt,top
-classic,ballet flats,shoes
-classic,peacoat,coat
-classic,turtleneck sweater,top
-classic,tote bag,accessory
-classic,blazer,coat
-classic,knee-length skirt,bottoms
-classic,creneck sweater,top
-classic,Wool coat,coat
-classic,button-up cardigan,coat
-classic,Wrap dress,dress
-classic,leather belt,accessory
-classic,trench coat,coat
-classic,boatneck top,top
-classic,boatneck dress,dress
-classic,Wool skirt,bottoms
-classic,silk blouse,top
-classic,leather handbag,accessory
-classic,straight-leg jeans,bottoms
-classic,silk scarf,accessory
-classic,jeans with no holes,bottoms
-classic,a-line dress,dress
-casual,t-shirt,top
-casual,jeans with holes,bottoms
-casual,hoodie,top
-casual,sneakers,shoes
-casual,leggings,bottoms
-casual,sweatpants,bottoms
-casual,denim jacket,coat
-casual,baseball cap,accessory
-casual,sweatshirt,top
-casual,tote bag,accessory
-casual,denim shorts,bottoms
-casual,baseball jacket,coat
-casual,backpack,accessory
-casual,track pants,bottoms
-casual,canvas sneakers,shoes
-casual,graphic sweatshirt,top
-casual,graphic t-shirt,top
-casual,slip-on shoes,shoes
-casual,cargo pants,bottoms
-casual,boat shoes,shoes
-casual,plaid shirt,top
-ethnic,kaftan,top
-ethnic,saree,dress
-ethnic,dashiki,top
-ethnic,kente cloth shirt,top
-ethnic,kente cloth pants,bottoms
-ethnic,kente cloth skirt,bottoms
-ethnic,kente cloth dress,dress
-ethnic,harem pants,bottoms
-ethnic,kimono,dress
-ethnic,poncho,coat
-ethnic,djellaba,dress
-ethnic,embroidered tunic,top
-ethnic,boubou,dress
-ethnic,dirndl,dress
-ethnic,cheongsam,dress
-ethnic,sarong,bottoms
-ethnic,thawb,dress
-ethnic,abaya,dress
-ethnic,kanzu,dress
-ethnic,huipil,top
-ethnic,thobe,dress
+Sporty,Gym shoes,Shoes
+Sporty,Joggers,Bottoms
+Sporty,Sweatpants,Bottoms
+Sporty,Leggings,Bottoms
+Sporty,Racerback tank tops,Top
+Sporty,Athletic t-shirts,Top
+Sporty,Crewnecks,Top
+Sporty,Athletic shorts,Bottoms
+Sporty,Baseball caps,Accessory
+Sporty,Visors,Accessory
+Sporty,Windbreakers,Coat
+Sporty,Track jackets,Coat
+Sporty,Crew socks,Accessory
+Sporty,Yoga pants,Bottoms
+Sporty,Fanny packs,Accessory
+Sporty,Crossbody bags,Accessory
+Sporty,Athletic skirts,Bottoms
+Sporty,Athletic dresses,Dress
+Bohemian,Floral maxi dresses,Dress
+Bohemian,Floral maxi skirts,Bottoms
+Bohemian,Crochet tops,Top
+Bohemian,Crochet dresses,Dress
+Bohemian,Bell-bottom pants,Bottoms
+Bohemian,Kimonos,Dress
+Bohemian,Duster jackets,Coat
+Bohemian,Off-the-shoulder tops,Top
+Bohemian,Off-the-shoulder dresses,Dress
+Bohemian,Fringe shirts,Top
+Bohemian,Fringe pants,Bottoms
+Bohemian,Fringe skirts,Bottoms
+Bohemian,Fringe dresses,Dress
+Bohemian,Embroidered shirts,Top
+Bohemian,Embroidered pants,Bottoms
+Bohemian,Embroidered skirts,Bottoms
+Bohemian,Embroidered dresses,Dress
+Bohemian,Flowy blouses,Top
+Bohemian,Flowy dresses,Dress
+Bohemian,Flowy skirts,Bottoms
+Bohemian,Oversized sunglasses,Accessory
+Bohemian,Floppy hats,Accessory
+Bohemian,Beaded jewelry,Accessory
+Bohemian,Frayed denim shorts,Bottoms
+Bohemian,Frayed denim jeans,Bottoms
+Bohemian,Flared jeans,Bottoms
+Bohemian,Lace blouses,Top
+Bohemian,Lace dresses,Dress
+Bohemian,Ruffled blouses,Top
+Bohemian,Ruffled dresses,Dress
+Bohemian,Ruffled skirts,Bottoms
+Bohemian,Paisley shirts,Top
+Bohemian,Paisley pants,Bottoms
+Bohemian,Floral shirts,Top
+Bohemian,Floral skirts,Bottoms
+Bohemian,Floral pants,Bottoms
+Bohemian,Floral dresses,Dress
+Bohemian,Paisley dresses,Dress
+Bohemian,Paisley skirts,Bottoms
+Bohemian,Geometric shirts,Top
+Bohemian,Geometric pants,Bottoms
+Bohemian,Geometric dresses,Dress
+Bohemian,Geometric skirts,Bottoms
+Bohemian,Maxi rompers,Dress
+Bohemian,Jumpsuit,Dress
+Bohemian,Fedoras,Accessory
+Bohemian,Tassel shirts,Top
+Bohemian,Tassel pants,Bottoms
+Bohemian,Tassel skirts,Bottoms
+Bohemian,Fringed vests,Top
+Bohemian,Embroidered denim jackets,Coat
+Bohemian,Moccasin style shoes,Shoes
+Bohemian,Wide-leg pants,Bottoms
+Bohemian,Lace-up sandals,Shoes
+Bohemian,Layered necklaces,Accessory
+Bohemian,Crop tops,Top
+Bohemian,Patchwork bags,Accessory
+Bohemian,Patchwork jeans,Bottoms
+Bohemian,Patchwork jackets,Coat
+Bohemian,Printed headscarves,Accessory
+Bohemian,Tie-dye dresses,Dress
+Bohemian,Tie-dye shirts,Top
+Bohemian,Tie-dye skirts,Bottoms
+Bohemian,Tie-dye pants,Bottoms
+Grunge,Flannel shirts,Top
+Grunge,Oversized ripped t-shirts,Top
+Grunge,Combat boots,Shoes
+Grunge,Leather jackets,Coat
+Grunge,Beanie hats,Accessory
+Grunge,Fishnet stockings,Bottoms
+Grunge,Oversized knit sweaters,Top
+Grunge,Plaid skirts,Bottoms
+Grunge,Vintage band t-shirts,Top
+Grunge,Denim jackets,Coat
+Grunge,High-top sneakers,Shoes
+Grunge,Doc Marten boots,Shoes
+Grunge,Acid wash denim jackets,Coat
+Grunge,Acid wash denim jeans,Bottoms
+Grunge,Leather pants,Bottoms
+Grunge,Distressed band t-shirts,Top
+Grunge,Bandanas,Accessory
+Grunge,Ripped fishnet tights,Bottoms
+Grunge,Distressed hoodies,Top
+Grunge,Distressed denim shorts,Bottoms
+Grunge,Oversized flannel jackets,Coat
+Grunge,Military jackets,Coat
+Preppy,Button-up shirts,Top
+Preppy,Polo shirts,Top
+Preppy,Tailored blazers,Coat
+Preppy,Sweaters,Top
+Preppy,Khaki pants,Bottoms
+Preppy,Khaki skirts,Bottoms
+Preppy,Bermuda shorts,Bottoms
+Preppy,Penny loafers,Shoes
+Preppy,Boat shoes,Shoes
+Preppy,Trench coat,Coat
+Preppy,Pleated skirt,Bottoms
+Preppy,Cardigans,Top
+Preppy,Chinos,Shoes
+Preppy,Polo dresses,Dress
+Preppy,Cable knit scarves,Accessory
+Preppy,Turtleneck sweaters,Top
+Preppy,Oxford shoes,Shoes
+Preppy,Peacoats,Coat
+Preppy,Rugby shirts,Top
+Preppy,Tote bags,Accessory
+Preppy,Crewneck sweatshirts,Top
+Preppy,Capri pants,Bottoms
+Preppy,Boatneck shirts,Top
+Preppy,Boatneck dresses,Dress
+Punk,Metal chains,Accessory
+Punk,Band t-shirts,Top
+Punk,Combat boots,Shoes
+Punk,Ripped jeans,Bottoms
+Punk,Graphic t-shirts,Top
+Punk,Fishnet stockings,Bottoms
+Punk,Plaid shirts,Top
+Punk,Studded belts,Accessory
+Punk,Denim vests,Top
+Punk,Leather leggings,Bottoms
+Punk,Biker jackets,Coat
+Punk,Choker necklaces,Accessory
+Punk,Hoodies,Top
+Punk,Military jackets,Coat
+Punk,Distressed t-shirts,Top
+Punk,Leather skirts,Bottoms
+Punk,High top sneakers,Shoes
+Punk,Black denim jakcets,Coat
+Punk,Faux fur jackets,Coat
+Punk,Vinyl skirts,Bottoms
+Punk,Sleeveless shirts,Top
+Punk,Biker boots,Shoes
+Streetwear,Drawstring hoodies,Top
+Streetwear,Colorful sneakers,Shoes
+Streetwear,Logo t-shirts,Top
+Streetwear,Cargo joggers,Bottoms
+Streetwear,Denim jackets,Coat
+Streetwear,Snapback hats,Accessory
+Streetwear,Cargo pants,Bottoms
+Streetwear,Oversized t-shirts,Top
+Streetwear,Tracksuits,Dress
+Streetwear,Graphic sweatshirts,Top
+Streetwear,High-top sneakers,Shoes
+Streetwear,Distressed denim jeans,Bottoms
+Streetwear,Bomber jackets,Coat
+Streetwear,Bucket hats,Accessory
+Streetwear,Skate shoes,Shoes
+Streetwear,Oversized hoodies,Top
+Streetwear,Graphic t-shirts,Top
+Streetwear,Cargo shorts,Bottoms
+Streetwear,Cargo jackets,Coat
+Streetwear,Cargo skirts,Bottoms
+Streetwear,Coach jackets,Coat
+Streetwear,Denim jackets with patches,Coat
+Streetwear,Combat boots,Shoes
+Streetwear,Leather jackets,Coat
+Streetwear,Printed socks,Accessory
+Streetwear,Camouflage shirts,Top
+Streetwear,Camouflage pants,Bottoms
+Streetwear,Camouflage skirts,Bottoms
+Streetwear,Patchwork jackets,Coat
+Streetwear,Patchwork jeans,Bottoms
+Streetwear,Vintage t-shirts,Top
+Streetwear,Basketball shorts,Bottoms
+Streetwear,Track pants,Bottoms
+Streetwear,Baggy jeans,Bottoms
+Streetwear,Mom jeans,Bottoms
+Streetwear,Wide-leg jeans,Bottoms
+Streetwear,Utility vests,Top
+Classic,Tapered jeans,Bottoms
+Classic,Oversized blazers,Top
+Classic,Cashmere sweaters,Top
+Classic,Tweed jackets,Coat
+Classic,Loafers,Shoes
+Classic,Trench coats,Coat
+Classic,Pearl jewelry,Accessory
+Classic,Shift dresses,Dress
+Classic,Penny loafers,Shoes
+Classic,Wide-leg trousers,Bottoms
+Classic,Tailored trousers,Bottoms
+Classic,Slacks,Bottoms
+Classic,Button-up shirts,Top
+Classic,Pencil skirts,Bottoms
+Classic,Oxford shirts,Top
+Classic,Ballet flats,Shoes
+Classic,Peacoats,Coat
+Classic,Turtleneck sweaters,Top
+Classic,Tote bags,Accessory
+Classic,Knee-length skirts,Bottoms
+Classic,Creneck sweaters,Top
+Classic,Wool coats,Coat
+Classic,Button-up cardigans,Coat
+Classic,Wrap dresses,Dress
+Classic,Leather belts,Accessory
+Classic,Trench coats,Coat
+Classic,Boatneck tops,Top
+Classic,Boatneck dresses,Dress
+Classic,Wool skirts,Bottoms
+Classic,Silk blouses,Top
+Classic,Leather handbags,Accessory
+Classic,Straight-leg jeans,Bottoms
+Classic,Silk scarves,Accessory
+Classic,Jeans with no holes,Bottoms
+Classic,Pinstripe trousers,Bottoms
+Classic,Pinstripe blazer,Coat
+Classic,Stilettos,Shoes
+Classic,Pumps,Shoes
+Classic,A-line dresses,Dress
+Casual,White t-shirts,Top
+Casual,Jeans with holes,Bottoms
+Casual,Hooded sweatshirts,Top
+Casual,Low top sneakers,Shoes
+Casual,Sweatpants,Bottoms
+Casual,Blue denim jackets,Coat
+Casual,Baseball caps,Accessory
+Casual,Sweatshirts,Top
+Casual,Canvas tote bags,Accessory
+Casual,Denim shorts,Bottoms
+Casual,Baseball jackets,Coat
+Casual,Backpacks,Accessory
+Casual,Canvas sneakers,Shoes
+Casual,Graphic sweatshirts,Top
+Casual,Graphic t-shirts,Top
+Casual,Slip-on shoes,Shoes
+Casual,Boot cut jeans,Bottoms
+Casual,Boyfriend jeans,Bottoms
+Casual,Skinny jeans,Bottoms
+Casual,Cargo pants,Bottoms
+Casual,Boat shoes,Shoes
+Casual,Plaid shirts,Top
+Ethnic,Kaftans,Top
+Ethnic,Sarees,Dress
+Ethnic,Dashikis,Top
+Ethnic,Kente cloth shirts,Top
+Ethnic,Kente cloth pants,Bottoms
+Ethnic,Kente cloth skirts,Bottoms
+Ethnic,Kente cloth dresses,Dress
+Ethnic,Harem pants,Bottoms
+Ethnic,Kimonos,Dress
+Ethnic,Ponchos,Coat
+Ethnic,Djellabas,Dress
+Ethnic,Embroidered tunics,Top
+Ethnic,Boubous,Dress
+Ethnic,Dirndls,Dress
+Ethnic,Cheongsams,Dress
+Ethnic,Sarongs,Bottoms
+Ethnic,Thawbs,Dress
+Ethnic,Abayas,Dress
+Ethnic,Kanzus,Dress
+Ethnic,Huipils,Top
+Ethnic,Thobes,Dress
