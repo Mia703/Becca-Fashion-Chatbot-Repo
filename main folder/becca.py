@@ -212,6 +212,7 @@ class MacroSaveHobby(Macro):
 
 		print(users_dictionary)
 
+
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's favourite colours 
 class MacroSaveFavoriteColor(Macro):
@@ -247,6 +248,7 @@ class MacroSaveFavoriteColor(Macro):
 
 		print(users_dictionary)
 
+
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's not favourite colours
 class MacroSaveNotFavoriteColor(Macro):
@@ -278,6 +280,7 @@ class MacroSaveNotFavoriteColor(Macro):
 		user_nested_list.append(color_hex)
 
 		print(users_dictionary)
+
 
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
 class MacroSaveStyle(Macro):
@@ -313,7 +316,7 @@ class MacroSaveStyle(Macro):
 
 
 # TODO: make sure the there are no duplicate hobbies; check before adding to list
-# TODO: saves the user's favourite clothing items
+# FIXME: saves the user's favourite clothing items
 class MacroSaveFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -1029,31 +1032,246 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-	# TODO: -- get user's preferred clothing items (generic)
+	# -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
-		'`What are some of clothing items you wear often?`': 'end'
-	}
-
-
-	# TODO: -- get user's not preferred clothing items (generic)
-	get_not_fav_clothing_transition = {
-		'state': 'get_not_fav_clothing_transition',
-		'`What are some clothing items that you try to avoid?`': 'end'
-	}
-
-
-	# TODO: -- get user's current outfit
-	get_current_outfit_transition = {
-		'state': 'get_current_outfit_transition',
-		'`What are you currently wearing?`': {
-			# I don't care what the user says here
+		'`What are some of clothing items you wear often?`': {
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(basics)]': {
+				'#GET_FAV_CLOTHING`The necessities are important! I\'ll admit I\'m honestly quite the basic girl myself lol.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(dressy)]': {
+				'#GET_FAV_CLOTHING`I like to dress up too! In my opinion, being overdressed is always best.\n `': 'get_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(casual)]': {
+				'#GET_FAV_CLOTHING`Casual\'s nice, but I\'m personally an overdresser. The grocery store is my runway!\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING=#ONT(outerwear)]': {
+				'#GET_FAV_CLOTHING`I don\'t typically wear a lot of coats and jackets and stuff because in Atlanta it\'s usually warm here!\n `': 'get_not_fav_clothing_transition'
+			},
 			'error': {
-				'`Okay.` #GET_CURR_OUTFIT': 'end'
+				'`Sorry, I don\'t understand.`': 'get_fav_clothing_transition'
 			}
 		}
 	}
 
+
+	# -- get user's not preferred clothing items (generic)
+	get_not_fav_clothing_transition = {
+		'state': 'get_not_fav_clothing_transition',
+		'`What are some clothing items that you try to avoid?`': {
+			'[$USER_NOT_FAV_CLOTHING=#ONT(basics)]': {
+				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'get_current_top_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(dressy)]': {
+				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'get_current_top_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(casual)]': {
+				'#GET_NOT_FAV_CLOTHING`I\'m glad that we\'re on the same page. Casual is boring.\n `': 'get_current_top_outfit_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING=#ONT(outerwear)]': {
+				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'get_current_top_outfit_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'get_not_fav_clothing_transition'
+			}
+		}
+	}
+
+
+	# -- get user's current outfit #1
+	# -- get the top the user is wearing
+	get_current_top_outfit_transition = {
+		'state': 'get_current_top_outfit_transition',
+		'`What are you currently wearing?`': {
+			'[$USER_CURR_TOP=#ONT(sporty)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(bohemian)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(grunge)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(preppy)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(punk)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(streetwear)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(classic)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(casual)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'[$USER_CURR_TOP=#ONT(ethnic)]': {
+				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			'error': {
+				'`I\'m not sure I understand.`': 'get_current_top_transition'
+			}
+		}
+	}
+
+
+	# -- get the user's current outfit #2
+	# -- get the bottom the user is wearing
+	get_current_bottoms_transition = {
+		'state': 'get_current_bottoms_transition',
+		'`What bottoms are you currently wearing?`': {
+			'[$USER_CURR_BOTTOM=#ONT(sporty)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(bohemian)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(grunge)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(preppy)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(punk)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(streetwear)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(classic)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(casual)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'[$USER_CURR_BOTTOM=#ONT(ethnic)]': {
+				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			'error': {
+				'`I\'m not sure I understand.`': 'get_current_bottoms_transition'
+			}
+		}
+	}
+
+
+	# -- get the user's current outfit #3
+	# -- get the coat the user is wearing
+	get_current_coat_transition = {
+		'state': 'get_current_coat_transition',
+		'`What coat are you currently wearing?`': {
+			'[$USER_CURR_COAT=#ONT(sporty)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(bohemian)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(grunge)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(preppy)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(punk)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(streetwear)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(classic)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(casual)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'[$USER_CURR_COAT=#ONT(ethnic)]': {
+				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			'error': {
+				'`I\'m not sure I understand.`': 'get_current_coat_transition'
+			}
+		}
+	}
+
+
+	# -- get the user's current outfit #4
+	# -- get the shoes the user is wearing
+	get_current_shoes_transition = {
+		'state': 'get_current_shoes_transition',
+		'`What shoes are you currently wearing?`': {
+			'[$USER_CURR_SHOES=#ONT(sporty)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(bohemian)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(grunge)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(preppy)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(punk)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(streetwear)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(classic)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(casual)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'[$USER_CURR_SHOES=#ONT(ethnic)]': {
+				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			'error': {
+				'`I\'m not sure I understand.`': 'get_current_shoes_transition'
+			}
+		}
+	}
+
+
+	# -- get the user's current outfit #5
+	# -- get any accessories the user is currently wearing
+	# TODO: make this loop back onto itself so that we can get about 3 accessories --> maybe implement for hobbies and styles too
+	get_current_accessory_transition = {
+		'state': 'get_current_accessory_transition',
+		'`What accessory are you currently wearing?`': {
+			'[$USER_CURR_ACCSRY=#ONT(sporty)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(bohemian)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(grunge)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(preppy)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(punk)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(streetwear)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(classic)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(casual)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+			},
+			'error': {
+				'`I\'m not sure I understand.`': 'get_current_accessory_transition'
+			}
+		}
+	}
 
 	# macro references ============================================
 	macros = {
@@ -1079,6 +1297,7 @@ def main_dialogue() -> DialogueFlow:
 	df.knowledge_base().load_json_file('./resources/hobbies_ontology.json')
 	df.knowledge_base().load_json_file('./resources/color_names_ontology.json')
 	df.knowledge_base().load_json_file('./resources/styles_ontology.json')
+	df.knowledge_base().load_json_file('./resources/clothing_items_ontology.json')
 
 	df.load_transitions(introduction_transition)
 
@@ -1087,25 +1306,40 @@ def main_dialogue() -> DialogueFlow:
 
 	df.load_transitions(clothing_transition)
 
+	# get the user's age
 	df.load_transitions(get_age_transition)
+	
+	# get the users occupation
 	df.load_transitions(get_occupation_transition)
 	
+	# get the user's hobby (3x
 	df.load_transitions(get_hobby_transition_one)
 	df.load_transitions(get_hobby_transition_two)
 	df.load_transitions(get_hobby_transition_three)
 
+	# get the user's favourite colours (2x)
 	df.load_transitions(get_fav_color_transition_one)
 	df.load_transitions(get_fav_color_transition_two)
 
+	# get the user's not favourite colour
 	df.load_transitions(get_not_fav_color_transition)
 
+	# get the user's preffered styles (2x)
 	df.load_transitions(get_style_transition_one)
 	df.load_transitions(get_style_transition_two)
 
+	# get the user's favourite clothing item
 	df.load_transitions(get_fav_clothing_transition)
+
+	# get the user's not favourite clothing item
 	df.load_transitions(get_not_fav_clothing_transition)
 
-	df.load_transitions(get_current_outfit_transition)
+	# get the user's current outfit
+	df.load_transitions(get_current_top_outfit_transition)
+	df.load_transitions(get_current_bottoms_transition)
+	df.load_transitions(get_current_coat_transition)
+	df.load_transitions(get_current_shoes_transition)
+	df.load_transitions(get_current_accessory_transition)
 
 	df.add_macros(macros)
 

@@ -1,7 +1,7 @@
 {
     "ontology": {
         "clothing": ["basics", "dressy", "casual", "outerwear"],
-        "basics": ["underwear", "socks", "sleepwear", "robe", "slippers", "sandals", "flip flops", "rope"],
+        "basics": ["underwear", "socks", "sleepwear", "robe", "slippers", "sandals", "flip flops"],
         "dressy": ["dresses", "skirts", "slacks", "long sleeve shirts", "blazers", "sweaters", "pants", "ties"],
         "casual": ["t-shirts", "tank tops", "jeans", "shorts", "swimsuit", "polos"],
         "outerwear": ["jackets", "coats", "raincoats", "hats", "gloves", "scarves", "belts"]
