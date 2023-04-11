@@ -4,6 +4,13 @@ import re
 import random
 import json
 import pandas as pd
+import openai
+# python files ============================================
+# api_file.py is ignored by github for privacy reasons
+import api_file
+import babble_macros
+import openai_macros
+# ============================================
 from typing import Dict, Any, List
 from collections import defaultdict
 from emora_stdm import Macro, Ngrams, DialogueFlow
@@ -18,6 +25,7 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 # import styles csv file
 styles_df = pd.read_csv('./resources/styles.csv')
 
+openai.api_key = API_KEY
 
 # macros ============================================
 
@@ -460,7 +468,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'get_current_top_outfit_transition'
+				'#RETURN_WELCOME_MESG': 'choice_transition'
 			}
 		}
 	}
@@ -472,7 +480,9 @@ def main_dialogue() -> DialogueFlow:
 		'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
 			# Let's talk about the movie Babble
 			'<babble>': {
-				'`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+				# TODO: change back when done with babble transition
+				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
 			},
 			# Let's talk about clothes
 			'[{let, lets, wanna, want}, clothes]': {
@@ -488,9 +498,153 @@ def main_dialogue() -> DialogueFlow:
 	# let's talk about Babble
 	babble_transition = {
 		'state': 'babble_transition',
-		'`That movie tho`': 'end'
-		# TODO: anywhere in the conversation insert "summary" indicator 
-		# which will prompt the system to give a summary of the film
+		'`Have you already watched the movie \"Babble\" or would you like to learn more about the film?`': {
+			'#SET_WATCH_STATUS':{
+				'state': 'user_rating',
+				# the user has watched the film
+				'#IF($WATCH_STATUS=yes)`Did you enjoy the movie? What did you like or dislike about the movie?`': {
+					# the user's rating for the movie was positive
+					'#IF($USER_RATING=positive) `Glad to hear you enjoyed the movie.\n '
+					'What were your thoughts on some of the themes or messages in the movie?`': {
+						# don't really care what the user says here
+						'error': {
+							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
+							'can lead to misunderstandings that lead to severe consequeces.\n '
+							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
+							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
+							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
+							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
+							'He was suspected of dealing in the black market.\n '
+							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
+							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
+							'which ends up being an incredibly poor decision.\n '
+							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
+							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
+							'Do you have any additional thoughts on the characters?`': {
+								# don't really care about what the user says here
+								'error': {
+									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
+									'She had the best intentions and treated the couple\'s children like her own.\n '
+									'Due to a the poor decision of taking the children across the border, '
+									'she competely ruined her life and was treated like a criminal.\n '
+									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
+									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
+										'[{yes, of course, alright, ok}]': {
+											'`Sounds good`': 'clothing_transition'
+										},
+										'[{no, I\'m good, I am good, don\'t, do not}]' :{
+											'It was good talking with you': 'end'
+										}
+									}
+								}
+							}
+						}
+					},
+					# the user's rating for the move was neutral
+					'#IF($USER_RATING=neutral)`Understandable. '
+					'Personally, I felt the movie is pretty good overall. '
+					'Only thing is, the Japan plotline feels a bit forced into the whole plot. '
+					'What are your thoughts on some of the themes or messages in the movie?`': {
+						# don't really care what the user says here
+						'error': {
+							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
+							'can lead to misunderstandings that lead to severe consequeces.\n '
+							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
+							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
+							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
+							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
+							'He was suspected of dealing in the black market.\n '
+							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
+							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
+							'which ends up being an incredibly poor decision.\n '
+							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
+							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
+							'Do you have any additional thoughts on the characters?`': {
+								# don't really care about what the user says here
+								'error': {
+									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
+									'She had the best intentions and treated the couple\'s children like her own.\n '
+									'Due to a the poor decision of taking the children across the border, '
+									'she competely ruined her life and was treated like a criminal.\n '
+									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
+									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
+										'[{yes, of course, alright, ok}]': {
+											'`Sounds good`': 'clothing_transition'
+										},
+										'[{no, I\'m good, I am good, don\'t, do not}]' :{
+											'It was good talking with you': 'end'
+										}
+									}
+								}
+							}
+						}
+					},
+					# the user's rating for the move was negative
+					'#IF($USER_RATING=negative) `I personally thought Babel is a decent movie. '
+					'I don\'t know if it deserves such a harsh review.\n '
+					'What are your thoughts on some of the themes or messages in the movie?`': {
+						'error': {
+							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
+							'can lead to misunderstandings that lead to severe consequeces.\n '
+							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
+							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
+							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
+							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
+							'He was suspected of dealing in the black market.\n '
+							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
+							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
+							'which ends up being an incredibly poor decision.\n '
+							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
+							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
+							'Do you have any additional thoughts on the characters?`': {
+								# don't really care about what the user says here
+								'error': {
+									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
+									'She had the best intentions and treated the couple\'s children like her own.\n '
+									'Due to a the poor decision of taking the children across the border, '
+									'she competely ruined her life and was treated like a criminal.\n '
+									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
+									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
+										'[{yes, of course, alright, ok}]': {
+											'`Sounds good`': 'clothing_transition'
+										},
+										'[{no, I\'m good, I am good, don\'t, do not}]' :{
+											'It was good talking with you': 'end'
+										}
+									}
+								}
+							}
+						}
+					},
+					'`Sorry, I was not able to understand you. Let\'s try this again.`': {
+						'state': 'USER_RATING',
+						'score': 0.1
+					}
+				},
+				# the user has NOT watched the film
+				'#IF($WATCH_STATUS=no) `Babel is a psychological drama.\n '
+				'An unintentional shooting incident connects four groups of people from different countries:\n '
+				'a Japanese father and his teen daughter, a Moroccan goatherd family, a Mexican nanny, and an American couple '
+				'(Brad Pitt and Cate Blanchett).\n All of these characters run into problems due to barriers in communication '
+				'due to factors such as cultural and lanuage differences.`': {
+					# don't really care what the user says here
+					'error': {
+						'`I believe this is a movie worth watching. Would you like to go back and learn more about clothes?`': {
+							'[{yes, of course, alright, ok}]': {
+								'`Sounds good`': 'clothing_transition'
+							},
+							'[{no, I\'m good, I am good, don\'t, do not}]': {
+								'It was good talking with you': 'end'
+							}
+						}
+					}
+				},
+				'`Sorry, I was not able to understand you. Let\'s try this again.`': {
+					'state': 'babble_transition',
+					'score': 0.1
+				}
+			}
+		}
 	}
 
 
@@ -1403,6 +1557,11 @@ def main_dialogue() -> DialogueFlow:
 		'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
 		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
 		'GET_CURR_OUTFIT': MacroSaveOutfit(),
+		# openai_macros.py -- recommendation macros
+		'REC_CLOTHING': openai_macros.MacroGPTRecommend(),
+		'GET_FEEDBACK': openai_macros.MacroGetFeedbackSentiment(),
+		'REC_AFTER_FEEDBACK': openai_macros.MacroGPTNegativeFeedbackRecommend(),
+		'REC_AGAIN': openai_macros.MacroGPTRecommendAfterPositiveFeedback(),
 	}
 
 	# ============================================
