@@ -57,7 +57,7 @@ class MacroGetName(Macro):
 
 # depending on if the user is a returner or a new users
 # a different message will appear
-# also creates user dictionary
+# if new user creates new user dictionary
 class MacroWelcomeMessage(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -191,7 +191,6 @@ class MacroOccupationResponse(Macro):
 		'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # saves the user's hobbies
 class MacroSaveHobby(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -213,7 +212,6 @@ class MacroSaveHobby(Macro):
 		print(users_dictionary)
 
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's favourite colours 
 class MacroSaveFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -249,7 +247,6 @@ class MacroSaveFavoriteColor(Macro):
 		print(users_dictionary)
 
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
 # save the user's not favourite colours
 class MacroSaveNotFavoriteColor(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -282,7 +279,7 @@ class MacroSaveNotFavoriteColor(Macro):
 		print(users_dictionary)
 
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
+# save the user's favourite styles
 class MacroSaveStyle(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -315,37 +312,118 @@ class MacroSaveStyle(Macro):
 		print(users_dictionary)
 
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
-# FIXME: saves the user's favourite clothing items
+# saves the user's favourite clothing items
 class MacroSaveFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
-# TODO: saves the user's not favourite clothing items
+		# get the user's clothing item
+		user_fav_item = str(vars['USER_FAV_CLOTHING_ITEM'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's favourite cltohes list
+		user_nested_list = user_nested_dictionary['fav_clothes_list']
+
+		# append the clothing item to the list
+		user_nested_list.append(user_fav_item)
+
+		print(users_dictionary)
+
+
+# saves the user's not favourite clothing items
 class MacroSaveNotFavoriteClothing(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
 
-# TODO: make sure the there are no duplicate hobbies; check before adding to list
-# TODO: saves the user's current outfit
+		# get the user's clothing item from the 'clothing_items_ontology.json'
+		user_not_fav_item = str(vars['USER_NOT_FAV_CLOTHING_ITEM'])
+
+		# access the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's not favorite clothes list
+		user_nested_list = user_nested_dictionary['not_fav_clothes_list']
+
+		# append the clothing item name to the list
+		user_nested_list.append(user_not_fav_item)
+
+		print(users_dictionary)
+
+
+
+# saves the user's current outfit
 class MacroSaveOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
 		global current_user
+		global styles_df
 
-		print(ngrams)
-		print(vars)
-		print(args)
+		# get the user’s current clothing item
+		user_item = str(vars['USER_CURR_ITEM'])
+		print('user item: ' + user_item)
 
-		return "hello"
+		# if the user is wearing nothing or something similar to nothing, just exit
+		if user_item == '':
+			return
+
+
+		# search the dataframe (i.e.: csv file) for the clothing item
+		# — returns a dataframe with the row of the clothing item
+		df_results = styles_df.loc[styles_df['Clothing'] == user_item]
+
+		# get the index of the row
+		curr_item_index = list(df_results.index.values)[0]
+
+		# get the clothing item
+		clothing_item = df_results['Clothing'][curr_item_index]
+
+		# get the item’s category
+		clothing_category = df_results['Category'][curr_item_index]
+
+		# get the item’s style
+		clothing_style = df_results['Style'][curr_item_index]
+
+		# print(str(curr_item_index) + " " + str(clothing_item) + " " + str(clothing_category) + " " + str(clothing_style))
+
+		# access the user’s dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user’s current outfit dictionary
+		user_nested_current_outfit_dictionary = user_nested_dictionary['current_outfit_dict']
+		
+		# if the clothing item is already in the dictionary, just exit
+		for item in user_nested_current_outfit_dictionary:
+			# for each clothing_item  (=item) in user_nested_current_outfit_dictionary
+			nested_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
+			# if the item is already in the dictionary
+			if nested_item == user_item:
+				# just exit
+				return
+
+		# else, add the item to the dicionary
+		# get the size of the current outfit dictionary
+		dict_index = len(user_nested_current_outfit_dictionary)
+
+		# add +1 to index, to start at 1
+		dict_index += 1
+		print('current outfit dictionary size: ' + str(dict_index))
+
+		# add the clothing item, category, and style to the user's current outfit dictinoary
+		user_nested_current_outfit_dictionary[dict_index] = dict(
+			clothing_item=str(clothing_item),
+			clothing_category=str(clothing_category),
+			clothing_style=str(clothing_style)
+		)
+
+		print(user_nested_current_outfit_dictionary)
 
 
 
-# pickle
-#  functions ============================================
+# pickle functions ============================================
 
 def save(df: DialogueFlow, varfile: str):
 	global users_dictionary
@@ -384,7 +462,7 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'choice_transition'
+				'#RETURN_WELCOME_MESG': 'get_current_top_outfit_transition'
 			}
 		}
 	}
@@ -1032,6 +1110,8 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
+# FIXME: change to style onology?
 	# -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
@@ -1039,13 +1119,13 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(basics)]': {
 				'#GET_FAV_CLOTHING`The necessities are important! I\'ll admit I\'m honestly quite the basic girl myself lol.\n `': 'get_not_fav_clothing_transition'
 			},
-			'[$USER_FAV_CLOTHING=#ONT(dressy)]': {
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(dressy)]': {
 				'#GET_FAV_CLOTHING`I like to dress up too! In my opinion, being overdressed is always best.\n `': 'get_fav_clothing_transition'
 			},
-			'[$USER_FAV_CLOTHING=#ONT(casual)]': {
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(casual)]': {
 				'#GET_FAV_CLOTHING`Casual\'s nice, but I\'m personally an overdresser. The grocery store is my runway!\n `': 'get_not_fav_clothing_transition'
 			},
-			'[$USER_FAV_CLOTHING=#ONT(outerwear)]': {
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(outerwear)]': {
 				'#GET_FAV_CLOTHING`I don\'t typically wear a lot of coats and jackets and stuff because in Atlanta it\'s usually warm here!\n `': 'get_not_fav_clothing_transition'
 			},
 			'error': {
@@ -1055,20 +1135,21 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
+# FIXME: change to style onology?
 	# -- get user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
 		'`What are some clothing items that you try to avoid?`': {
-			'[$USER_NOT_FAV_CLOTHING=#ONT(basics)]': {
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(basics)]': {
 				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'get_current_top_outfit_transition'
 			},
-			'[$USER_NOT_FAV_CLOTHING=#ONT(dressy)]': {
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(dressy)]': {
 				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'get_current_top_outfit_transition'
 			},
-			'[$USER_NOT_FAV_CLOTHING=#ONT(casual)]': {
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
 				'#GET_NOT_FAV_CLOTHING`I\'m glad that we\'re on the same page. Casual is boring.\n `': 'get_current_top_outfit_transition'
 			},
-			'[$USER_NOT_FAV_CLOTHING=#ONT(outerwear)]': {
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(outerwear)]': {
 				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'get_current_top_outfit_transition'
 			},
 			'error': {
@@ -1082,33 +1163,39 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the top the user is wearing
 	get_current_top_outfit_transition = {
 		'state': 'get_current_top_outfit_transition',
-		'`What are you currently wearing?`': {
-			'[$USER_CURR_TOP=#ONT(sporty)]': {
+		'`What top are you currently wearing?`': {
+			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(bohemian)]': {
+			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(grunge)]': {
+			'[$USER_CURR_ITEM=#ONT(grunge)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(preppy)]': {
+			'[$USER_CURR_ITEM=#ONT(preppy)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(punk)]': {
+			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(streetwear)]': {
+			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(classic)]': {
+			'[$USER_CURR_ITEM=#ONT(classic)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(casual)]': {
+			'[$USER_CURR_ITEM=#ONT(casual)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			'[$USER_CURR_TOP=#ONT(ethnic)]': {
+			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+			},
+			# TODO: add more words that are similar to nothing, or have the same meaning
+			# FIXME: what's up with the extra space? Try to remove.
+			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
+			'<nothing>': {
+				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_bottoms_transition'
 			},
 			'error': {
 				'`I\'m not sure I understand.`': 'get_current_top_transition'
@@ -1122,32 +1209,37 @@ def main_dialogue() -> DialogueFlow:
 	get_current_bottoms_transition = {
 		'state': 'get_current_bottoms_transition',
 		'`What bottoms are you currently wearing?`': {
-			'[$USER_CURR_BOTTOM=#ONT(sporty)]': {
+			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(bohemian)]': {
+			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(grunge)]': {
+			'[$USER_CURR_ITEM=#ONT(grunge)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(preppy)]': {
+			'[$USER_CURR_ITEM=#ONT(preppy)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(punk)]': {
+			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(streetwear)]': {
+			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(classic)]': {
+			'[$USER_CURR_ITEM=#ONT(classic)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(casual)]': {
+			'[$USER_CURR_ITEM=#ONT(casual)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			'[$USER_CURR_BOTTOM=#ONT(ethnic)]': {
+			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+			},
+			# TODO: add more words that are similar to nothing, or have the same meaning
+			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
+			'<nothing>': {
+				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_coat_transition'
 			},
 			'error': {
 				'`I\'m not sure I understand.`': 'get_current_bottoms_transition'
@@ -1157,36 +1249,41 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- get the user's current outfit #3
-	# -- get the coat the user is wearing
+	# -- get the outerwear the user is wearing
 	get_current_coat_transition = {
 		'state': 'get_current_coat_transition',
-		'`What coat are you currently wearing?`': {
-			'[$USER_CURR_COAT=#ONT(sporty)]': {
+		'`What coat or outerwear are you currently wearing?`': {
+			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(bohemian)]': {
+			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(grunge)]': {
+			'[$USER_CURR_ITEM=#ONT(grunge)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(preppy)]': {
+			'[$USER_CURR_ITEM=#ONT(preppy)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(punk)]': {
+			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(streetwear)]': {
+			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(classic)]': {
+			'[$USER_CURR_ITEM=#ONT(classic)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(casual)]': {
+			'[$USER_CURR_ITEM=#ONT(casual)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
 			},
-			'[$USER_CURR_COAT=#ONT(ethnic)]': {
+			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+			},
+			# TODO: add more words that are similar to nothing, or have the same meaning
+			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
+			'<nothing>': {
+				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_shoes_transition'
 			},
 			'error': {
 				'`I\'m not sure I understand.`': 'get_current_coat_transition'
@@ -1200,32 +1297,37 @@ def main_dialogue() -> DialogueFlow:
 	get_current_shoes_transition = {
 		'state': 'get_current_shoes_transition',
 		'`What shoes are you currently wearing?`': {
-			'[$USER_CURR_SHOES=#ONT(sporty)]': {
+			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(bohemian)]': {
+			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(grunge)]': {
+			'[$USER_CURR_ITEM=#ONT(grunge)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(preppy)]': {
+			'[$USER_CURR_ITEM=#ONT(preppy)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(punk)]': {
+			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(streetwear)]': {
+			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(classic)]': {
+			'[$USER_CURR_ITEM=#ONT(classic)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(casual)]': {
+			'[$USER_CURR_ITEM=#ONT(casual)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
 			},
-			'[$USER_CURR_SHOES=#ONT(ethnic)]': {
+			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+			},
+			# TODO: add more words that are similar to nothing, or have the same meaning
+			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
+			'<nothing>': {
+				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_accessory_transition'
 			},
 			'error': {
 				'`I\'m not sure I understand.`': 'get_current_shoes_transition'
@@ -1236,42 +1338,57 @@ def main_dialogue() -> DialogueFlow:
 
 	# -- get the user's current outfit #5
 	# -- get any accessories the user is currently wearing
-	# TODO: make this loop back onto itself so that we can get about 3 accessories --> maybe implement for hobbies and styles too
 	get_current_accessory_transition = {
 		'state': 'get_current_accessory_transition',
 		'`What accessory are you currently wearing?`': {
 			'[$USER_CURR_ACCSRY=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'end'
+				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+			},
+			# TODO: add more words that are similar to nothing, or have the same meaning
+			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
+			'<nothing>': {
+				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
 			},
 			'error': {
 				'`I\'m not sure I understand.`': 'get_current_accessory_transition'
 			}
 		}
 	}
+
+
+	# TODO: maybe do the same thing for hobbies, favourite colour, and style?
+	choice_acessory_transition = {
+		'state': 'choice_acessory_transition',
+		'`Are you wearing any more accessories?`': {
+			'<yes>': 'get_current_accessory_transition',
+			'<no>': 'end'
+		}
+	}
+
 
 	# macro references ============================================
 	macros = {
@@ -1340,6 +1457,11 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(get_current_coat_transition)
 	df.load_transitions(get_current_shoes_transition)
 	df.load_transitions(get_current_accessory_transition)
+
+	# ask if the user is wearing any more accessories
+	# if yes, double back to get_current_accessory_transition
+	# if no, move on to next transition
+	df.load_transitions(choice_acessory_transition)
 
 	df.add_macros(macros)
 
