@@ -75,12 +75,12 @@ class MacroWelcomeMessage(Macro):
 
 			users_dictionary[current_user] = dict(
 				name=str(current_user.capitalize()),
-				age=15,
-				occupation="salesman",
-				hobbies_list=['baseball','hiking','surfing'],
-				fav_colors_list=['blue','black','green'],
+				age=0,
+				occupation="",
+				hobbies_list=[],
+				fav_colors_list=[],
 				not_fav_colors_list=[],
-				style_list=['sporty','casual','preppy'],
+				style_list=[],
 				fav_clothes_list=[],
 				not_fav_clothes_list=[],
 				current_outfit_dict={}
@@ -345,7 +345,7 @@ class MacroSaveOutfit(Macro):
 def recommendClothing(interest, color, style):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[
+        messs=[
                 {"role": "system", "content": "You are a chatbot"},
                 {"role": "user", "content": "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" + style + ". Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."},
             ]
