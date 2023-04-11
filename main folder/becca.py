@@ -1293,19 +1293,37 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_not_fav_clothing_transition',
 		'`What are some clothing items that you try to avoid?`': {
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(basics)]': {
-				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'get_current_top_outfit_transition'
+				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(dressy)]': {
-				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'get_current_top_outfit_transition'
+				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
 				'#GET_NOT_FAV_CLOTHING`I\'m glad that we\'re on the same page. Casual is boring.\n `': 'get_current_top_outfit_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(outerwear)]': {
-				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'get_current_top_outfit_transition'
+				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'choice_recommendation_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_not_fav_clothing_transition'
+			}
+		}
+	}
+
+
+	# -- ask if the user would like to be recommended an outfit 
+	# or help getting styled with an outfit
+	choice_recommendation_transition = {
+		'state': 'choice_recommendation_transition',
+		'`Alright, now that I\'ve collected all this information about you.\n '
+		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
+			'{<recommend>, <outfit>}': {
+				# TODO: Insert whole outfit recommendation here
+				'`Alright, I can recommend you an outfit! I think you\'d look good in....`': 'end'
+			},
+			'[styling, advice]': {
+				'`Alright, I can help you style your current outfit!\n '
+				'Before I can do that though, I gotta know what you\'re wearing!\n So, `': 'get_current_top_outfit_transition'
 			}
 		}
 	}
@@ -1315,7 +1333,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the top the user is wearing
 	get_current_top_outfit_transition = {
 		'state': 'get_current_top_outfit_transition',
-		'`What top are you currently wearing?`': {
+		'`what top are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
@@ -1532,13 +1550,20 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# TODO: maybe do the same thing for hobbies, favourite colour, and style?
 	choice_acessory_transition = {
 		'state': 'choice_acessory_transition',
 		'`Are you wearing any more accessories?`': {
 			'<yes>': 'get_current_accessory_transition',
-			'<no>': 'end'
+			'<no>': 'return_current_outfit_advice_transition'
 		}
+	}
+
+
+	# -- given the user's current oufit, recommend a clothing item that would go with it
+	return_current_outfit_advice_transition = {
+		'state': 'return_current_outfit_advice_transition',
+		# TODO: recommend matching item here
+		'`Alright, given the information I\'ve recived about what you\'re currently wearing, I think...`': 'end'
 	}
 
 
@@ -1619,6 +1644,14 @@ def main_dialogue() -> DialogueFlow:
 	# if yes, double back to get_current_accessory_transition
 	# if no, move on to next transition
 	df.load_transitions(choice_acessory_transition)
+
+	# ask if the user whats to get recommended a whole outfit
+	# or if they want styling advice for their current outfit
+	# if yes whole outfit, return whole outfit recommendation
+	df.load_transitions(choice_recommendation_transition)
+	
+	# return, recommednation for user's current outift
+	df.load_transitions(return_current_outfit_advice_transition)
 
 	df.add_macros(macros)
 
