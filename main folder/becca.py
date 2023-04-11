@@ -354,7 +354,6 @@ class MacroSaveNotFavoriteClothing(Macro):
 		print(users_dictionary)
 
 
-
 # saves the user's current outfit
 class MacroSaveOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -420,7 +419,6 @@ class MacroSaveOutfit(Macro):
 		)
 
 		print(user_nested_current_outfit_dictionary)
-
 
 
 # pickle functions ============================================
