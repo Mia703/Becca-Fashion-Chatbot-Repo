@@ -92,20 +92,14 @@ class MacroWelcomeMessage(Macro):
 				not_fav_clothes_list=[],
 				current_outfit_dict={}
 			)
-
+			
 			print(users_dictionary)
-
-			return str('Nice to meet you ' + current_user.capitalize() + 
-			'. My name is Becca! '
-			'I\'m a personal stylist bot created just for you.\n '
-			'I\'m here to help you look good and feel good about yourself and your clothes.\n '
-			'And just an F.Y.I. the information you share with me will stay with me. \U0001F92B\n '
-			'So, let\'s get started!')
+			return 'Nice to meet you.'
 
 		# else, the user is already in the dictionary -- returning user
 		else:
 			print("A returning user: " + current_user)
-			return str('Welcome back ' + current_user.capitalize() + '!\n ')
+			return 'Welcome back.'
 
 
 # saves the user's age
@@ -134,8 +128,6 @@ class MacroSaveAge(Macro):
 		users_dictionary[current_user]['age'] = int(age)
 		
 		# save the user's age in a var for dialogue
-		# if needed
-		# TODO: maybe remove? not really using...
 		vars['USER_AGE'] = age
 
 		return True
@@ -430,9 +422,9 @@ class MacroSaveOutfit(Macro):
 
 		print(user_nested_current_outfit_dictionary)
 
-# RECOMMENDATION FUNCTIONS & MACROS ============================================
 
-# recommendation functions ============================================
+# recommendation functions and macros ============================================
+
 # asks the API to recommend a clothing item
 def recommendClothing(interest, color, style):
 
@@ -649,29 +641,54 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				# '#RETURN_WELCOME_MESG': 'choice_transition'
-				'#RETURN_WELCOME_MESG': 'choice_recommendation_transition'
+				# TODO: if the user is a returning user, have them jump to 'return_user_transition'
+				# if the user is a new user, have them jump to 'new_user_transition'
+				'#RETURN_WELCOME_MESG': 'end'
+			}
+		}
+	}
+	
+	return_user_transition = {
+		'state': 'return_user_transition',
+		'`Welcome back`$FIRSTNAME`!`': {
+			'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
+				'<babble>': {
+					# TODO: change back when done with babble transition
+					# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+					'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+				},
+				# Let's talk about clothes
+				'[{let, lets, wanna, want}, clothes]': {
+					'`Okay, we can talk about clothes!\n`': 'end'
+				},
+				'error': {
+					'`Sorry, I don\'t understand.`': 'choice_transition'
+				}
 			}
 		}
 	}
 
 
-	# do you wanna talk about the movie or clothes?
-	choice_transition = {
-		'state': 'choice_transition',
-		'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
-			# Let's talk about the movie Babble
-			'<babble>': {
-				# TODO: change back when done with babble transition
-				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
-				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
-			},
-			# Let's talk about clothes
-			'[{let, lets, wanna, want}, clothes]': {
-				'`Okay, we can talk about clothes!\n`': 'clothing_transition'
-			},
-			'error': {
-				'`Sorry, I don\'t understand.`': 'choice_transition'
+	new_user_transition = {
+		'state': 'new_user_transition',
+		'`Nice to meet you`$FIRSTNAME`. My name is Becca! '
+		'I\'m your personal stylist bot created just for you.\n '
+		'I\'m here to help you look good and feel good about yourself and your clothes.\n '
+		'And just an F.Y.I the information you share with me will stay with me. \U0001F92B\n '
+		'So, let\'s get started!`': {
+			'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
+				'<babble>': {
+					# TODO: change back when done with babble transition
+					# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+					'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+				},
+				# Let's talk about clothes
+				'[{let, lets, wanna, want}, clothes]': {
+					'`Okay, we can talk about clothes!\n`': 'end'
+				},
+				'error': {
+					'`Sorry, I don\'t understand.`': 'clothing_transition'
+				}
 			}
 		}
 	}
@@ -1782,8 +1799,11 @@ def main_dialogue() -> DialogueFlow:
 	df.knowledge_base().load_json_file('./resources/clothing_items_ontology.json')
 
 	df.load_transitions(introduction_transition)
+	
+	df.load_transitions(return_user_transition)
+	df.load_transitions(new_user_transition)
 
-	df.load_transitions(choice_transition)
+	# df.load_transitions(choice_transition)
 	df.load_transitions(babble_transition)
 
 	df.load_transitions(clothing_transition)
