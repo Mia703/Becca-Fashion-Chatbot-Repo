@@ -7,7 +7,7 @@ import pandas as pd
 # API ============================================
 import openai
 import nltk
-nltk.download('omw-1.4')
+# nltk.download('omw-1.4')
 # python files ============================================
 from becca import users_dictionary, current_user, color_names_df, styles_df
 # TODO: api_file.py is ignored by github for privacy reasons
@@ -20,6 +20,10 @@ from emora_stdm import Macro, Ngrams, DialogueFlow
 
 # variables ============================================
 openai.api_key = API_KEY
+
+
+with open('users-pickle.pkl', 'rb') as handle:
+    users_dictionary = pickle.load(handle)
 
 # functions ============================================
 
@@ -95,7 +99,7 @@ class MacroGPTNegativeFeedbackRecommend(Macro):
         # select the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
 
-        # save the user's hobbies, styles, and fav colours list
+        # access the user's hobbies, styles, and fav colours list
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_style_list = user_nested_dictionary['style_list']
         user_colors_list = user_nested_dictionary['fav_colors_list']
@@ -142,7 +146,7 @@ class MacroGPTRecommendAfterPositiveFeedback(Macro):
         # select the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
 
-        # save the user's hobbies, styles, and fav colours list
+        # access the user's hobbies, styles, and fav colours list
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_style_list = user_nested_dictionary['style_list']
         user_colors_list = user_nested_dictionary['fav_colors_list']
@@ -178,10 +182,10 @@ class MacroGPTRecommend(Macro):
         # select the user's dictinary
         user_nested_dictionary = users_dictionary[current_user]
 
-        # save the user's hobbies, styles, and fav colours list
+        # access the user's hobbies, styles, and fav colours list
         user_hobbies_list = user_nested_dictionary['hobbies_list']
-        user_style_list = user_nested_dictionary['style_list']
         user_colors_list = user_nested_dictionary['fav_colors_list']
+        user_style_list = user_nested_dictionary['style_list']
 
         # randomly select an item from each list
         randInt1 = random.randint(0, len(user_hobbies_list)-1)
@@ -198,3 +202,10 @@ class MacroGPTRecommend(Macro):
         lastRec = rec
 
         return "I think you'd really like this " + rec + "."
+
+class MacroCheck(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        # FIXME: imports everything from the user's dict but its not in the correct format, why?
+        pretty = json.dumps(users_dictionary, indent=4)
+        print(pretty)
+        return

@@ -471,7 +471,8 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				'#RETURN_WELCOME_MESG': 'choice_transition'
+				# '#RETURN_WELCOME_MESG': 'choice_transition'
+				'#RETURN_WELCOME_MESG': 'choice_recommendation_transition'
 			}
 		}
 	}
@@ -1322,7 +1323,7 @@ def main_dialogue() -> DialogueFlow:
 		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
 			'{<recommend>, <outfit>}': {
 				# TODO: Insert whole outfit recommendation here
-				'`Alright, I can recommend you an outfit! I think you\'d look good in....`': 'end'
+				'`Alright, I can recommend you an outfit!`#REC_CLOTHING': 'end'
 			},
 			'[styling, advice]': {
 				'`Alright, I can help you style your current outfit!\n '
@@ -1586,11 +1587,11 @@ def main_dialogue() -> DialogueFlow:
 		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
 		'GET_CURR_OUTFIT': MacroSaveOutfit(),
 
-		# openai_macros.py -- recommendation macros
-		'REC_CLOTHING': openai_macros.MacroGPTRecommend(),
-		'GET_FEEDBACK': openai_macros.MacroGetFeedbackSentiment(),
-		'REC_AFTER_FEEDBACK': openai_macros.MacroGPTNegativeFeedbackRecommend(),
-		'REC_AGAIN': openai_macros.MacroGPTRecommendAfterPositiveFeedback(),
+		# macros from  openai_macros.py ============================================
+		'REC_CLOTHING': openai_macros.MacroCheck(),
+		# 'DET_FEEDBACK': openai_macros.MacroGetFeedbackSentiment(),
+		# 'REC_AFTER_N_FEEDBACK': openai_macros.MacroGPTNegativeFeedbackRecommend(),
+		# 'REC_AFTER_P_FEEDBACK': openai_macros.MacroGPTRecommendAfterPositiveFeedback(),
 	}
 
 	# ============================================
