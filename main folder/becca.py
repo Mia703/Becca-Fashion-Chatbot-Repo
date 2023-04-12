@@ -4,12 +4,15 @@ import re
 import random
 import json
 import pandas as pd
+# API ============================================
 import openai
+import nltk
+nltk.download('omw-1.4')
 # python files ============================================
-# api_file.py is ignored by github for privacy reasons
-import api_file
-import babble_macros
+# TODO: api_file.py is ignored by github for privacy reasons
+from api_file import API_KEY
 import openai_macros
+# import babble_macros
 # ============================================
 from typing import Dict, Any, List
 from collections import defaultdict
@@ -1582,6 +1585,7 @@ def main_dialogue() -> DialogueFlow:
 		'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
 		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
 		'GET_CURR_OUTFIT': MacroSaveOutfit(),
+
 		# openai_macros.py -- recommendation macros
 		'REC_CLOTHING': openai_macros.MacroGPTRecommend(),
 		'GET_FEEDBACK': openai_macros.MacroGetFeedbackSentiment(),
