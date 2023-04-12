@@ -119,45 +119,56 @@ class MacroGPTRecommend(Macro):
 
 
 def recommendClothing(interest, color, style):
-    response = openai.ChatCompletion.create(
+	prompt = "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" + style + ". Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."
+    
+	response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messs=[
-                {"role": "system", "content": "You are a chatbot"},
-                {"role": "user", "content": "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" + style + ". Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."},
-            ]
+        messages=[
+			{"role": "system", "content": "You are a chatbot"},
+			{"role": "user", "content": prompt },
+		]
     )
 
+	# FIXME: why is there an issue here?
     result = ''
     for choice in response.choices:
         result += choice.message.content
+
+	# result = response['choices'][0]['message']['content'].strip()
+	# return str(result)
 
     return result
 
 
 def recommendClothingAfterFeedback(interest, color, style, lastRec, feedback):
-    response = openai.ChatCompletion.create(
+	prompt = "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" +  style + ". This person gave the following feedback to your last recommendation of " + lastRec + ": " + feedback + "Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."
+    
+	response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
                 {"role": "system", "content": "You are a chatbot"},
-                {"role": "user", "content": "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" +  style + ". This person gave the following feedback to your last recommendation of " + lastRec + ": " + feedback + "Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."},
+                {"role": "user", "content": prompt},
             ]
     )
 
     result = ''
     for choice in response.choices:
         result += choice.message.content
+
+	# result = response['choices'][0]['message']['content'].strip()
+	# return str(result)
 
     return result
 
 
-
-
 def feedbackSentiment(feedback):
-    response = openai.ChatCompletion.create(
+	prompt = "You are a bot that determines if feedback is positive, nuetral, or negative. I just recommended a peice of clothing to a user. This is their response:" + feedback + "Is the sentiment of this response positive, negative, or neutral. Give a one word response. Do not put a period at the end of your response. Only say positive, negative, or neutral and say nothing else."
+    
+	response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
                 {"role": "system", "content": "You are a chatbot"},
-                {"role": "user", "content": "You are a bot that determines if feedback is positive, nuetral, or negative. I just recommended a peice of clothing to a user. This is their response:" + feedback + "Is the sentiment of this response positive, negative, or neutral. Give a one word response. Do not put a period at the end of your response. Only say positive, negative, or neutral and say nothing else."},
+                {"role": "user", "content": prompt},
             ]
     )
 
@@ -165,5 +176,8 @@ def feedbackSentiment(feedback):
     for choice in response.choices:
         result += choice.message.content
 
-    print(result)
+	# result = response['choices'][0]['message']['content'].strip()
+	# return str(result)
+
+	print(result)
     return result
