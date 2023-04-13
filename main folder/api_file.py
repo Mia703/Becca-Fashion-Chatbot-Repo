@@ -1,2 +1,2 @@
-# TODO: add to .gitignore later
-API_KEY = ''
+# TODO: HIDE
+API_KEY = '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'

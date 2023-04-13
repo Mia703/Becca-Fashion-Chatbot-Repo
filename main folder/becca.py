@@ -448,7 +448,7 @@ def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fa
 
 # done
 def returnUserFeedbackSentiment(feedback):
-	prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: ' + feedback + '. Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
+	prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
 
 	response = openai.ChatCompletion.create(
 		model='gpt-3.5-turbo',
@@ -461,7 +461,13 @@ def returnUserFeedbackSentiment(feedback):
 	)
 
 	result = response['choices'][0]['message']['content'].strip()
-	return str(result)
+
+	if result == "Negative" or result == "negative" or result == "Negative." or result == "negative.":
+		return 'negative'
+	elif result == "Positive" or result == "positive" or result == "Positive." or result == "positive.":
+		return 'positive'
+	else:
+		return 'neutral'
 
 
 # class MacroGPTNegativeFeedbackRecommend(Macro):
@@ -521,6 +527,8 @@ def returnUserFeedbackSentiment(feedback):
         # return "Here's my next recommendation: " + rec
 
 
+
+# done
 class MacroReturnFeedbackSentiment(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global user_feedback
@@ -531,13 +539,9 @@ class MacroReturnFeedbackSentiment(Macro):
 		# determine if the user's feedback is positive, neutral, or negative
 		user_sentiment = returnUserFeedbackSentiment(feedback=user_feedback)
 
-		if user_sentiment == 'Negative' or user_sentiment == 'negative' or user_sentiment == 'Negative.' or user_sentiment == 'negative.':
-			return 'negative'
-
-		elif user_sentiment == 'Positive' or user_sentiment == 'positive' or user_sentiment == 'Positive.' or user_sentiment == 'positive.':
-			return 'positive'
-		else:
-			return 'neutral'
+		# pass the sentiment to the variable
+		vars['USER_SENTIMENT'] = str(user_sentiment)
+		return True
 
 
 # class MacroGetFeedbackAfterFirst(Macro):
@@ -582,11 +586,11 @@ class MacroReturnFeedbackSentiment(Macro):
 
 # recommends an outfit to the user -- Done
 class MacroRecommendOutfit(Macro):
-    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global users_dictionary
-        global current_user
-        global styles_df
-        global last_recommendation
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+		global styles_df
+		global last_recommendation
 
 		# select the user's dictionary
 		user_nested_dictionary = users_dictionary[current_user]
@@ -699,6 +703,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# they are a returning user
+				# '#IF($RETURN_USER=yes)': 'return_user_transition',
 				'#IF($RETURN_USER=yes)': 'return_user_transition',
 				# they are a new user
 				'#IF($RETURN_USER=no)': 'new_user_transition'
@@ -1605,7 +1610,12 @@ def main_dialogue() -> DialogueFlow:
 		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
 			'{<recommend>, <outfit>}': {
 				'`Alright!`#REC_OUTFIT`What do you think?`': {
-					'#GET_FEEDBACK': 'end'
+					'#GET_FEEDBACK': {
+						# TODO: fill out these statements
+						'#IF($USER_SENTIMENT=positive)`I\'m happy you like it!`': 'end',
+						'#IF($USER_SENTIMENT=neutral)`Cool....`': 'end',
+						'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like it. Would you like me to recommend you another outfit?`': 'end'
+					}
 				}
 			},
 			'[styling, advice]': {
