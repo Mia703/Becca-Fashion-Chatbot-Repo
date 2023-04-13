@@ -503,6 +503,49 @@ class MacroRecommendOutfitAfterFeedback (Macro):
 
 		return 'I think you might like this recommendation a little bit better, I would recommend ' + outfit_recommendation.lower()
 
+
+# recommens a piece of clothing to match an outfit
+class MacroRecommentClothingItem(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+		global styles_df
+		global last_recommendation
+
+		# select the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's current outfit dictionary
+		user_nested_current_outfit_dictionary = user_nested_dictionary['current_outfit_dict']
+
+		clothing_item_sentence = ''
+		# iterate through the user's current outfit dictionary
+		for item in user_nested_current_outfit_dictionary:
+			clothing_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
+			clothing_item_style = user_nested_current_outfit_dictionary[item].get('clothing_style')
+
+			# if not the last item in the list, append with comma
+			if item == len(user_nested_current_outfit_dictionary):
+				clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item)
+			else:
+				clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item) + ', '
+
+		print(clothing_item_sentence)
+
+		# call function
+		# outfit_recommendation = recommendOutfit(
+		# 	hobby=user_hobbies_list[random_hobby_index], 
+		# 	fav_color=user_fav_colors_list[random_fav_color_index], 
+		# 	not_fav_color=user_not_fav_colors_list[random_not_fav_color_index], 
+		# 	user_style=user_style_list[random_style_index], 
+		# 	fav_item=user_fav_clothes_list[random_fav_clothes_index], 
+		# 	not_fav_item=user_not_fav_clothes_list[random_not_fav_clothes_index]
+		# )
+
+		# last_recommendation = outfit_recommendation
+
+		# return 'I would recommend ' + outfit_recommendation.lower()
+
 # pickle functions ============================================
 
 def save(df: DialogueFlow, varfile: str):
@@ -632,6 +675,25 @@ def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fa
 	return str(result)
 
 
+def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
+	# prompt = 'Recommend an outfit for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
+	prompt = ''
+	# recommend a ...
+	response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=200,
+        messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt},
+		]
+    )
+	
+	result = response['choices'][0]['message']['content'].strip()
+	return str(result)
+
+# def recommendClothingItemAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback, sentiment):
+
 # dialogue ============================================
 def main_dialogue() -> DialogueFlow:
 	introduction_transition = {
@@ -640,7 +702,7 @@ def main_dialogue() -> DialogueFlow:
 			'#GET_NAME': {
 				# they are a returning user
 				# '#IF($RETURN_USER=yes)': 'return_user_transition',
-				'#IF($RETURN_USER=yes)': 'choice_recommendation_transition',
+				'#IF($RETURN_USER=yes)': 'return_current_outfit_advice_transition',
 				# they are a new user
 				'#IF($RETURN_USER=no)': 'new_user_transition'
 			}
@@ -852,7 +914,6 @@ def main_dialogue() -> DialogueFlow:
 		'`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
 		'To give you good recommendations, I need to get to know you first.\n '
 		'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n`': 'get_age_transition'
-		# TODO: if user is not a new user skip to recommendation transition -- THE FUTURE
 	}
 
 	
@@ -1554,7 +1615,7 @@ def main_dialogue() -> DialogueFlow:
 								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'end'
 							},
 							'no': {
-
+								'`Alright, I won\'t give you any more recommendations.`': 'end'
 							},
 							'error': {
 								'`Sorry, I don\'t understand.`': 'choice_recommendation_transition'
@@ -1805,7 +1866,7 @@ def main_dialogue() -> DialogueFlow:
 	return_current_outfit_advice_transition = {
 		'state': 'return_current_outfit_advice_transition',
 		# TODO: recommend matching item here
-		'`Alright, given the information I\'ve recived about what you\'re currently wearing, I think...`': 'end'
+		'`Alright, given the information I\'ve recived about what you\'re currently wearing, I think...`#REC_CLOTHING_ITEM': 'end'
 	}
 
 
@@ -1827,6 +1888,7 @@ def main_dialogue() -> DialogueFlow:
 		'REC_OUTFIT': MacroRecommendOutfit(),
 		'GET_FEEDBACK': MacroReturnFeedbackSentiment(),
 		'REC_OUTFIT_AF_FEEDBACK':MacroRecommendOutfitAfterFeedback(),
+		'REC_CLOTHING_ITEM': MacroRecommentClothingItem()
 
 	}
 
