@@ -395,196 +395,9 @@ class MacroSaveOutfit(Macro):
 		print(user_nested_current_outfit_dictionary)
 
 
-# recommendation functions and macros ============================================
+# recommendation macros ============================================
 
-# done
-def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
-	prompt = 'Recommend an outfit for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
-
-	response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-		temperature=0,
-		max_tokens=200,
-        messages=[
-			{'role': 'system', 'content': 'You are a chatbot'},
-			{'role': 'user', 'content': prompt},
-		]
-    )
-	
-	result = response['choices'][0]['message']['content'].strip()
-	return str(result)
-
-# done
-def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback):
-	prompt = 'Recommend a real clothing item for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and does\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback: ' + feedback + '. Put your response in a sentence. Don\'t explain.'
-
-	response = openai.ChatCompletion.create(
-		model='gpt-3.5-turbo',
-		temperature=0,
-		max_tokens=200,
-		messages=[
-			{'role': 'system', 'content': 'You are a chatbot'},
-			{'role': 'user', 'content': prompt},
-		]
-	)
-	
-	result = response['choices'][0]['message']['content'].strip()
-	return str(result)
-
-# def recommendClothingAfterGeneralFeedback(interest, color, style, lastRec, feedback):
-#     response = openai.ChatCompletion.create(
-#         model="gpt-3.5-turbo",
-#         messages=[
-#                 {"role": "system", "content": "You are a chatbot"},
-#                 {"role": "user", "content": "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" +  style + ". This was your last recommendation. " + lastRec + ". I asked what clothing item they would like me to recommend now and they said this: " + feedback + "Recommend the clothing item they requested. If they did not request a clothing item, use the interest, color, and style information I gave you to recommend. Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."},
-#             ]
-#     )
-
-#     result = ''
-#     for choice in response.choices:
-#         result += choice.message.content
-
-#     return result
-
-# done
-def returnUserFeedbackSentiment(feedback):
-	prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
-
-	response = openai.ChatCompletion.create(
-		model='gpt-3.5-turbo',
-		temperature=0,
-		max_tokens=200,
-		messages=[
-			{'role': 'system', 'content': 'You are a chatbot'},
-			{'role': 'user', 'content': prompt},
-		]
-	)
-
-	result = response['choices'][0]['message']['content'].strip()
-
-	if result == "Negative" or result == "negative" or result == "Negative." or result == "negative.":
-		return 'negative'
-	elif result == "Positive" or result == "positive" or result == "Positive." or result == "positive.":
-		return 'positive'
-	else:
-		return 'neutral'
-
-
-# class MacroGPTNegativeFeedbackRecommend(Macro):
-#     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-#         global users_dictionary
-#         global current_user
-#         global styles_df
-#         global lastRec
-#         # global randInt1
-#         # global randInt2
-#         # global randInt3
-#         # global feedback
-
-#         user_nested_dictionary = users_dictionary[current_user]
-
-#         user_hobbies_list = user_nested_dictionary['hobbies_list']
-#         user_style_list = user_nested_dictionary['style_list']
-#         user_colors_list = user_nested_dictionary['fav_colors_list']
-
-        # rec = recommendClothingAfterFeedback(
-		# 	interest=user_hobbies_list[randInt1],
-		# 	color=user_colors_list[randInt2],
-		# 	style=user_style_list[randInt3],
-		# 	lastRec = lastRec,
-		# 	feedback=feedback
-		# )
-
-        # lastRec = rec
-        # return "I think you might like this recommendation a little better: " + rec
-
-# class MacroGPTGeneralFeedbackRecommend(Macro):
-#     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-#         global users_dictionary
-#         global current_user
-#         global styles_df
-#         global lastRec
-#         global randInt1
-#         global randInt2
-#         global randInt3
-#         global feedback
-
-        # user_nested_dictionary = users_dictionary[current_user]
-
-        # user_hobbies_list = user_nested_dictionary['hobbies_list']
-        # user_style_list = user_nested_dictionary['style_list']
-        # user_colors_list = user_nested_dictionary['fav_colors_list']
-
-        # rec = recommendClothingAfterGeneralFeedback(
-		# 	interest=user_hobbies_list[randInt1],
-		# 	color=user_colors_list[randInt2],
-		# 	style=user_style_list[randInt3],
-		# 	lastRec = lastRec,
-		# 	feedback=feedback
-		# )
-
-        # lastRec = rec
-        # return "Here's my next recommendation: " + rec
-
-
-
-# done
-class MacroReturnFeedbackSentiment(Macro):
-	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-		global user_feedback
-
-		# save the user's feedback
-		user_feedback = ngrams.text()
-
-		# determine if the user's feedback is positive, neutral, or negative
-		user_sentiment = returnUserFeedbackSentiment(feedback=user_feedback)
-
-		# pass the sentiment to the variable
-		vars['USER_SENTIMENT'] = str(user_sentiment)
-		return True
-
-
-# class MacroGetFeedbackAfterFirst(Macro):
-#     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-#         global feedback
-
-#         feedback = ngrams.text()
-#         sentiment = feedbackSentiment(feedback)
-
-#         return True
-
-
-# class MacroGPTRecommendAfterPositiveFeedback(Macro):
-#     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-#         global users_dictionary
-#         global current_user
-#         global styles_df
-#         global lastRec
-#         global randInt1
-#         global randInt2
-#         global randInt3
-
-#         user_nested_dictionary = users_dictionary[current_user]
-
-#         user_hobbies_list = user_nested_dictionary['hobbies_list']
-#         user_style_list = user_nested_dictionary['style_list']
-#         user_colors_list = user_nested_dictionary['fav_colors_list']
-
-#         randInt1 = random.randint(0,len(user_hobbies_list)-1)
-#         randInt2 = random.randint(0, len(user_colors_list)-1)
-#         randInt3 = random.randint(0, len(user_style_list)-1)
-
-        # rec = recommendClothing(
-		# 	interest=user_hobbies_list[randInt1],
-		# 	color=user_colors_list[randInt2],
-		# 	style=user_style_list[randInt3]
-		# )
-
-        # lastRec = rec
-        # return "I also think you might like this " + rec
-
-
-# recommends an outfit to the user -- Done
+# recommends an outfit to the user
 class MacroRecommendOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -626,6 +439,69 @@ class MacroRecommendOutfit(Macro):
 		last_recommendation = outfit_recommendation
 
 		return 'I would recommend ' + outfit_recommendation.lower()
+
+
+# gets, saves, and returns the user's sentiments about their recommendation
+class MacroReturnFeedbackSentiment(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global user_feedback
+
+		# save the user's feedback
+		user_feedback = ngrams.text()
+
+		# determine if the user's feedback is positive, neutral, or negative
+		user_sentiment = returnUserFeedbackSentiment(feedback=user_feedback)
+
+		# pass the sentiment to the variable
+		vars['USER_SENTIMENT'] = str(user_sentiment)
+		return True
+
+
+# recommends an outfit to the user after their positive, neutral, or negative (= sentiment) & feedback
+class MacroRecommendOutfitAfterFeedback (Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
+		global styles_df
+		global last_recommendation
+		global user_feedback
+
+		# select the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
+
+		# access the user's lists
+		user_hobbies_list = user_nested_dictionary['hobbies_list']
+		user_fav_colors_list = user_nested_dictionary['fav_colors_list']
+		user_not_fav_colors_list = user_nested_dictionary['not_fav_colors_list']
+		user_style_list = user_nested_dictionary['style_list']
+		user_fav_clothes_list = user_nested_dictionary['fav_clothes_list']
+		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
+
+		# TODO: should there be a check here to make sure the list isn't empty
+		# an empty list causes an error
+		# randomly select an item from each list
+		random_hobby_index = random.randint(0, len(user_hobbies_list)-1)
+		random_fav_color_index = random.randint(0, len(user_fav_colors_list)-1)
+		random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list)-1)
+		random_style_index = random.randint(0, len(user_style_list)-1)
+		random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list)-1)
+		random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list)-1)
+
+		# call function
+		outfit_recommendation = recommendOutfitAfterFeedback(
+			hobby=user_hobbies_list[random_hobby_index],
+			fav_color=user_fav_colors_list[random_fav_color_index],
+			not_fav_color=user_not_fav_colors_list[random_not_fav_color_index],
+			user_style=user_style_list[random_style_index],
+			fav_item=user_fav_clothes_list[random_fav_clothes_index],
+			not_fav_item=user_not_fav_clothes_list[random_not_fav_clothes_index],
+			feedback=user_feedback,
+			sentiment= vars['USER_SENTIMENT']
+		)
+
+		last_recommendation = outfit_recommendation
+
+		return 'I think you might like this recommendation a little bit better, I would recommend ' + outfit_recommendation.lower()
 
 # pickle functions ============================================
 
@@ -696,6 +572,66 @@ def createUserCheck():
 		return 'yes'
 
 
+# recommens an outfit to the user
+def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
+	prompt = 'Recommend an outfit for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
+
+	response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=200,
+        messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt},
+		]
+    )
+	
+	result = response['choices'][0]['message']['content'].strip()
+	return str(result)
+
+
+# returns the user's feedback as a postivie, neutral, or negative (=sentiment)
+def returnUserFeedbackSentiment(feedback):
+	prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
+
+	response = openai.ChatCompletion.create(
+		model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=200,
+		messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt},
+		]
+	)
+
+	result = response['choices'][0]['message']['content'].strip()
+
+	if result == "Negative" or result == "negative" or result == "Negative." or result == "negative.":
+		return 'negative'
+	elif result == "Positive" or result == "positive" or result == "Positive." or result == "positive.":
+		return 'positive'
+	else:
+		return 'neutral'
+
+
+# recommends an outfit after the user's positive, neutral, or negative feedback
+def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback, sentiment):
+	prompt = 'Recommend a real clothing item for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and does\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following ' + sentiment + ' feedback: ' + feedback + '. Put your response in a sentence. Don\'t explain.'
+
+	response = openai.ChatCompletion.create(
+		model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=200,
+		messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt},
+		]
+	)
+	
+	result = response['choices'][0]['message']['content'].strip()
+	return str(result)
+
+
 # dialogue ============================================
 def main_dialogue() -> DialogueFlow:
 	introduction_transition = {
@@ -704,7 +640,7 @@ def main_dialogue() -> DialogueFlow:
 			'#GET_NAME': {
 				# they are a returning user
 				# '#IF($RETURN_USER=yes)': 'return_user_transition',
-				'#IF($RETURN_USER=yes)': 'return_user_transition',
+				'#IF($RETURN_USER=yes)': 'choice_recommendation_transition',
 				# they are a new user
 				'#IF($RETURN_USER=no)': 'new_user_transition'
 			}
@@ -1563,7 +1499,6 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-
 	# -- get user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
@@ -1614,7 +1549,17 @@ def main_dialogue() -> DialogueFlow:
 						# TODO: fill out these statements
 						'#IF($USER_SENTIMENT=positive)`I\'m happy you like it!`': 'end',
 						'#IF($USER_SENTIMENT=neutral)`Cool....`': 'end',
-						'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like it. Would you like me to recommend you another outfit?`': 'end'
+						'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like it. Would you like me to recommend you another outfit?`': {
+							'yes': {
+								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'end'
+							},
+							'no': {
+
+							},
+							'error': {
+								'`Sorry, I don\'t understand.`': 'choice_recommendation_transition'
+							}
+						}
 					}
 				}
 			},
@@ -1881,6 +1826,7 @@ def main_dialogue() -> DialogueFlow:
 		# macros from  openai_macros.py ============================================
 		'REC_OUTFIT': MacroRecommendOutfit(),
 		'GET_FEEDBACK': MacroReturnFeedbackSentiment(),
+		'REC_OUTFIT_AF_FEEDBACK':MacroRecommendOutfitAfterFeedback(),
 
 	}
 
