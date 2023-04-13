@@ -62,44 +62,10 @@ class MacroGetName(Macro):
 		vars['TITLE'] = title
 		vars['FIRSTNAME'] = firstname.capitalize()
 		vars['LASTNAME'] = lastname
+
+		vars['RETURN_USER'] = createUserCheck()
+
 		return True
-
-
-# depending on if the user is a returner or a new users
-# a different message will appear
-# if new user creates new user dictionary
-class MacroWelcomeMessage(Macro):
-	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-		global users_dictionary
-		global current_user
-
-		print("The current user is " + current_user)
-
-		# if the user is not already in the dictionary
-		# create a dictionary with the user's name
-		if users_dictionary.get(current_user) is None:
-			print("Creating a new user " + current_user)
-
-			users_dictionary[current_user] = dict(
-				name=str(current_user.capitalize()),
-				age=0,
-				occupation="",
-				hobbies_list=[],
-				fav_colors_list=[],
-				not_fav_colors_list=[],
-				style_list=[],
-				fav_clothes_list=[],
-				not_fav_clothes_list=[],
-				current_outfit_dict={}
-			)
-			
-			print(users_dictionary)
-			return 'Nice to meet you.'
-
-		# else, the user is already in the dictionary -- returning user
-		else:
-			print("A returning user: " + current_user)
-			return 'Welcome back.'
 
 
 # saves the user's age
@@ -441,7 +407,7 @@ def recommendOutfit (hobbies, f_color, not_f_color, u_style, f_item, not_f_item)
 	result = response['choices'][0]['message']['content'].strip()
 	return str(result)
 
-# recommendation macros ============================================
+
 class MacroRecommendOutfit(Macro):
 	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
 		global users_dictionary
@@ -513,35 +479,74 @@ def clear_dictionary(dict_name: Dict):
 	dict_name.clear()
 
 
+# checks if the user is already in the user_dictionary
+# if not -- new user -- creates a empty dictionary with the users name
+# if is -- return user -- does nothing
+def createUserCheck():
+	global users_dictionary
+	global current_user
+
+	print("The current user is " + current_user)
+
+	# if the user is not already in the dictionary
+	# create a empty dictionary with the user's name
+	if users_dictionary.get(current_user) is None:
+		print("Creating a new user " + current_user)
+
+		users_dictionary[current_user] = dict(
+			name=str(current_user.capitalize()),
+			age=0,
+			occupation="",
+			hobbies_list=[],
+			fav_colors_list=[],
+			not_fav_colors_list=[],
+			style_list=[],
+			fav_clothes_list=[],
+			not_fav_clothes_list=[],
+			current_outfit_dict={}
+		)
+		
+		print(users_dictionary)
+		return 'no'
+
+	# else, the user is already in the dictionary -- returning user
+	else:
+		print("A returning user: " + current_user)
+		return 'yes'
+
+
 # dialogue ============================================
 def main_dialogue() -> DialogueFlow:
 	introduction_transition = {
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
-				# TODO: if the user is a returning user, have them jump to 'return_user_transition'
-				# if the user is a new user, have them jump to 'new_user_transition'
-				'#RETURN_WELCOME_MESG': 'choice_recommendation_transition'
+				# they are a returning user
+				'#IF($RETURN_USER=yes)': 'return_user_transition',
+				# they are a new user
+				'#IF($RETURN_USER=no)': 'new_user_transition'
 			}
 		}
 	}
 	
 	return_user_transition = {
 		'state': 'return_user_transition',
-		'`Welcome back`$FIRSTNAME`!`': {
-			'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
-				'<babble>': {
-					# TODO: change back when done with babble transition
-					# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
-					'`Okay, we can talk about the movie \"Babble\"!`': 'end'
-				},
-				# Let's talk about clothes
-				'[{let, lets, wanna, want}, clothes]': {
-					'`Okay, we can talk about clothes!\n`': 'end'
-				},
-				'error': {
-					'`Sorry, I don\'t understand.`': 'choice_transition'
-				}
+		'`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Babble\", jump right in to recommending, or update your preferences?`': {
+			'<babble>': {
+				# TODO: change back when done with babble transition
+				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+			},
+			# Get started recommending
+			'<{recommend, recommending}>': {
+				'`Okay, we can get started recommend you!\n`': 'choice_recommendation_transition'
+			},
+			# Let's update my preferences
+			'<preferences>': {
+				'`Okay, let\'s start updating your preferences.`': 'clothing_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'return_user_transition'
 			}
 		}
 	}
@@ -553,20 +558,18 @@ def main_dialogue() -> DialogueFlow:
 		'I\'m your personal stylist bot created just for you.\n '
 		'I\'m here to help you look good and feel good about yourself and your clothes.\n '
 		'And just an F.Y.I the information you share with me will stay with me. \U0001F92B\n '
-		'So, let\'s get started!`': {
-			'`Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
-				'<babble>': {
-					# TODO: change back when done with babble transition
-					# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
-					'`Okay, we can talk about the movie \"Babble\"!`': 'end'
-				},
-				# Let's talk about clothes
-				'[{let, lets, wanna, want}, clothes]': {
-					'`Okay, we can talk about clothes!\n`': 'end'
-				},
-				'error': {
-					'`Sorry, I don\'t understand.`': 'clothing_transition'
-				}
+		'So, let\'s get started! Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
+			'<babble>': {
+				# TODO: change back when done with babble transition
+				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
+				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+			},
+			# Let's talk about clothes
+			'[{let, lets, wanna, want}, clothes]': {
+				'`Okay, we can talk about clothes!\n`': 'clothing_transition'
+			},
+			'error': {
+				'`Sorry, I don\'t understand.`': 'new_user_transition'
 			}
 		}
 	}
@@ -1428,7 +1431,7 @@ def main_dialogue() -> DialogueFlow:
 			},
 			'[styling, advice]': {
 				'`Alright, I can help you style your current outfit!\n '
-				'Before I can do that though, I gotta know what you\'re wearing!\n So, `': 'get_current_top_outfit_transition'
+				'Before I can do that though, I gotta know what you\'re wearing!\n So, `': 'get_current_top_transition'
 			}
 		}
 	}
@@ -1436,8 +1439,8 @@ def main_dialogue() -> DialogueFlow:
 
 	# -- get user's current outfit #1
 	# -- get the top the user is wearing
-	get_current_top_outfit_transition = {
-		'state': 'get_current_top_outfit_transition',
+	get_current_top_transition = {
+		'state': 'get_current_top_transition',
 		'`what top are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
@@ -1675,7 +1678,6 @@ def main_dialogue() -> DialogueFlow:
 	# macro references ============================================
 	macros = {
 		'GET_NAME': MacroGetName(),
-		'RETURN_WELCOME_MESG': MacroWelcomeMessage(),
 		'GET_AGE': MacroSaveAge(),
 		'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
 		'GET_OCCUPATION': MacroSaveOccupation(),
@@ -1740,7 +1742,7 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(get_not_fav_clothing_transition)
 
 	# get the user's current outfit
-	df.load_transitions(get_current_top_outfit_transition)
+	df.load_transitions(get_current_top_transition)
 	df.load_transitions(get_current_bottoms_transition)
 	df.load_transitions(get_current_coat_transition)
 	df.load_transitions(get_current_shoes_transition)
