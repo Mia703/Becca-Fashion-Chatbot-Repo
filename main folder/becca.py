@@ -28,7 +28,8 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-openai.api_key = API_KEY
+openai.api_key_path = './resources/openai_api.txt'
+
 
 # macros ============================================
 
@@ -209,7 +210,8 @@ class MacroSaveHobby(Macro):
 		user_nested_list = user_nested_dictionary['hobbies_list']
 
 		# append the hobby to the list
-		user_nested_list.append(user_hobby)
+		if (user_hobby not in user_nested_list):
+			user_nested_list.append(user_hobby)
 
 		print(users_dictionary)
 
@@ -244,7 +246,8 @@ class MacroSaveFavoriteColor(Macro):
 		user_nested_list = user_nested_dictionary['fav_colors_list']
 
 		# append the HEX code to the list
-		user_nested_list.append(color_hex)
+		if (color_hex not in user_nested_list):
+			user_nested_list.append(color_hex)
 
 		print(users_dictionary)
 
@@ -276,7 +279,8 @@ class MacroSaveNotFavoriteColor(Macro):
 		user_nested_list = user_nested_dictionary['not_fav_colors_list']
 
 		# append the HEX code to the list
-		user_nested_list.append(color_hex)
+		if (color_hex not in user_nested_list):
+			user_nested_list.append(color_hex)
 
 		print(users_dictionary)
 
@@ -309,7 +313,8 @@ class MacroSaveStyle(Macro):
 		user_nested_list = user_nested_dictionary['style_list']
 
 		# append the style name to the list
-		user_nested_list.append(style_name)
+		if (style_name not in user_nested_list):
+			user_nested_list.append(style_name)
 
 		print(users_dictionary)
 
@@ -330,7 +335,8 @@ class MacroSaveFavoriteClothing(Macro):
 		user_nested_list = user_nested_dictionary['fav_clothes_list']
 
 		# append the clothing item to the list
-		user_nested_list.append(user_fav_item)
+		if (user_fav_item not in user_nested_list):
+			user_nested_list.append(user_fav_item)
 
 		print(users_dictionary)
 
@@ -351,7 +357,8 @@ class MacroSaveNotFavoriteClothing(Macro):
 		user_nested_list = user_nested_dictionary['not_fav_clothes_list']
 
 		# append the clothing item name to the list
-		user_nested_list.append(user_not_fav_item)
+		if (user_not_fav_item not in user_nested_list):
+			user_nested_list.append(user_not_fav_item)
 
 		print(users_dictionary)
 
@@ -725,7 +732,7 @@ def main_dialogue() -> DialogueFlow:
 									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
 									'She had the best intentions and treated the couple\'s children like her own.\n '
 									'Due to a the poor decision of taking the children across the border, '
-									'she competely ruined her life and was treated like a criminal.\n '
+									'she completely ruined her life and was treated like a criminal.\n '
 									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
 									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
 										'[{yes, of course, alright, ok}]': {
