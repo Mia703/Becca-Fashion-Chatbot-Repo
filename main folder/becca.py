@@ -292,7 +292,7 @@ class MacroSaveStyle(Macro):
 		user_style_item = str(vars['USER_STYLE'])
 
 		# search the dataframe for the item
-		# -- returns a dataframe with the row of the colour
+		# -- returns a dataframe with the row of the item
 		df_results = styles_df.loc[styles_df['Clothing'] == user_style_item]
 		# print(df_results)
 
