@@ -424,183 +424,61 @@ class MacroSaveOutfit(Macro):
 
 
 # recommendation functions and macros ============================================
+def recommendOutfit (hobbies, f_color, not_f_color, u_style, f_item, not_f_item):
+	# TODO: should I remove the 'don't explain'? Would have to convert hex codes back to colour name
+	prompt = 'Recommend an outfit for someone who likes ' + hobbies + ', the color ' + f_color + ', hates the color ' + not_f_color + ', dresses in the ' + u_style + ' style, likes to wear ' + f_item + ', and doesn\'t like to wear ' + not_f_item + '. Put your response in a sentence. Don\'t explain.'
+	
+	response = openai.ChatCompletion.create(
+		model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=200,
+		messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt}
+		]
+	)
 
-# asks the API to recommend a clothing item
-def recommendClothing(interest, color, style):
-
-    prompt = "Recommend a real clothing item for someone who likes " + interest + " and the color " + color + " and the " + style + ". Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."
-
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        # determines the randomness of the API's response; 0 = response is more focused and deterministic ~ 0.8 = response is more random
-        temperature=0,
-        messages=[
-            {"role": "system", "content": "You are a chatbot"},
-            {"role": "user", "content": prompt},
-        ]
-    )
-
-    result = response['choices'][0]['message']['content'].strip()
-    return str(result)
-
-
-# asks the API to recommend a clothing item based on the feedback from the last recommendation
-def recommendClothingAfterFeedback(interest, color, style, lastRec, feedback):
-
-    prompt = "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" +  style + ". This person gave the following feedback to your last recommendation of " + lastRec + ": " + feedback + "Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."
-
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        temperature=0,
-        messages=[
-                {"role": "system", "content": "You are a chatbot"},
-                {"role": "user", "content": prompt},
-            ]
-    )
-
-    result = response['choices'][0]['message']['content'].strip()
-    return str(result)
-
-
-# determines the sentiment of the user's response
-def feedbackSentiment(feedback):
-
-    prompt = "You are a bot that determines if feedback is positive, nuetral, or negative. I just recommended a peice of clothing to a user. This is their response: " + feedback + " Is the sentiment of this response positive, negative, or neutral. Give a one word response. Do not put a period at the end of your response. Only say positive, negative, or neutral and say nothing else."
-
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        temperature=0,
-        messages=[
-                {"role": "system", "content": "You are a chatbot"},
-                {"role": "user", "content": prompt},
-            ]
-    )
-
-    result = response['choices'][0]['message']['content'].strip()
-    return str(result)
-
+	result = response['choices'][0]['message']['content'].strip()
+	return str(result)
 
 # recommendation macros ============================================
+class MacroRecommendOutfit(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		global users_dictionary
+		global current_user
 
-# recommends another clothing item -- message output based on if the user's previous feedback was negative
-class MacroGPTNegativeFeedbackRecommend(Macro):
-    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global users_dictionary
-        global current_user
-        global styles_df
-        global lastRec
-        global randInt1
-        global randInt2
-        global randInt3
-        global feedback
+		# select the user's dictionary
+		user_nested_dictionary = users_dictionary[current_user]
 
-        # select the user's dictionary
-        user_nested_dictionary = users_dictionary[current_user]
+		# access the user's lists
+		user_hobbies_list = user_nested_dictionary['hobbies_list']
+		user_fav_colors_list = user_nested_dictionary['fav_colors_list']
+		user_not_fav_colors_list = user_nested_dictionary['not_fav_colors_list']
+		user_style_list = user_nested_dictionary['style_list']
+		user_fav_clothes_list = user_nested_dictionary['fav_clothes_list']
+		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
 
-        # access the user's hobbies, styles, and fav colours list
-        user_hobbies_list = user_nested_dictionary['hobbies_list']
-        user_style_list = user_nested_dictionary['style_list']
-        user_colors_list = user_nested_dictionary['fav_colors_list']
+		# TODO: should there be a check here to make sure the list isn't empty
+		# an empty list causes an error
+		# randomly select an item from each list
+		random_hobby = random.randint(0, len(user_hobbies_list)-1)
+		random_f_color = random.randint(0, len(user_fav_colors_list)-1)
+		random_nf_color = random.randint(0, len(user_not_fav_colors_list)-1)
+		random_style = random.randint(0, len(user_style_list)-1)
+		random_f_clothes = random.randint(0, len(user_fav_clothes_list)-1)
+		random_nf_clothes = random.randint(0, len(user_not_fav_clothes_list)-1)
 
-
-        rec = recommendClothingAfterFeedback(
-			interest=user_hobbies_list[randInt1],
-			color=user_colors_list[randInt2],
-			style=user_style_list[randInt3],
-			lastRec = lastRec,
-			feedback=feedback
+		# call function
+		outfit_recommendation = recommendOutfit(
+			hobbies=user_hobbies_list[random_hobby], 
+			f_color=user_fav_colors_list[random_f_color], 
+			not_f_color=user_not_fav_colors_list[random_nf_color],
+			u_style=user_style_list[random_style], 
+			f_item=user_fav_clothes_list[random_f_clothes], 
+			not_f_item=user_not_fav_clothes_list[random_nf_clothes]
 		)
 
-        lastRec = rec
-
-        return "I think you might like this recommendation a little better: " + rec
-
-
-# returns True if the user's feedback was negative, else False
-class MacroGetFeedbackSentiment(Macro):
-    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global feedback
-
-        feedback = ngrams.text()
-        sentiment = feedbackSentiment(feedback)
-
-        if sentiment == "Negative" or sentiment == "negative" or sentiment == "Negative." or sentiment == "negative.":
-            return True
-        else:
-            return False
-
-
-# recommends another clothing item -- message output based on if the user's previous feedback was positive
-class MacroGPTRecommendAfterPositiveFeedback(Macro):
-    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global users_dictionary
-        global current_user
-        global styles_df
-        global lastRec
-        global randInt1
-        global randInt2
-        global randInt3
-
-        # select the user's dictionary
-        user_nested_dictionary = users_dictionary[current_user]
-
-        # access the user's hobbies, styles, and fav colours list
-        user_hobbies_list = user_nested_dictionary['hobbies_list']
-        user_style_list = user_nested_dictionary['style_list']
-        user_colors_list = user_nested_dictionary['fav_colors_list']
-
-        # randomly select an item from each list
-        randInt1 = random.randint(0, len(user_hobbies_list)-1)
-        randInt2 = random.randint(0, len(user_colors_list)-1)
-        randInt3 = random.randint(0, len(user_style_list)-1)
-
-
-        rec = recommendClothing(
-			interest=user_hobbies_list[randInt1],
-			color=user_colors_list[randInt2],
-			style=user_style_list[randInt3]
-		)
-
-        lastRec = rec
-        return "I also think you might like this " + rec
-
-
-# recommends a clothing item
-class MacroGPTRecommend(Macro):
-    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global users_dictionary
-        global current_user
-        global styles_df
-        global lastRec
-        global randInt1
-        global randInt2
-        global randInt3
-
-
-        # select the user's dictinary
-        user_nested_dictionary = users_dictionary[current_user]
-
-        # access the user's hobbies, styles, and fav colours list
-        user_hobbies_list = user_nested_dictionary['hobbies_list']
-        user_colors_list = user_nested_dictionary['fav_colors_list']
-        user_style_list = user_nested_dictionary['style_list']
-
-        # randomly select an item from each list
-        randInt1 = random.randint(0, len(user_hobbies_list)-1)
-        randInt2 = random.randint(0, len(user_colors_list)-1)
-        randInt3 = random.randint(0, len(user_style_list)-1)
-
-
-        rec = recommendClothing(
-			interest=user_hobbies_list[randInt1],
-			color=user_colors_list[randInt2],
-			style=user_style_list[randInt3]
-		)
-
-        lastRec = rec
-
-        return "I think you'd look really good in " + rec
-
+		return 'I would recommend ' + outfit_recommendation.lower()
 
 # pickle functions ============================================
 
@@ -643,7 +521,7 @@ def main_dialogue() -> DialogueFlow:
 			'#GET_NAME': {
 				# TODO: if the user is a returning user, have them jump to 'return_user_transition'
 				# if the user is a new user, have them jump to 'new_user_transition'
-				'#RETURN_WELCOME_MESG': 'end'
+				'#RETURN_WELCOME_MESG': 'choice_recommendation_transition'
 			}
 		}
 	}
@@ -1461,50 +1339,79 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-
-# FIXME: change to style onology?
+	
 	# -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
 		'`What are some of clothing items you wear often?`': {
-			'[$USER_FAV_CLOTHING_ITEM=#ONT(basics)]': {
-				'#GET_FAV_CLOTHING`The necessities are important! I\'ll admit I\'m honestly quite the basic girl myself lol.\n `': 'get_not_fav_clothing_transition'
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
 			},
-			'[$USER_FAV_CLOTHING_ITEM=#ONT(dressy)]': {
-				'#GET_FAV_CLOTHING`I like to dress up too! In my opinion, being overdressed is always best.\n `': 'get_fav_clothing_transition'
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(punk)]': {
+				'#GET_FAV_CLOTHING`comment.?\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+			},
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(classic)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_FAV_CLOTHING`Casual\'s nice, but I\'m personally an overdresser. The grocery store is my runway!\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
 			},
-			'[$USER_FAV_CLOTHING_ITEM=#ONT(outerwear)]': {
-				'#GET_FAV_CLOTHING`I don\'t typically wear a lot of coats and jackets and stuff because in Atlanta it\'s usually warm here!\n `': 'get_not_fav_clothing_transition'
+			'[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
+				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_fav_clothing_transition'
+				'`Sorry, I don\'t understand`': 'get_fav_clothing_transition'
 			}
 		}
 	}
 
 
-# FIXME: change to style onology?
+
 	# -- get user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
 		'`What are some clothing items that you try to avoid?`': {
-			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(basics)]': {
-				'#GET_NOT_FAV_CLOTHING`I see, so you\'re not basic girl like me then. We\'ll have to agree to disagree.\n `': 'choice_recommendation_transition'
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
 			},
-			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(dressy)]': {
-				'#GET_NOT_FAV_CLOTHING`That\'s too bad that you don\'t like to dress up. Playing dress up in my closet is my favorite activity.\n `': 'choice_recommendation_transition'
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(punk)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.?\n `': 'choice_recommendation_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+			},
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(classic)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_NOT_FAV_CLOTHING`I\'m glad that we\'re on the same page. Casual is boring.\n `': 'get_current_top_outfit_transition'
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
 			},
-			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(outerwear)]': {
-				'#GET_NOT_FAV_CLOTHING`I don\'t wear too much outerwear either. It\'s warm where I live so I tend not to need many layers.\n `': 'choice_recommendation_transition'
+			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
+				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_not_fav_clothing_transition'
+				'`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
 			}
 		}
 	}
@@ -1517,8 +1424,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Alright, now that I\'ve collected all this information about you.\n '
 		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
 			'{<recommend>, <outfit>}': {
-				# TODO: Insert whole outfit recommendation here
-				'`Alright, I can recommend you an outfit!\n`#REC_CLOTHING': 'end'
+				'`Alright!`#REC_OUTFIT`What do you think?`': 'end'
 			},
 			'[styling, advice]': {
 				'`Alright, I can help you style your current outfit!\n '
@@ -1781,12 +1687,9 @@ def main_dialogue() -> DialogueFlow:
 		'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
 		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
 		'GET_CURR_OUTFIT': MacroSaveOutfit(),
-
 		# macros from  openai_macros.py ============================================
-		'REC_CLOTHING': MacroGPTRecommend(),
-		'DET_FEEDBACK': MacroGetFeedbackSentiment(),
-		'REC_AFTER_N_FEEDBACK': MacroGPTNegativeFeedbackRecommend(),
-		'REC_AFTER_P_FEEDBACK': MacroGPTRecommendAfterPositiveFeedback(),
+		'REC_OUTFIT': MacroRecommendOutfit(),
+
 	}
 
 	# ============================================
