@@ -5,8 +5,8 @@ import random
 import json
 import pandas as pd
 import openai
-import nltk
-nltk.download('omw-1.4')
+#import nltk
+#nltk.download('omw-1.4')
 # python files ============================================
 # api_file.py is ignored by github for privacy reasons
 import api_file
@@ -27,7 +27,7 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 # import styles csv file
 styles_df = pd.read_csv('./resources/styles.csv')
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 # macros ============================================
 
@@ -461,6 +461,20 @@ def recommendClothingAfterFeedback(interest, color, style, lastRec, feedback):
 
     return result
 
+def recommendClothingAfterGeneralFeedback(interest, color, style, lastRec, feedback):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "system", "content": "You are a chatbot"},
+                {"role": "user", "content": "Recommend a real clothing item for someone who likes" + interest + "and the color" + color + "and the" +  style + ". This was your last recommendation. " + lastRec + ". I asked what clothing item they would like me to recommend now and they said this: " + feedback + "Recommend the clothing item they requested. If they did not request a clothing item, use the interest, color, and style information I gave you to recommend. Put your response in the same form as this example response: Athleta's Speedlight Skort in the color Blue Tropics. Do not say anything more than this example shows."},
+            ]
+    )
+
+    result = ''
+    for choice in response.choices:
+        result += choice.message.content
+
+    return result
 def feedbackSentiment(feedback):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -474,7 +488,7 @@ def feedbackSentiment(feedback):
     for choice in response.choices:
         result += choice.message.content
 
-    print(result)
+    #print(result)
     return result
 
 
@@ -505,8 +519,35 @@ class MacroGPTNegativeFeedbackRecommend(Macro):
 		)
 
         lastRec = rec
-        return "I think you might like this recommendation a little better: " + rec + "."
+        return "I think you might like this recommendation a little better: " + rec
 
+class MacroGPTGeneralFeedbackRecommend(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+        global styles_df
+        global lastRec
+        global randInt1
+        global randInt2
+        global randInt3
+        global feedback
+
+        user_nested_dictionary = users_dictionary[current_user]
+
+        user_hobbies_list = user_nested_dictionary['hobbies_list']
+        user_style_list = user_nested_dictionary['style_list']
+        user_colors_list = user_nested_dictionary['fav_colors_list']
+
+        rec = recommendClothingAfterGeneralFeedback(
+			interest=user_hobbies_list[randInt1],
+			color=user_colors_list[randInt2],
+			style=user_style_list[randInt3],
+			lastRec = lastRec,
+			feedback=feedback
+		)
+
+        lastRec = rec
+        return "Here's my next recommendation: " + rec
 
 class MacroGetFeedbackSentiment(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -520,6 +561,14 @@ class MacroGetFeedbackSentiment(Macro):
         else:
             return False
 
+class MacroGetFeedbackAfterFirst(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global feedback
+
+        feedback = ngrams.text()
+        sentiment = feedbackSentiment(feedback)
+
+        return True
 
 class MacroGPTRecommendAfterPositiveFeedback(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -548,7 +597,7 @@ class MacroGPTRecommendAfterPositiveFeedback(Macro):
 		)
 
         lastRec = rec
-        return "I also think you might like this " + rec + "."
+        return "I also think you might like this " + rec
 
 
 class MacroGPTRecommend(Macro):
@@ -560,7 +609,6 @@ class MacroGPTRecommend(Macro):
         global randInt1
         global randInt2
         global randInt3
-        print(users_dictionary)
         user_nested_dictionary = users_dictionary[current_user]
 
         user_hobbies_list = user_nested_dictionary['hobbies_list']
@@ -578,7 +626,7 @@ class MacroGPTRecommend(Macro):
 		)
 
         lastRec = rec
-        return "I think you'd really like this " + rec + "."
+        return "I think you'd really like this " + rec
 
 
 
@@ -627,10 +675,38 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'start',
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
+				'#RETURN_WELCOME_MESG #REC_CLOTHING `What do you think?`': {
+						'#GET_FEEDBACK': {
+							'#REC_AFTER_FEEDBACK `What type of clothing do you want me to recommend next?`': {
+								'#GET_GENERAL_FEEDBACK': {
+									'#REC_SPECIFIC_ITEM `What type of clothing item should I recommend next?`': {
+										'#GET_GENERAL_FEEDBACK':{
+											'#REC_SPECIFIC_ITEM': 'end'
+										}
+									}
+								},
+							}
+						},
+						'error': {
+							'#REC_AGAIN `What type of clothing item should I recommend next?`': {
+								'#GET_GENERAL_FEEDBACK': {
+									'#REC_SPECIFIC_ITEM': 'end'
+								}
+							}
+				}
+					}
+				}
+		}
+	}
+
+	'''introduction_transition = {
+		'state': 'start',
+		'`Hi, what\'s your name?`': {
+			'#GET_NAME': {
 				'#RETURN_WELCOME_MESG': 'choice_transition'
 			}
 		}
-	}
+	}'''
 
 
 	# do you wanna talk about the movie or clothes?
@@ -1476,9 +1552,28 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'choice_recommendation_transition',
 		'`Alright, now that I\'ve collected all this information about you.\n '
 		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
-			'{<recommend>, <outfit>}': {
+			'[{recommend, outfit}]': {
 				# TODO: Insert whole outfit recommendation here
-				'`Alright, I can recommend you an outfit! First, #REC_CLOTHING`': 'end'
+				'`Alright, I can recommend you an outfit! I think I have a good first recommendation.` #REC_CLOTHING `What do you think?`': {
+					'#GET_FEEDBACK': {
+							'#REC_AFTER_FEEDBACK `What type of clothing do you want me to recommend next?`': {
+								'#GET_GENERAL_FEEDBACK': {
+									'#REC_SPECIFIC_ITEM `What type of clothing item should I recommend next?`': {
+										'#GET_GENERAL_FEEDBACK':{
+											'#REC_SPECIFIC_ITEM': 'end'
+										}
+									}
+								},
+							}
+						},
+						'error': {
+							'#REC_AGAIN `What type of clothing item should I recommend next?`': {
+								'#GET_GENERAL_FEEDBACK': {
+									'#REC_SPECIFIC_ITEM': 'end'
+								}
+							}
+				}
+			}
 			},
 			'[styling, advice]': {
 				'`Alright, I can help you style your current outfit!\n '
@@ -1746,6 +1841,8 @@ def main_dialogue() -> DialogueFlow:
 		'GET_FEEDBACK': MacroGetFeedbackSentiment(),
 		'REC_AFTER_FEEDBACK': MacroGPTNegativeFeedbackRecommend(),
 		'REC_AGAIN': MacroGPTRecommendAfterPositiveFeedback(),
+		'GET_GENERAL_FEEDBACK': MacroGetFeedbackAfterFirst(),
+		'REC_SPECIFIC_ITEM': MacroGPTGeneralFeedbackRecommend()
 	}
 
 	# ============================================
