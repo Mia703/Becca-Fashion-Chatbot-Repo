@@ -1554,8 +1554,8 @@ def main_dialogue() -> DialogueFlow:
 	# -- gets the user's favourite styles
 	get_style_transition_one = {
 		'state': 'get_style_transition_one',
-		'`Another thing I\'d love to know about you is how you like to dress. I\'m always curious about people\'s fashion preferences.\n '
-		'Can you tell me a bit about your personal style?`': {
+		'`I\'d love to learn more about your personal style!\n '
+		'Do you have any staple pieces in your clothes that you wear often? Or do you resonate with a certain aesthetic?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
 			},
@@ -1594,7 +1594,7 @@ def main_dialogue() -> DialogueFlow:
 	# TODO: add a statement here from Becca
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
-		'`Is there another style you like to wear?`': {
+		'`Is there another item in your closet you couldn\'t live without or another aesthetic you resonate with?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`How athletic of you! I\'ve really been loving Aritzia\'s athleisure brand, TNA. I live in their TNA butter workout sets.\n `': 'get_fav_clothing_transition'
 			},
