@@ -2006,7 +2006,6 @@ def main_dialogue() -> DialogueFlow:
 		'REC_OUTFIT_AF_FEEDBACK':MacroRecommendOutfitAfterFeedback(),
 		'REC_CLOTHING_ITEM': MacroRecommentClothingItem(),
 		'REC_CLOTHING_ITEM_AF_FEEDBACK': MacroRecommendClothingItemAfterFeedback(),
-
 	}
 
 	# ============================================
