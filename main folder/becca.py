@@ -417,7 +417,7 @@ class MacroRecommendOutfit(Macro):
 		user_fav_clothes_list = user_nested_dictionary['fav_clothes_list']
 		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
 
-		# TODO: should there be a check here to make sure the list isn't empty
+		# should there be a check here to make sure the list isn't empty
 		# an empty list causes an error
 		# randomly select an item from each list
 		random_hobby_index = random.randint(0, len(user_hobbies_list)-1)
@@ -478,7 +478,7 @@ class MacroRecommendOutfitAfterFeedback (Macro):
 		user_fav_clothes_list = user_nested_dictionary['fav_clothes_list']
 		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
 
-		# TODO: should there be a check here to make sure the list isn't empty
+		# should there be a check here to make sure the list isn't empty
 		# an empty list causes an error
 		# randomly select an item from each list
 		random_hobby_index = random.randint(0, len(user_hobbies_list)-1)
@@ -540,7 +540,7 @@ class MacroRecommentClothingItem(Macro):
 		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
 		
 
-		# TODO: should there be a check here to make sure the list isn't empty
+		# should there be a check here to make sure the list isn't empty
 		# an empty list causes an error
 		# randomly select an item from each list
 		random_hobby_index = random.randint(0, len(user_hobbies_list)-1)
@@ -563,7 +563,7 @@ class MacroRecommentClothingItem(Macro):
 
 		last_recommendation = outfit_recommendation
 
-		# TODO: remove the period?
+		# remove the period? -- doesn't matter
 		# outfit_recommendation_no_period = outfit_recommendation.replace('.', '')
 
 		return 'I would recommend ' + outfit_recommendation.lower()
@@ -604,7 +604,7 @@ class MacroRecommendClothingItemAfterFeedback(Macro):
 		user_fav_clothes_list = user_nested_dictionary['fav_clothes_list']
 		user_not_fav_clothes_list = user_nested_dictionary['not_fav_clothes_list']
 
-		# TODO: should there be a check here to make sure the list isn't empty
+		# should there be a check here to make sure the list isn't empty
 		# an empty list causes an error
 		# randomly select an item from each list
 		random_hobby_index = random.randint(0, len(user_hobbies_list)-1)
