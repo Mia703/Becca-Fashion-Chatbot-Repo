@@ -10,8 +10,7 @@ import openai
 import nltk
 # nltk.download('omw-1.4')
 # python files ============================================
-# TODO: api_file.py is ignored by github for privacy reasons
-from api_file import API_KEY
+# from resources.open_api import API_KEY
 # import babble_macros
 # ============================================
 from typing import Dict, Any, List
@@ -30,6 +29,7 @@ styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
 openai.api_key_path = './resources/openai_api.txt'
+# openai.api_key = API_KEY
 
 
 # saves the user's feedback from recommendation
@@ -808,8 +808,7 @@ def main_dialogue() -> DialogueFlow:
 		'`Hi, what\'s your name?`': {
 			'#GET_NAME': {
 				# they are a returning user
-				# '#IF($RETURN_USER=yes)': 'return_user_transition',
-				'#IF($RETURN_USER=yes)': 'return_current_outfit_advice_transition',
+				'#IF($RETURN_USER=yes)': 'return_user_transition',
 				# they are a new user
 				'#IF($RETURN_USER=no)': 'new_user_transition'
 			}
@@ -862,156 +861,10 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# let's talk about Babble
+	# FIXME: let's talk about Babble
 	babble_transition = {
 		'state': 'babble_transition',
-		'`Have you already watched the movie \"Babble\" or would you like to learn more about the film?`': {
-			'#SET_WATCH_STATUS':{
-				'state': 'user_rating',
-				# the user has watched the film
-				'#IF($WATCH_STATUS=yes)`Did you enjoy the movie? What did you like or dislike about the movie?`': {
-					# the user's rating for the movie was positive
-					'#IF($USER_RATING=positive) `Glad to hear you enjoyed the movie.\n '
-					'What were your thoughts on some of the themes or messages in the movie?`': {
-						# don't really care what the user says here
-						'error': {
-							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
-							'can lead to misunderstandings that lead to severe consequeces.\n '
-							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
-							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
-							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
-							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
-							'He was suspected of dealing in the black market.\n '
-							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
-							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
-							'which ends up being an incredibly poor decision.\n '
-							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
-							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
-							'Do you have any additional thoughts on the characters?`': {
-								# don't really care about what the user says here
-								'error': {
-									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
-									'She had the best intentions and treated the couple\'s children like her own.\n '
-									'Due to a the poor decision of taking the children across the border, '
-									'she completely ruined her life and was treated like a criminal.\n '
-									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
-									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
-										'[{yes, of course, alright, ok}]': {
-											'`Sounds good`': 'clothing_transition'
-										},
-										'[{no, I\'m good, I am good, don\'t, do not}]' :{
-											'It was good talking with you': 'end'
-										}
-									}
-								}
-							}
-						}
-					},
-					# the user's rating for the move was neutral
-					'#IF($USER_RATING=neutral)`Understandable. '
-					'Personally, I felt the movie is pretty good overall. '
-					'Only thing is, the Japan plotline feels a bit forced into the whole plot. '
-					'What are your thoughts on some of the themes or messages in the movie?`': {
-						# don't really care what the user says here
-						'error': {
-							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
-							'can lead to misunderstandings that lead to severe consequeces.\n '
-							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
-							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
-							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
-							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
-							'He was suspected of dealing in the black market.\n '
-							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
-							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
-							'which ends up being an incredibly poor decision.\n '
-							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
-							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
-							'Do you have any additional thoughts on the characters?`': {
-								# don't really care about what the user says here
-								'error': {
-									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
-									'She had the best intentions and treated the couple\'s children like her own.\n '
-									'Due to a the poor decision of taking the children across the border, '
-									'she competely ruined her life and was treated like a criminal.\n '
-									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
-									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
-										'[{yes, of course, alright, ok}]': {
-											'`Sounds good`': 'clothing_transition'
-										},
-										'[{no, I\'m good, I am good, don\'t, do not}]' :{
-											'It was good talking with you': 'end'
-										}
-									}
-								}
-							}
-						}
-					},
-					# the user's rating for the move was negative
-					'#IF($USER_RATING=negative) `I personally thought Babel is a decent movie. '
-					'I don\'t know if it deserves such a harsh review.\n '
-					'What are your thoughts on some of the themes or messages in the movie?`': {
-						'error': {
-							'`Yeah. I felt that this movie\'s main theme was that cultural and language barriers '
-							'can lead to misunderstandings that lead to severe consequeces.\n '
-							'None of the characters in this movie have bad intentions; however, things quickly spiral out of control due to misunderstandings.\n '
-							'For example, the character Yussef naively underestimates the range of the rifle given to Hasan and shot an American tourist.\n '
-							'The Americans incorrectly label the incident as an act of terror due to the stereotype associated with Morocco.\n '
-							'As a result, Yasujiro, who gave a rifle to Hasan as a gesture of appreciation, came under investigation in Japan.\n '
-							'He was suspected of dealing in the black market.\n '
-							'Lastly, Amelia was forced to take of the American couple\'s kids for longer than anticipated due to Susan getting shot.\n '
-							'However, she must show up to her son\'s wedding. Out of a sense of duty, she brings the couple\'s children with her to Mexico,\n '
-							'which ends up being an incredibly poor decision.\n '
-							'Due to a lack of written consent, the border patrol became suspicious and places her under arrest, which leads to her deportation.\n '
-							'As we can see here, a combination of poor decisions and misunderstandings blew things out of proportion in these storylines.\n '
-							'Do you have any additional thoughts on the characters?`': {
-								# don't really care about what the user says here
-								'error': {
-									'`Out of all the characters in this movie, I have the most sympathy for Amelia.\n '
-									'She had the best intentions and treated the couple\'s children like her own.\n '
-									'Due to a the poor decision of taking the children across the border, '
-									'she competely ruined her life and was treated like a criminal.\n '
-									'On the other hand, Yussef and his brother just ruins it for everyone else.\n '
-									'It has been great talking about the movie with you. Would you like to go back and learn more about clothing?`': {
-										'[{yes, of course, alright, ok}]': {
-											'`Sounds good`': 'clothing_transition'
-										},
-										'[{no, I\'m good, I am good, don\'t, do not}]' :{
-											'It was good talking with you': 'end'
-										}
-									}
-								}
-							}
-						}
-					},
-					'`Sorry, I was not able to understand you. Let\'s try this again.`': {
-						'state': 'USER_RATING',
-						'score': 0.1
-					}
-				},
-				# the user has NOT watched the film
-				'#IF($WATCH_STATUS=no) `Babel is a psychological drama.\n '
-				'An unintentional shooting incident connects four groups of people from different countries:\n '
-				'a Japanese father and his teen daughter, a Moroccan goatherd family, a Mexican nanny, and an American couple '
-				'(Brad Pitt and Cate Blanchett).\n All of these characters run into problems due to barriers in communication '
-				'due to factors such as cultural and lanuage differences.`': {
-					# don't really care what the user says here
-					'error': {
-						'`I believe this is a movie worth watching. Would you like to go back and learn more about clothes?`': {
-							'[{yes, of course, alright, ok}]': {
-								'`Sounds good`': 'clothing_transition'
-							},
-							'[{no, I\'m good, I am good, don\'t, do not}]': {
-								'It was good talking with you': 'end'
-							}
-						}
-					}
-				},
-				'`Sorry, I was not able to understand you. Let\'s try this again.`': {
-					'state': 'babble_transition',
-					'score': 0.1
-				}
-			}
-		}
+		'`Have you already watched the movie \"Babble\" or would you like to learn more about the film?`': 'end'
 	}
 
 
@@ -1294,6 +1147,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's hobby 1
+	# FIXME: diverse transitions
 	get_hobby_transition_one = {
 		'state': 'get_hobby_transition_one',
 		'`Ah, I see! Speaking of... what do you do when you\'re not working?`': {
@@ -1342,6 +1196,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's hobby 2
+	# FIXME: diverse transitions
 	get_hobby_transition_two = {
 		'state': 'get_hobby_transition_two',
 		'`What other activities do you like to do for fun?`': {
@@ -1390,6 +1245,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's hobby 3
+	# FIXME: diverse transitions
 	get_hobby_transition_three = {
 		'state': 'get_hobby_transition_three',
 		'`Are there any other hobbies you\'re really passionate about?`': {
@@ -1438,6 +1294,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's favourite colour #1
+	# FIXME: diverse transitions
 	get_fav_color_transition_one = {
 		'state': 'get_fav_color_transition_one',
 		# favourite colour #1
@@ -1475,6 +1332,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's favourite colour #2
+	# FIXME: diverse transitions?
 	get_fav_color_transition_two = {
 		'state': 'get_fav_color_transition_two',
 		# favourite colour #2
@@ -1511,6 +1369,7 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- get user's not favourite colours # 1
+	# FIXME: add more diverse responses?
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
 		'`Out of curiosity, are there any color that you really dislike or wouldn\'t wear?`': {
@@ -1591,7 +1450,6 @@ def main_dialogue() -> DialogueFlow:
 	
 
 	# -- gets the user's favourite styles #2
-	# TODO: add a statement here from Becca
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
 		'`Is there another style you like to wear?`': {
@@ -1611,7 +1469,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_STYLE`?I like punk too! I would say my rave outfits are pretty punk. Dolls Kill has some great stuff right now.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`Omg streetwear is my favorite! Model off duty style for life. I assume you\'re also a Hailey Bieber fan too then.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`Omg, streetwear is my favorite! Model off duty style for life. I assume you\'re also a Hailey Bieber fan too then.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
 				'#GET_STYLE`Yeah, so you\'re automatically too cool for me. People who dress classicly always seem like they have their life together.\n `': 'get_fav_clothing_transition'
@@ -1629,7 +1487,8 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 	
-	# -- get user's preferred clothing items (generic)
+	# -- get user's preferred clothing items
+	# FIXME: add transition
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
 		'`What are some of clothing items you wear often?`': {
@@ -1667,7 +1526,8 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# -- get user's not preferred clothing items (generic)
+	# -- get user's not preferred clothing items
+	# FIXME: add transisions
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
 		'`What are some clothing items that you try to avoid?`': {
@@ -1706,26 +1566,41 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- ask if the user would like to be recommended an outfit 
-	# or help getting styled with an outfit
+	# or help getting styled with an outfit they've already picked out
 	choice_recommendation_transition = {
 		'state': 'choice_recommendation_transition',
 		'`Alright, now that I\'ve collected all this information about you.\n '
-		'Would you like me to recommend you an outfit? Or do you need styling advice for an oufit your currently wearing?`': {
+		'Are you interested in my suggestions for an outfit? Or would you like styling advice for what you\'re currently wearing?`': {
 			'{<recommend>, <outfit>}': {
-				'`Alright!`#REC_OUTFIT`What do you think?`': {
+				'`Alright! I can recommend you an outfit.\n `#REC_OUTFIT`What do you think?`': {
+					# get the user's feedback about Becca's first recommendation
+					'state': 'return_to_feedback_choice_rec_transition',
 					'#GET_FEEDBACK': {
-						# TODO: fill out these statements
-						'#IF($USER_SENTIMENT=positive)`I\'m happy you like it!`': 'end',
-						'#IF($USER_SENTIMENT=neutral)`Cool....`': 'end',
-						'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like it. Would you like me to recommend you another outfit?`': {
-							'yes': {
-								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'end'
+						# if the user's feedback is considered postitve
+						'#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F`': 'end',
+						# if the user's feedback is considered neutral
+						'#IF($USER_SENTIMENT=neutral)`I\'m not sure if my recommendation is something your\'re interested in, \U0001F937 but I\'m glad to hear you don\'t completely hate it!.\n '
+						'Would you like me to recommend you another outfit?`': {
+							'{yes, sure}': {
+								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
 							},
 							'no': {
 								'`Alright, I won\'t give you any more recommendations.`': 'end'
 							},
 							'error': {
-								'`Sorry, I don\'t understand.`': 'choice_recommendation_transition'
+								'`Sorry, I don\'t understand.`': 'end'
+							}
+						},
+						# if the user's feedback is considered negative
+						'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t my recommendation. \U0001F61E Would you like me to recommend you another outfit?`': {
+							'yes': {
+								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
+							},
+							'no': {
+								'`Alright, I won\'t give you any more recommendations.`': 'end'
+							},
+							'error': {
+								'`Sorry, I don\'t understand.`': 'end'
 							}
 						}
 					}
@@ -1959,35 +1834,62 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
-
+	# -- asks the user if they have any more accessories they'd like to list
 	choice_acessory_transition = {
 		'state': 'choice_acessory_transition',
 		'`Are you wearing any more accessories?`': {
 			'<yes>': 'get_current_accessory_transition',
-			'<no>': 'return_current_outfit_advice_transition'
+			'<no>': 'return_outfit_recommendation_transition'
 		}
 	}
 
 
 	# -- given the user's current oufit, recommend a clothing item that would go with it
-	return_current_outfit_advice_transition = {
-		'state': 'return_current_outfit_advice_transition',
+	return_outfit_recommendation_transition = {
+		'state': 'return_outfit_recommendation_transition',
 		'`Alright, given the information I\'ve recived about what you\'re currently wearing,`#REC_CLOTHING_ITEM`What do you think?`': {
-			# TODO: add more reponse here
+			'state': 'return_to_feedback_outfit_rec',
 			'#GET_FEEDBACK': {
-				'#IF($USER_SENTIMENT=positive)`I\'m happy you like it!`': 'end',
-				'#IF($USER_SENTIMENT=neutral)`Cool....`': 'end',
-				'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like it. Would you like me to recommend you another outfit?`': {
-					'yes': {
-						'`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'end'
+				# if the user's feedback is considered positive
+				'#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F`': 'end',
+				# if the user's feedback is considered neutral
+				'#IF($USER_SENTIMENT=neutral)`I\'m not sure if my recommendation is something your\'re interested in, \U0001F937 but I\'m glad to hear you don\'t completely hate it!.\n '
+				'Would you like me to recommend you another outfit?`': {
+					'{yes, sure}': {
+						'`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
 					},
 					'no': {
 						'`Alright, I won\'t give you any more recommendations.`': 'end'
 					},
 					'error': {
-						'`Sorry, I don\'t understand.`': 'choice_recommendation_transition'
+						'`Sorry, I don\'t understand.`': 'end'
+					}
+				},
+				# if the user's feedback is considered negative
+				'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t my recommendation. \U0001F616 Would you like me to recommend you another outfit?`': {
+					'{yes, sure}': {
+						'`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
+					},
+					'no': {
+						'`Alright, I won\'t give you any more recommendations.`': 'end'
+					},
+					'error': {
+						'`Sorry, I don\'t understand.`': 'end'
 					}
 				}
+			}
+		}
+	}
+
+	exit_transition = {
+		'state': 'exit_transition',
+		'`Well that\'s all I really have for you.\n '
+		'I\'d really apprecate if if you would take a quick survey on my performance. Would you be willing to do so?`': {
+			'yes': {
+				'`Okay, great! The link to the survey is here: "https://forms.gle/jJGy46m3PSQdZwiC8" I hope you have a wonderful and stylish day!`': 'end'
+			},
+			'no': {
+				'`That\'s fine too. I hope you have a wonderful and stylish day!`': 'end'
 			}
 		}
 	}
@@ -2080,8 +1982,11 @@ def main_dialogue() -> DialogueFlow:
 	df.load_transitions(choice_recommendation_transition)
 	
 	# return, recommednation for user's current outift
-	df.load_transitions(return_current_outfit_advice_transition)
+	df.load_transitions(return_outfit_recommendation_transition)
 
+	# exting conversation -- directs user to google form
+	df.load_transitions(exit_transition)
+	
 	df.add_macros(macros)
 
 	return df
