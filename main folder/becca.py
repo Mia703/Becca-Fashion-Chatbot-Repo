@@ -1596,31 +1596,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_style_transition_two',
 		'`Is there another style you like to wear?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`How athletic of you! I\'ve really been loving Aritzia\'s athleisure brand, TNA. I live in their TNA butter workout sets.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(bohemian)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`So you\'re a big fan of the 70s? If I could live in any decade it would be the 90s. I\'m a 90s girl for life.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(grunge)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`I assume you like Y2K too then. I\'m a low rise everything type of girl.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(preppy)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`I\'ve been trying to hop on the preppy train, but I can\'t seem to quite nail it down. Mad respect though for being able to pull it off!\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(punk)]': {
-				'#GET_STYLE`comment.?\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`?I like punk too! I would say my rave outfits are pretty punk. Dolls Kill has some great stuff right now.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`Omg streetwear is my favorite! Model off duty style for life. I assume you\'re also a Hailey Bieber fan too then.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(classic)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`Yeah, so you\'re automatically too cool for me. People who dress classicly always seem like they have their life together.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(casual)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`I sometimes dress casually, but to be honest I prefer to always be the most overdressed in the room.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`comment.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`That\'s so cool! I\'d love for you to teach me about the type clothes you wear.\n `': 'get_fav_clothing_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand`': 'get_style_transition_two'
@@ -1745,31 +1745,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_current_top_transition',
 		'`what top are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I wore a soccer jersey with a pleated skirt yesterday to the Atlanta United game. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I\'m obsessed with my sheer bell sleeve top from Free People. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I thrifted the coolest black tank with rips originally from Jaded London top the other day. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I have a cropped collared t-shirt my Aunt gave that I\'ve been meaning to style. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! The other day I wore my Rolling Stones band t-shirt with jean shorts and sneakers and it was a vibe! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I\'ve been on the hunt for a denim vest so I can have my Canadian Tuxedo moment. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(classic)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I wore an oversized blazer to work last week and felt super cool lol. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! Those are so gorgeous. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# FIXME: what's up with the extra space? Try to remove.
@@ -1790,31 +1790,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_current_bottoms_transition',
 		'`What bottoms are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I\'m a tennis skirt girlie. I wore one yesterday to workout. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I wore the coolest plaid flared pants from Free People to a 70s party last weekend. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I\'ve been obsessed with the Melina leather pants from Aritzia lately. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I wear my black pleated skirt all the time. I\'m thinking about investing in another color! Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. My black leather is skirt is my ride or die for going out. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I love that for you. I will never stop wearing mom jeans, idc what people say. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I have this royal blue silk skirt that I\'m so excited to wear this spring. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. I\'m literally wearing sweatpants right now lol. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Understood. Moving on to the next item.\n `': 'get_current_coat_transition'
+				'#GET_CURR_OUTFIT`Understood. Ralph Lauren\'s 2009 Harem pants were iconic. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
@@ -1834,31 +1834,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_current_coat_transition',
 		'`What coat or outerwear are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I literally live in my Nike track jacket. It\'s perfectly oversized and so comfy. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I\'ve actually been meaning to get my denim jacket embroidered with little flowers. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I\'m a strong believer that everyone needs a good leather jacket in their closet. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! Maybe one day I\'ll be able to buy myself the iconic Burberry trench. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I LOVE my Wilsons biker jacket from Ebay. It has an orange stripe down the sleeve and it so unique. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I thrifted the sickest patchwork jacket from Depop the other day. I\'m so excited to wear it. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I love a classic peacoat. I\'ve been eyeing one from Ralph Lauren forever. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I feel like baseball jackets are also super trendy right now. I need to hop on that trend. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Cool! And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! I saw the most beautiful embroidered tunic the other day. And now...\n `': 'get_current_shoes_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
@@ -1878,31 +1878,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_current_shoes_transition',
 		'`What shoes are you currently wearing?`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I just invested in a pair of Hokas and they literally make it feel like I\'m running on clouds. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I recently bought a pair of fringed sandals from Target for summer I\'m super excited to wear them. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I\'ve been wanting to style my combat boots. I got them awile ago and haven\'t worn them for a long time. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I\'ve really been wanting a pair of Golden Goose. I\'ve seen a lot of people wearing them. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I love my moto boots from Frye. I really need to wear those more. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I\'ve been wanting a pair of black and white Nike high tops. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I love how versatile loafers are. I\ve been able to style them in so many different ways. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. I love my white high top converse. I wore them literally every day last summer. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Great, and last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about different shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
@@ -1922,31 +1922,31 @@ def main_dialogue() -> DialogueFlow:
 		'state': 'get_current_accessory_transition',
 		'`What accessory are you currently wearing?`': {
 			'[$USER_CURR_ACCSRY=#ONT(sporty)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I like wearing a baseball cap when I don\'t want to talk to people in public lol.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(bohemian)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been looking for a pair of oversized sunnies for this summer.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(grunge)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! Chokers are really trending these days. I guess I need to hop on that trend.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I recently bought the cutest tote bag at a night market in Costa Rica. I\'m obsessed with it.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! My mom sent me a picture of the custest studded belt the other day that she bought for herself.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(streetwear)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! So apparently people are wearing ski glasses for fun these days? I definitely need to look into that.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! People have been styling silk scarves all types of ways on TikTok. People are so creative.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been meaning to get myself a straw hat for this summer. Any recs would be appreciated! \n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks!\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. \n `': 'choice_acessory_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
