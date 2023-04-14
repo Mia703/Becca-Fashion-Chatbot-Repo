@@ -861,10 +861,90 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
-	# FIXME: let's talk about Babble
+	# talks about the movie Babble
 	babble_transition = {
 		'state': 'babble_transition',
-		'`Have you already watched the movie \"Babble\" or would you like to learn more about the film?`': 'end'
+		'`I guess I should ask first if you have already watched the movie \"Babble\" or would you like to learn more about the film?`': {
+			# returns wheither or not the user watchced the movie
+			'#GET_WATCH_STATUS': {
+				# yes, the user watched the film
+				'#IF($USER_WATCH_STATUS=yes)': {
+					'`Did you enjoy the movie? What did you like or dislike about the movie?`': {
+						# get's the user's feedback about the film, returns 'positive', 'neutral', or 'negative'
+						'#GET_FEEDBACK': {
+							# if the user's feedback is considered 'postitve'
+							'#IF($USER_SENTIMENT=positive)`Glad to hear you enjoyed the movie!\n '
+							'What are your thoughts on some of the themes or messages in the movie?`': {
+								'error': {
+									'`Yeah, I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
+									'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
+									'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+									'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
+									'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
+									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
+									'This resulted in additional challenges and major issues with other characters in the picture.\n '
+									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
+									'Do you have any additional thoughts on the characters?`': {
+										'error': {
+											'hello': 'end'
+										}
+									}
+								}
+							},
+							# if the user's feedback is considered 'neutral'
+							'#IF($USER_SENTIMENT=neutral)`Understandable. Personally, I felt that the movie is pretty good overall.\n '
+							'My only problem is that the Japan storyline was a little forced into the overall plot.\n '
+							'What are your thoughts on some of the themes or messages in the movie?`': {
+								'error': {
+									'`Yeah, I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
+									'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
+									'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+									'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
+									'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
+									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
+									'This resulted in additional challenges and major issues with other characters in the picture.\n '
+									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
+									'Do you have any additional thoughts on the characters?`': {
+										'error': {
+											'hello': 'end'
+										}
+									}
+								}
+							},
+							# if the user's feedback is considered 'negative'
+							'#IF($USER_SENTIMENT=negative)`Babel was a good movie in my opinion. I\'m not sure it warrants such a harsh critique.\n '
+							'But I am always willing to discuss our differing points of view.\n '
+							'What are your thoughts on some of the themes or messages in the movie?`': {
+								'error': {
+									'`Yeah, I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
+									'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
+									'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+									'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
+									'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
+									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
+									'This resulted in additional challenges and major issues with other characters in the picture.\n '
+									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
+									'Do you have any additional thoughts on the characters?`': {
+										'error': {
+											'hello': 'end'
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				# no, the user didn't watch the film
+				'#IF($USER_WATCH_STATUS=no)': {
+					'`Okay, so you didn\'t wach the movie. Here\'s a breif description of the film.\n '
+					'\"Babel\" is a 2006 film by Alejandro González Iñárritu, consisting of four interrelated stories in Morocco, Japan, Mexico, and the United States.\n '
+					'The film explores the theme of cultural miscommunication in the aftermath of a incident involving an American couple.\n '
+					'The non-linear narrative demonstrates how the characters\' actions impact not only the American couple, but a Moroccan family, and a Japanese teenager as well.\n '
+					'\"Babel\" received critical acclaim, winning Best Original Score at the Academy Awards and was nominated for seven awards.\n '
+					'If you\'d like more information about the film, the Wikipedia page is here: \"https://tinyurl.com/yckrvc6t\", here\'s the link to the trailer on YouTube: \"https://youtu.be/yDNa6t-TDrQ\".`': 'end'
+				}
+			}
+		}
 	}
 
 
