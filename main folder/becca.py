@@ -136,7 +136,7 @@ class MacroSaveOccupation(Macro):
 
 		# save the user's occupation
 		users_dictionary[current_user]['occupation'] = str(user_occupation).lower()
-		print(users_dictionary)
+		# print(users_dictionary)
 
 		# return a random response to the user's occupation
 		responses = ['Oh, cool! You\'re a ', 
@@ -183,7 +183,7 @@ class MacroSaveHobby(Macro):
 		if (user_hobby not in user_nested_list):
 			user_nested_list.append(user_hobby)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # save the user's favourite colours 
@@ -219,7 +219,7 @@ class MacroSaveFavoriteColor(Macro):
 		if (color_hex not in user_nested_list):
 			user_nested_list.append(color_hex)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # save the user's not favourite colours
@@ -252,7 +252,7 @@ class MacroSaveNotFavoriteColor(Macro):
 		if (color_hex not in user_nested_list):
 			user_nested_list.append(color_hex)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # save the user's favourite styles
@@ -286,7 +286,7 @@ class MacroSaveStyle(Macro):
 		if (style_name not in user_nested_list):
 			user_nested_list.append(style_name)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # saves the user's favourite clothing items
@@ -308,7 +308,7 @@ class MacroSaveFavoriteClothing(Macro):
 		if (user_fav_item not in user_nested_list):
 			user_nested_list.append(user_fav_item)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # saves the user's not favourite clothing items
@@ -330,7 +330,7 @@ class MacroSaveNotFavoriteClothing(Macro):
 		if (user_not_fav_item not in user_nested_list):
 			user_nested_list.append(user_not_fav_item)
 
-		print(users_dictionary)
+		# print(users_dictionary)
 
 
 # saves the user's current outfit
@@ -342,7 +342,7 @@ class MacroSaveOutfit(Macro):
 
 		# get the user’s current clothing item
 		user_item = str(vars['USER_CURR_ITEM'])
-		print('user item: ' + user_item)
+		# print('user item: ' + user_item)
 
 		# if the user is wearing nothing or something similar to nothing, just exit
 		if user_item == '':
@@ -388,7 +388,7 @@ class MacroSaveOutfit(Macro):
 
 		# add +1 to index, to start at 1
 		dict_index += 1
-		print('current outfit dictionary size: ' + str(dict_index))
+		# print('current outfit dictionary size: ' + str(dict_index))
 
 		# add the clothing item, category, and style to the user's current outfit dictinoary
 		user_nested_current_outfit_dictionary[dict_index] = dict(
@@ -397,7 +397,7 @@ class MacroSaveOutfit(Macro):
 			clothing_style=str(clothing_style)
 		)
 
-		print(user_nested_current_outfit_dictionary)
+		# print(user_nested_current_outfit_dictionary)
 
 
 # returns whether or not the user has watched the movie
@@ -687,12 +687,12 @@ def createUserCheck():
 	global users_dictionary
 	global current_user
 
-	print("The current user is " + current_user)
+	# print("The current user is " + current_user)
 
 	# if the user is not already in the dictionary
 	# create a empty dictionary with the user's name
 	if users_dictionary.get(current_user) is None:
-		print("Creating a new user " + current_user)
+		# print("Creating a new user " + current_user)
 
 		users_dictionary[current_user] = dict(
 			name=str(current_user.capitalize()),
@@ -707,12 +707,12 @@ def createUserCheck():
 			current_outfit_dict={}
 		)
 		
-		print(users_dictionary)
+		# print(users_dictionary)
 		return 'no'
 
 	# else, the user is already in the dictionary -- returning user
 	else:
-		print("A returning user: " + current_user)
+		# print("A returning user: " + current_user)
 		return 'yes'
 
 # recommendation functions ============================================
@@ -826,7 +826,7 @@ def determineWatchStatus(response):
 	)
 
 	result = response['choices'][0]['message']['content'].strip()
-	print('result: \"' + result + '\" ')
+	# print('result: \"' + result + '\" ')
 	
 	# check that the watch status is in the correct format
 	if result == 'yes' or result == 'Yes' or result == 'yes.' or result == 'Yes.':
