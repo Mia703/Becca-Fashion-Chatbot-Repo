@@ -1743,7 +1743,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the top the user is wearing
 	get_current_top_transition = {
 		'state': 'get_current_top_transition',
-		'`what top are you currently wearing?`': {
+		'`what top are you currently wearing? Otherwise, say skip.`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! I wore a soccer jersey with a pleated skirt yesterday to the Atlanta United game. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
@@ -1771,10 +1771,9 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Those are so gorgeous. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-			# TODO: add more words that are similar to nothing, or have the same meaning
-			# FIXME: what's up with the extra space? Try to remove.
+
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-			'<nothing>': {
+			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_bottoms_transition'
 			},
 			'error': {
@@ -1788,7 +1787,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the bottom the user is wearing
 	get_current_bottoms_transition = {
 		'state': 'get_current_bottoms_transition',
-		'`What bottoms are you currently wearing?`': {
+		'`What bottoms are you currently wearing? Otherwise, say skip.`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Understood. I\'m a tennis skirt girlie. I wore one yesterday to workout. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
@@ -1818,7 +1817,7 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-			'<nothing>': {
+			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_coat_transition'
 			},
 			'error': {
@@ -1832,7 +1831,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the outerwear the user is wearing
 	get_current_coat_transition = {
 		'state': 'get_current_coat_transition',
-		'`What coat or outerwear are you currently wearing?`': {
+		'`What coat or outerwear are you currently wearing? Otherwise, say skip.`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Cool! I literally live in my Nike track jacket. It\'s perfectly oversized and so comfy. And now...\n `': 'get_current_shoes_transition'
 			},
@@ -1860,9 +1859,9 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Cool! I saw the most beautiful embroidered tunic the other day. And now...\n `': 'get_current_shoes_transition'
 			},
-			# TODO: add more words that are similar to nothing, or have the same meaning
+
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-			'<nothing>': {
+			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_shoes_transition'
 			},
 			'error': {
@@ -1876,7 +1875,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get the shoes the user is wearing
 	get_current_shoes_transition = {
 		'state': 'get_current_shoes_transition',
-		'`What shoes are you currently wearing?`': {
+		'`What shoes are you currently wearing? Otherwise, say skip.`': {
 			'[$USER_CURR_ITEM=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Great. I just invested in a pair of Hokas and they literally make it feel like I\'m running on clouds. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
@@ -1904,9 +1903,9 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about different shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
-			# TODO: add more words that are similar to nothing, or have the same meaning
+
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-			'<nothing>': {
+			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_accessory_transition'
 			},
 			'error': {
@@ -1920,7 +1919,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get any accessories the user is currently wearing
 	get_current_accessory_transition = {
 		'state': 'get_current_accessory_transition',
-		'`What accessory are you currently wearing?`': {
+		'`What accessory are you currently wearing? Otherwise, say skip.`': {
 			'[$USER_CURR_ACCSRY=#ONT(sporty)]': {
 				'#GET_CURR_OUTFIT`Awesome, thanks! I like wearing a baseball cap when I don\'t want to talk to people in public lol.\n `': 'choice_acessory_transition'
 			},
@@ -1948,9 +1947,9 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. \n `': 'choice_acessory_transition'
 			},
-			# TODO: add more words that are similar to nothing, or have the same meaning
+
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-			'<nothing>': {
+			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
 			},
 			'error': {
