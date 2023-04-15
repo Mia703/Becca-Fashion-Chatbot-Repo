@@ -9,9 +9,6 @@ import pandas as pd
 import openai
 import nltk
 # nltk.download('omw-1.4')
-# python files ============================================
-# from resources.open_api import API_KEY
-# import babble_macros
 # ============================================
 from typing import Dict, Any, List
 from collections import defaultdict
@@ -29,7 +26,7 @@ styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
 openai.api_key_path = './resources/openai_api.txt'
-# openai.api_key = API_KEY
+# openai.api_key = ''
 
 
 # saves the user's feedback from recommendation
@@ -276,7 +273,7 @@ class MacroSaveStyle(Macro):
 		# get the index of the row
 		style_index = list(df_results.index.values)[0]
 
-		# save the style name
+		# return the style name
 		style_name = df_results['Style'][style_index]
 
 		# access the user's dictionary
@@ -401,6 +398,17 @@ class MacroSaveOutfit(Macro):
 		)
 
 		print(user_nested_current_outfit_dictionary)
+
+
+# returns whether or not the user has watched the movie
+class MacroReturnWatchStatus(Macro):
+	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+		# get the user's response
+		user_response = ngrams.text()
+
+		# pass the response to gpt
+		vars['USER_WATCH_STATUS'] = determineWatchStatus(response=user_response)
+		return True
 
 
 # recommendation macros ============================================
@@ -670,6 +678,7 @@ def load(df: DialogueFlow, varfile: str):
 def clear_dictionary(dict_name: Dict):
 	dict_name.clear()
 
+# functions  ============================================
 
 # checks if the user is already in the user_dictionary
 # if not -- new user -- creates a empty dictionary with the users name
@@ -706,7 +715,7 @@ def createUserCheck():
 		print("A returning user: " + current_user)
 		return 'yes'
 
-
+# recommendation functions ============================================
 # recommens an outfit to the user
 def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
 	prompt = 'Recommend an outfit for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
@@ -766,6 +775,7 @@ def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fa
 	result = response['choices'][0]['message']['content'].strip()
 	return str(result)
 
+
 # recommends a clothing item to the user based on their current outfit
 def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit):
 	prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
@@ -801,6 +811,31 @@ def recommendClothingItemAfterFeedback(hobby, fav_color, not_fav_color, user_sty
 	result = response['choices'][0]['message']['content'].strip()
 	return str(result)
 
+
+def determineWatchStatus(response):
+	prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Bable?\", the response is as follows: \"' + response + '\". Determine if the person has watched the movie, if the person has watched the movie return \"yes\" only, if not return \"no\" only, and nothing else. Do not explain.'
+
+	response = openai.ChatCompletion.create(
+		model='gpt-3.5-turbo',
+		temperature=0,
+		max_tokens=120,
+		messages=[
+			{'role': 'system', 'content': 'You are a chatbot'},
+			{'role': 'user', 'content': prompt}
+		]
+	)
+
+	result = response['choices'][0]['message']['content'].strip()
+	print('result: \"' + result + '\" ')
+	
+	# check that the watch status is in the correct format
+	if result == 'yes' or result == 'Yes' or result == 'yes.' or result == 'Yes.':
+		return 'yes'
+	
+	if result == 'no' or result == 'No' or result == 'No.' or result == 'No.':
+		return 'no'
+
+
 # dialogue ============================================
 def main_dialogue() -> DialogueFlow:
 	introduction_transition = {
@@ -817,11 +852,9 @@ def main_dialogue() -> DialogueFlow:
 	
 	return_user_transition = {
 		'state': 'return_user_transition',
-		'`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Babble\", jump right in to recommending, or update your preferences?`': {
-			'<babble>': {
-				# TODO: change back when done with babble transition
-				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
-				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+		'`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Bable\", jump right in to recommending, or update your preferences?`': {
+			'<bable>': {
+				'`Okay, we can talk about the movie \"Bable\"!`': 'babel_transition'
 			},
 			# Get started recommending
 			'<{recommend, recommending}>': {
@@ -844,11 +877,9 @@ def main_dialogue() -> DialogueFlow:
 		'I\'m your personal stylist bot created just for you.\n '
 		'I\'m here to help you look good and feel good about yourself and your clothes.\n '
 		'And just an F.Y.I the information you share with me will stay with me. \U0001F92B\n '
-		'So, let\'s get started! Would you like to talk about the movie \"Babble\" or shall we talk about you and your clothes?`': {
-			'<babble>': {
-				# TODO: change back when done with babble transition
-				# '`Okay, we can talk about the movie \"Babble\"!`': 'babble_transition'
-				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
+		'So, let\'s get started! Would you like to talk about the movie \"Bable\" or shall we talk about you and your clothes?`': {
+			'<bable>': {
+				'`Okay, we can talk about the movie \"Bable\"!`': 'babel_transition'
 			},
 			# Let's talk about clothes
 			'[{let, lets, wanna, want}, clothes]': {
@@ -862,14 +893,13 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# talks about the movie Babble
-	babble_transition = {
-		'state': 'babble_transition',
-		'`I guess I should ask first if you have already watched the movie \"Babble\" or would you like to learn more about the film?`': {
+	babel_transition = {
+		'state': 'babel_transition',
+		'`I guess I should ask first if you have already watched the movie \"Bable\" or would you like to learn more about the film?`': {
 			# returns wheither or not the user watchced the movie
 			'#GET_WATCH_STATUS': {
 				# yes, the user watched the film
-				'#IF($USER_WATCH_STATUS=yes)': {
-					'`Did you enjoy the movie? What did you like or dislike about the movie?`': {
+				'#IF($USER_WATCH_STATUS=yes)`Did you enjoy the movie? What did you like or dislike about the movie?`': {
 						# get's the user's feedback about the film, returns 'positive', 'neutral', or 'negative'
 						'#GET_FEEDBACK': {
 							# if the user's feedback is considered 'postitve'
@@ -884,9 +914,25 @@ def main_dialogue() -> DialogueFlow:
 									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
 									'This resulted in additional challenges and major issues with other characters in the picture.\n '
 									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
-									'Do you have any additional thoughts on the characters?`': {
+									'Do you have any additional thoughts on the characters in this film?`': {
+										# don't really care what the user says here
 										'error': {
-											'hello': 'end'
+											'`Ameila is the character in the film that I sympathise with the most.\n '
+											'She had the greatest of intentions and treated Debbie and Mike\'s children as if they were her own.\n '
+											'However, because of her error judgement to take the children across the U.S.-Mexico border, she not only put the children in danger,\n '
+											'but she also lost her job and was deported from the U.S. for working illegally.\n '
+											'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
+											'Would you like to go back and talk about clothing?`': {
+												'{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+													# they are a return user
+													'#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
+													# they are a new user
+													'#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
+												},
+												'{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+													'`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
+												}
+											}
 										}
 									}
 								}
@@ -904,9 +950,25 @@ def main_dialogue() -> DialogueFlow:
 									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
 									'This resulted in additional challenges and major issues with other characters in the picture.\n '
 									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
-									'Do you have any additional thoughts on the characters?`': {
+									'Do you have any additional thoughts on the characters in this film?`': {
+										# don't really care what the user says here
 										'error': {
-											'hello': 'end'
+											'`Ameila is the character in the film that I sympathise with the most.\n '
+											'She had the greatest of intentions and treated Debbie and Mike\'s children as if they were her own.\n '
+											'However, because of her error judgement to take the children across the U.S.-Mexico border, she not only put the children in danger,\n '
+											'but she also lost her job and was deported from the U.S. for working illegally.\n '
+											'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
+											'Would you like to go back and talk about clothing?`': {
+												'{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+													# they are a return user
+													'#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
+													# they are a new user
+													'#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
+												},
+												'{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+													'`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
+												}
+											}
 										}
 									}
 								}
@@ -924,25 +986,38 @@ def main_dialogue() -> DialogueFlow:
 									'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
 									'This resulted in additional challenges and major issues with other characters in the picture.\n '
 									'As we can see, a mix of poor decisions and misconceptions blasted the stories out of proportion.\n '
-									'Do you have any additional thoughts on the characters?`': {
+									'Do you have any additional thoughts on the characters in this film?`': {
+										# don't really care what the user says here
 										'error': {
-											'hello': 'end'
+											'`Ameila is the character in the film that I sympathise with the most.\n '
+											'She had the greatest of intentions and treated Debbie and Mike\'s children as if they were her own.\n '
+											'However, because of her error judgement to take the children across the U.S.-Mexico border, she not only put the children in danger,\n '
+											'but she also lost her job and was deported from the U.S. for working illegally.\n '
+											'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
+											'Would you like to go back and talk about clothing?`': {
+												'{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+													# they are a return user
+													'#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
+													# they are a new user
+													'#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
+												},
+												'{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+													'`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
+												}
+											}
 										}
 									}
 								}
 							}
 						}
-					}
 				},
 				# no, the user didn't watch the film
-				'#IF($USER_WATCH_STATUS=no)': {
-					'`Okay, so you didn\'t wach the movie. Here\'s a breif description of the film.\n '
+				'#IF($USER_WATCH_STATUS=no)`Okay, so you didn\'t wach the movie. Here\'s a breif description of the film.\n '
 					'\"Babel\" is a 2006 film by Alejandro González Iñárritu, consisting of four interrelated stories in Morocco, Japan, Mexico, and the United States.\n '
 					'The film explores the theme of cultural miscommunication in the aftermath of a incident involving an American couple.\n '
 					'The non-linear narrative demonstrates how the characters\' actions impact not only the American couple, but a Moroccan family, and a Japanese teenager as well.\n '
 					'\"Babel\" received critical acclaim, winning Best Original Score at the Academy Awards and was nominated for seven awards.\n '
 					'If you\'d like more information about the film, the Wikipedia page is here: \"https://tinyurl.com/yckrvc6t\", here\'s the link to the trailer on YouTube: \"https://youtu.be/yDNa6t-TDrQ\".`': 'end'
-				}
 			}
 		}
 	}
@@ -1606,6 +1681,17 @@ def main_dialogue() -> DialogueFlow:
 	}
 
 
+	# TODO: divrsify transitions / prompts
+	choice_get_fav_clothing_transition = {
+		'`Do you have any more favorite clothing items?`': {
+			'yes': 'get_fav_clothing_transition',
+			'no': 'get_not_fav_clothing_transition',
+			'error': {
+				'`Sorry, I don\'t understand.`': 'choice_get_fav_clothing_transition'
+			}
+		}
+	}
+
 	# -- get user's not preferred clothing items
 	# FIXME: add transisions
 	get_not_fav_clothing_transition = {
@@ -1914,6 +2000,7 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
 	# -- asks the user if they have any more accessories they'd like to list
 	choice_acessory_transition = {
 		'state': 'choice_acessory_transition',
@@ -1961,6 +2048,7 @@ def main_dialogue() -> DialogueFlow:
 		}
 	}
 
+
 	exit_transition = {
 		'state': 'exit_transition',
 		'`Well that\'s all I really have for you.\n '
@@ -1989,12 +2077,15 @@ def main_dialogue() -> DialogueFlow:
 		'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
 		'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
 		'GET_CURR_OUTFIT': MacroSaveOutfit(),
-		# macros from  openai_macros.py ============================================
+		# macros for talking about the movie ============================================
+		'GET_WATCH_STATUS': MacroReturnWatchStatus(),
+		# macros for recommending clothes ============================================
 		'REC_OUTFIT': MacroRecommendOutfit(),
 		'GET_FEEDBACK': MacroReturnFeedbackSentiment(),
 		'REC_OUTFIT_AF_FEEDBACK':MacroRecommendOutfitAfterFeedback(),
 		'REC_CLOTHING_ITEM': MacroRecommentClothingItem(),
 		'REC_CLOTHING_ITEM_AF_FEEDBACK': MacroRecommendClothingItemAfterFeedback(),
+
 	}
 
 	# ============================================
@@ -2008,11 +2099,12 @@ def main_dialogue() -> DialogueFlow:
 
 	df.load_transitions(introduction_transition)
 	
+
 	df.load_transitions(return_user_transition)
 	df.load_transitions(new_user_transition)
 
 	# df.load_transitions(choice_transition)
-	df.load_transitions(babble_transition)
+	df.load_transitions(babel_transition)
 
 	df.load_transitions(clothing_transition)
 
@@ -2044,6 +2136,8 @@ def main_dialogue() -> DialogueFlow:
 	# get the user's not favourite clothing item
 	df.load_transitions(get_not_fav_clothing_transition)
 
+	df.load_transitions(choice_get_fav_clothing_transition)
+
 	# get the user's current outfit
 	df.load_transitions(get_current_top_transition)
 	df.load_transitions(get_current_bottoms_transition)
@@ -2066,7 +2160,7 @@ def main_dialogue() -> DialogueFlow:
 
 	# exting conversation -- directs user to google form
 	df.load_transitions(exit_transition)
-	
+
 	df.add_macros(macros)
 
 	return df
