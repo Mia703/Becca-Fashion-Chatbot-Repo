@@ -35,7 +35,7 @@ openai.api_key_path = './resources/openai_api.txt'
 # saves the user's feedback from recommendation
 user_feedback = ''
 
-# saves the last recommendation to the user
+# saves the last recommendation to the user 
 last_recommendation = ''
 
 # macros ============================================
