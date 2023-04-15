@@ -852,7 +852,7 @@ def main_dialogue() -> DialogueFlow:
 				'`Okay, we can talk about the movie \"Babble\"!`': 'end'
 			},
 			# Let's talk about clothes
-			'[clothes]': {
+			'<clothes>': {
 				'`Okay, we can talk about clothes!\n`': 'clothing_transition'
 			},
 			'error': {
