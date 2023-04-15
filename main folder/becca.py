@@ -1295,21 +1295,20 @@ def main_dialogue() -> DialogueFlow:
 				}
 			},
 			'error': {
-				'`I don\'t know much about that field, but it sounds like you must have a lot of expertise!`': 'end'
+				# TODO: should we add this occupation to anyway
+				'`I\'m sorry, I\'m not familiar with this field, but it sounds like you must have a lot of expertise!`': 'get_occupation_transition'
 			}
 		}
 	}
 
 
 	# -- gets the user's hobby 1
-	# FIXME: diverse transitions
 	get_hobby_transition_one = {
 		'state': 'get_hobby_transition_one',
 		'`Ah, I see! Speaking of... what do you do when you\'re not working?`': {
-			# get hobby #1
 			# learning = things that someone would learn for fun
 			'[$USER_HOBBY=#ONT(learning)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			# sports = a physical activity
 			'[$USER_HOBBY=#ONT(sports)]': {
@@ -1317,11 +1316,11 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# games = card/board games and the like
 			'[$USER_HOBBY=#ONT(games)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			# creative = creating something; an artistic hobby
 			'[$USER_HOBBY=#ONT(creative)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`That\'s interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
@@ -1329,11 +1328,11 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# domestic = chores that are hobbies
 			'[$USER_HOBBY=#ONT(domestic)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			# making = making an object; tinkering
 			'[$USER_HOBBY=#ONT(making)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			# outdoor = hobbies that happen outdoors; that aren't sports
 			'[$USER_HOBBY=#ONT(outdoor)]': {
@@ -1341,21 +1340,19 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# observation = hobbies that involve just looking at something
 			'[$USER_HOBBY=#ONT(observation)]': {
-				'#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+				'#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_hobby_transition_one'
+				'`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_one'
 			}
 		}
 	}
 
 
 	# -- gets the user's hobby 2
-	# FIXME: diverse transitions
 	get_hobby_transition_two = {
 		'state': 'get_hobby_transition_two',
 		'`What other activities do you like to do for fun?`': {
-			# get hobby #2
 			# learning = things that someone would learn for fun
 			'[$USER_HOBBY=#ONT(learning)]': {
 				'#GET_HOBBY`Ooooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`for fun.\n `': 'get_hobby_transition_three'
@@ -1393,29 +1390,27 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_HOBBY`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`for fun.\n `': 'get_hobby_transition_three'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_hobby_transition_two'
+				'`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_two'
 			}
 		}
 	}
 
 
 	# -- gets the user's hobby 3
-	# FIXME: diverse transitions
 	get_hobby_transition_three = {
 		'state': 'get_hobby_transition_three',
-		'`Are there any other hobbies you\'re really passionate about?`': {
-			# get hobby 3
+		'`I looooove photography! It\'s one of my favorite hobbies. Are there any other hobbies you\'re really passionate about?`': {
 			# learning = things that someone would learn for fun
 			'[$USER_HOBBY=#ONT(learning)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`Nice! `': 'get_fav_color_transition_one'
 			},
 			# sports = a physical activity
 			'[$USER_HOBBY=#ONT(sports)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`That\'s so cool!`': 'get_fav_color_transition_one'
 			},
 			# games = card/board games and the like
 			'[$USER_HOBBY=#ONT(games)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`Great!`': 'get_fav_color_transition_one'
 			},
 			# creative = creating something; an artistic hobby
 			'[$USER_HOBBY=#ONT(creative)]': {
@@ -1423,15 +1418,15 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# collecting = anything a person could collect
 			'[$USER_HOBBY=#ONT(collecting)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`That\'s so cool!`': 'get_fav_color_transition_one'
 			},
 			# domestic = chores that are hobbies
 			'[$USER_HOBBY=#ONT(domestic)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`Great!`': 'get_fav_color_transition_one'
 			},
 			# making = making an object; tinkering
 			'[$USER_HOBBY=#ONT(making)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`That\'s so cool!`': 'get_fav_color_transition_one'
 			},
 			# outdoor = hobbies that happen outdoors; that aren't sports
 			'[$USER_HOBBY=#ONT(outdoor)]': {
@@ -1439,44 +1434,42 @@ def main_dialogue() -> DialogueFlow:
 			},
 			# observation = hobbies that involve just looking at something
 			'[$USER_HOBBY=#ONT(observation)]': {
-				'#GET_HOBBY`Nice.`': 'get_fav_color_transition_one'
+				'#GET_HOBBY`Great!`': 'get_fav_color_transition_one'
 			},
 			'error': {
-				'`Sorry, I don\'t understand.`': 'get_hobby_transition_three'
+				'`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_three'
 			}
 		}
 	}
 
 
 	# -- gets the user's favourite colour #1
-	# FIXME: diverse transitions
 	get_fav_color_transition_one = {
 		'state': 'get_fav_color_transition_one',
-		# favourite colour #1
 		'`While on the subject of things we like, it just occurred to me that I don\'t know your favorite color?!\n '
 		' What is it?`': {
 			'[$USER_COLOR=#ONT(red)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! That\'s so cool! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! That\'s so cool! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(green)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! That\'s so cool! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
-				'#GET_FAV_COLOR`Oh, really? My favorite color is pink.\n '
+				'#GET_FAV_COLOR`Oh, really?! My favorite color is pink.\n '
 				'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
 			},
 			'error': {
@@ -1487,18 +1480,17 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- gets the user's favourite colour #2
-	# FIXME: diverse transitions?
 	get_fav_color_transition_two = {
 		'state': 'get_fav_color_transition_two',
 		# favourite colour #2
 		'`Is there another color you love to wear?`': {
 			'[$USER_COLOR=#ONT(red)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
-				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
+				'I like`$USER_COLOR`too! It always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(orange)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
-				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
+				'I like`$USER_COLOR`too, it always stands out to me, but I never know how to style it!`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(yellow)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
@@ -1506,15 +1498,15 @@ def main_dialogue() -> DialogueFlow:
 			},
 			'[$USER_COLOR=#ONT(green)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
-				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
+				'I like`$USER_COLOR`too, it always stands out to me, but I never know how to style it!`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(blue)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
-				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
+				'I like`$USER_COLOR`too! It always stands out to me.`': 'get_not_fav_color_transition'
 			},
 			'[$USER_COLOR=#ONT(violet)]': {
 				'#GET_FAV_COLOR`Lol, nice. ' 
-				'I like`$USER_COLOR`too, it always stands out to me.`': 'get_not_fav_color_transition'
+				'I like`$USER_COLOR`too, it always stands out to me, but I never know how to style it!`': 'get_not_fav_color_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand.`': 'get_fav_color_transition_two'
@@ -1524,7 +1516,6 @@ def main_dialogue() -> DialogueFlow:
 
 
 	# -- get user's not favourite colours # 1
-	# FIXME: add more diverse responses?
 	get_not_fav_color_transition = {
 		'state': 'get_not_fav_color_transition',
 		'`Out of curiosity, are there any color that you really dislike or wouldn\'t wear?`': {
@@ -1643,86 +1634,84 @@ def main_dialogue() -> DialogueFlow:
 
 	
 	# -- get user's preferred clothing items
-	# FIXME: add transition
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
 		'`What are some of clothing items you wear often?`': {
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-				'#GET_FAV_CLOTHING`comment.?\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-				'#GET_FAV_CLOTHING`comment.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'error': {
-				'`Sorry, I don\'t understand`': 'get_fav_clothing_transition'
+				'`Sorry, I don\'t understand. Do you mind answering the question again?`': 'get_fav_clothing_transition'
 			}
 		}
 	}
 
+	
 
-	# TODO: divrsify transitions / prompts
 	choice_get_fav_clothing_transition = {
-		'`Do you have any more favorite clothing items?`': {
-			'yes': 'get_fav_clothing_transition',
-			'no': 'get_not_fav_clothing_transition',
+		'`Do you have any more clothing items you\'d like to add?`': {
+			'{yes, absolutely, affirmative, certainly, "of course", sure, yup, yeah, "uh-huh", roger, aye, okay, agreed, indeed, right, positively, "you bet", correct, definitely, "absolutely right", indubitably}': 'get_fav_clothing_transition',
+			'{no, nope, “nuh-uh”, negative, “not at all”, “no way”, “absolutely not”, never, “not really”, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'get_not_fav_clothing_transition',
 			'error': {
-				'`Sorry, I don\'t understand.`': 'choice_get_fav_clothing_transition'
+				'`Sorry, I don\'t understand. Do you mind answering the question again?`': 'choice_get_fav_clothing_transition'
 			}
 		}
 	}
 
 	# -- get user's not preferred clothing items
-	# FIXME: add transisions
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
 		'`What are some clothing items that you try to avoid?`': {
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.?\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.?\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-				'#GET_NOT_FAV_CLOTHING`comment.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
@@ -1812,7 +1801,6 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Got it, nice! Those are so gorgeous. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
-
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_bottoms_transition'
@@ -1856,7 +1844,6 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Understood. Ralph Lauren\'s 2009 Harem pants were iconic. Moving on to the next item.\n `': 'get_current_coat_transition'
 			},
-			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_coat_transition'
@@ -1900,7 +1887,6 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Cool! I saw the most beautiful embroidered tunic the other day. And now...\n `': 'get_current_shoes_transition'
 			},
-
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_shoes_transition'
@@ -1944,7 +1930,6 @@ def main_dialogue() -> DialogueFlow:
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
 				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about different shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
-
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
 				'$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_accessory_transition'
