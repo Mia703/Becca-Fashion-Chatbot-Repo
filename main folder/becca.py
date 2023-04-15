@@ -1554,8 +1554,8 @@ def main_dialogue() -> DialogueFlow:
 	# -- gets the user's favourite styles
 	get_style_transition_one = {
 		'state': 'get_style_transition_one',
-		'`I\'d love to learn more about your personal style!\n '
-		'Do you have any staple pieces in your clothes that you wear often? Or do you resonate with a certain aesthetic?`': {
+		'`I\'d love to learn about your personal style!\n '
+		'Do you resonate with any particular fashion aesthetic? Or is there an item in your closet that you would say is representative of your personal style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
 			},
@@ -1594,7 +1594,7 @@ def main_dialogue() -> DialogueFlow:
 	# TODO: add a statement here from Becca
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
-		'`Is there another item in your closet you couldn\'t live without or another aesthetic you resonate with?`': {
+		'`Is there another aesthetic you resonate with or another item in your closet that you couldn\'t live without?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`How athletic of you! I\'ve really been loving Aritzia\'s athleisure brand, TNA. I live in their TNA butter workout sets.\n `': 'get_fav_clothing_transition'
 			},
@@ -1632,7 +1632,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get user's preferred clothing items (generic)
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
-		'`What are some of clothing items you wear often?`': {
+		'`What is a staple item in your closet that you just can\'t get enough of?`': {
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
 				'#GET_FAV_CLOTHING`Oh so you either workout or trick people into thinking you workout by wearing athletic clothes.\n `': 'get_not_fav_clothing_transition'
 			},
@@ -1670,7 +1670,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- get user's not preferred clothing items (generic)
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
-		'`What are some clothing items that you try to avoid?`': {
+		'`What about a clothing item that you would never wear?`': {
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
 				'#GET_NOT_FAV_CLOTHING`I feel you. I only wear athleisure when I\'m too lazy to put together an outfit.\n `': 'choice_recommendation_transition'
 			},
@@ -1684,7 +1684,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_NOT_FAV_CLOTHING`I feel you. Whenever I put on a polo, I don\'t quite feel like myself.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-				'#GET_NOT_FAV_CLOTHING`I feel you. I also prefer not to dress like I\'m in a band.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. Fish nets, studded belts, and chokers aren\'t really my cup of tea either.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
 				'#GET_NOT_FAV_CLOTHING`I feel you, but honestly you\'re missing out. I\'m an oversized, cargo, and low rise fanatic.\n `': 'choice_recommendation_transition'
@@ -1843,7 +1843,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Cool! I\'m a strong believer that everyone needs a good leather jacket in their closet. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Cool! Maybe one day I\'ll be able to buy myself the iconic Burberry trench. And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! Maybe one day I\'ll be able to buy myself the iconic Burberry trench. Wow, that would make my year. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Cool! I LOVE my Wilsons biker jacket from Ebay. It has an orange stripe down the sleeve and it so unique. And now...\n `': 'get_current_shoes_transition'
@@ -1902,7 +1902,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Great. I love my white high top converse. I wore them literally every day last summer. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about different shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about the different types of shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
@@ -1934,19 +1934,19 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Awesome, thanks! I recently bought the cutest tote bag at a night market in Costa Rica. I\'m obsessed with it.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! My mom sent me a picture of the custest studded belt the other day that she bought for herself.\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! My mom sent me an adorable picture of her in a studded belt that she recently bought.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Awesome, thanks! So apparently people are wearing ski glasses for fun these days? I definitely need to look into that.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! People have been styling silk scarves all types of ways on TikTok. People are so creative.\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! People have been styling silk scarves all types of ways on TikTok. Who knew a scarf could function as ten different tops?\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been meaning to get myself a straw hat for this summer. Any recs would be appreciated! \n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been meaning to get myself a straw hat for this summer. Any recs would be greatly appreciated!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. \n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. I\'m dying to know where it was from.\n `': 'choice_acessory_transition'
 			},
 			# TODO: add more words that are similar to nothing, or have the same meaning
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
