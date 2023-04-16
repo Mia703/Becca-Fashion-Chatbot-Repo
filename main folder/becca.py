@@ -1559,8 +1559,8 @@ def main_dialogue() -> DialogueFlow:
 	# -- gets the user's favourite styles
 	get_style_transition_one = {
 		'state': 'get_style_transition_one',
-		'`Another thing I\'d love to know about you is how you like to dress. I\'m always curious about people\'s fashion preferences.\n '
-		'Can you tell me a bit about your personal style?`': {
+		'`I\'d love to learn about your personal style!\n '
+		'Do you resonate with any particular fashion aesthetic? Or is there an item in your closet that you would say is representative of your personal style?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
 			},
@@ -1598,7 +1598,7 @@ def main_dialogue() -> DialogueFlow:
 	# -- gets the user's favourite styles #2
 	get_style_transition_two = {
 		'state': 'get_style_transition_two',
-		'`Is there another style you like to wear?`': {
+		'`Is there another aesthetic you resonate with or another item in your closet that you couldn\'t live without?`': {
 			'[$USER_STYLE=#ONT(sporty)]': {
 				'#GET_STYLE`How athletic of you! I\'ve really been loving Aritzia\'s athleisure brand, TNA. I live in their TNA butter workout sets.\n `': 'get_fav_clothing_transition'
 			},
@@ -1624,7 +1624,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_STYLE`I sometimes dress casually, but to be honest I prefer to always be the most overdressed in the room.\n `': 'get_fav_clothing_transition'
 			},
 			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`That\'s so cool! I\'d love for you to teach me about the type clothes you wear.\n `': 'get_fav_clothing_transition'
+				'#GET_STYLE`That\'s so cool! I\'d love for you to teach me more about the type clothes you wear.\n `': 'get_fav_clothing_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand`': 'get_style_transition_two'
@@ -1636,33 +1636,33 @@ def main_dialogue() -> DialogueFlow:
 	# -- get user's preferred clothing items
 	get_fav_clothing_transition = {
 		'state': 'get_fav_clothing_transition',
-		'`What are some of clothing items you wear often?`': {
+		'`What is a staple item in your closet that you just can\'t get enough of?`': {
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`Oh so you either workout or trick people into thinking you workout by wearing athletic clothes.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`I could imagine myself frolicking through a prairie in a long flowy dress.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`So you probably also like plaid then. I\'m not the biggest plaid fan tbh.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`I know you\'ll get this reference then: Serena or Blair? Team Serena all the way.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! That\'s so cool, it\'s not my style, but I definitely respect it. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`Ok you must also own a lot of leather then. I\'m a simple creature. I like to stick to my trusty black leather jacket and pants.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`I see you over there with that model off duty style. Pop off queen.`': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`So you like to dress like you\'re going to work all the time? Sorry that might have been a little mean.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`Fair answer. I spend most of my time in my Aritzia sweat suits.\n `': 'get_not_fav_clothing_transition'
 			},
 			'[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-				'#GET_FAV_CLOTHING`You love to wear`$USER_FAV_CLOTHING_ITEM`?! I like it too. I also love to wear skirts and try to incoporate it into my outfits.\n `': 'get_not_fav_clothing_transition'
+				'#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'get_not_fav_clothing_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand. Do you mind answering the question again?`': 'get_fav_clothing_transition'
@@ -1685,33 +1685,33 @@ def main_dialogue() -> DialogueFlow:
 	# -- get user's not preferred clothing items
 	get_not_fav_clothing_transition = {
 		'state': 'get_not_fav_clothing_transition',
-		'`What are some clothing items that you try to avoid?`': {
+		'`What about a clothing item that you would never wear?`': {
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. I only wear athleisure when I\'m too lazy to put together an outfit.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. Fringed, flowy, and frayed is dfinitely not for everyone.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. I\'m not quite into the whole distressing everything vibe.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. Whenever I put on a polo, I don\'t quite feel like myself.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.?\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. Fish nets, studded belts, and chokers aren\'t really my cup of tea either.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you, but honestly you\'re missing out. I\'m an oversized, cargo, and low rise fanatic.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. The only time you\'ll catch me in clothes that look like I\'m going to work when I\'m actually going to work. Or if it\'s Chanel tweed ofc.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. I am quite the over dresser myself. You\'re way better overdressed than under in my humble opinion.\n `': 'choice_recommendation_transition'
 			},
 			'[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-				'#GET_NOT_FAV_CLOTHING`Okay, noted. I won\'t recommend you that item.\n `': 'choice_recommendation_transition'
+				'#GET_NOT_FAV_CLOTHING`I feel you. I don\'t wear too much of that either.\n `': 'choice_recommendation_transition'
 			},
 			'error': {
 				'`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
@@ -1725,7 +1725,7 @@ def main_dialogue() -> DialogueFlow:
 	choice_recommendation_transition = {
 		'state': 'choice_recommendation_transition',
 		'`Alright, now that I\'ve collected all this information about you.\n '
-		'Are you interested in my suggestions for an outfit? Or would you like styling advice for what you\'re currently wearing?`': {
+		'Would you like me to recommend you an outfit? Or do you need styling advice for an outfit your currently wearing?`': {
 			'{<recommend>, <outfit>}': {
 				'`Alright! I can recommend you an outfit.\n `#REC_OUTFIT`What do you think?`': {
 					# get the user's feedback about Becca's first recommendation
@@ -1751,7 +1751,7 @@ def main_dialogue() -> DialogueFlow:
 							'yes': {
 								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
 							},
-							'no': {
+							'{no, nah, nope, [I\'m good], [no thanks], [no thank you]}': {
 								'`Alright, I won\'t give you any more recommendations.`': 'end'
 							},
 							'error': {
@@ -1799,7 +1799,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Got it, nice! I wore an oversized blazer to work last week and felt super cool lol. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Got it, nice! Those are so gorgeous. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
+				'#GET_CURR_OUTFIT`Got it, nice! I\'m sure it\'s a beautiful garment. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
 			},
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
@@ -1870,7 +1870,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Cool! I\'m a strong believer that everyone needs a good leather jacket in their closet. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(preppy)]': {
-				'#GET_CURR_OUTFIT`Cool! Maybe one day I\'ll be able to buy myself the iconic Burberry trench. And now...\n `': 'get_current_shoes_transition'
+				'#GET_CURR_OUTFIT`Cool! Maybe one day I\'ll be able to buy myself the iconic Burberry trench. Wow, that would make my year. And now...\n `': 'get_current_shoes_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(punk)]': {
 				'#GET_CURR_OUTFIT`Cool! I LOVE my Wilsons biker jacket from Ebay. It has an orange stripe down the sleeve and it so unique. And now...\n `': 'get_current_shoes_transition'
@@ -1928,7 +1928,7 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Great. I love my white high top converse. I wore them literally every day last summer. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			'[$USER_CURR_ITEM=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about different shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
+				'#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about the different types of shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
 			},
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
 			'<skip>': {
@@ -1959,19 +1959,19 @@ def main_dialogue() -> DialogueFlow:
 				'#GET_CURR_OUTFIT`Awesome, thanks! I recently bought the cutest tote bag at a night market in Costa Rica. I\'m obsessed with it.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(punk)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! My mom sent me a picture of the custest studded belt the other day that she bought for herself.\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! My mom sent me an adorable picture of her in a studded belt that she recently bought.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(streetwear)]': {
 				'#GET_CURR_OUTFIT`Awesome, thanks! So apparently people are wearing ski glasses for fun these days? I definitely need to look into that.\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(classic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! People have been styling silk scarves all types of ways on TikTok. People are so creative.\n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! People have been styling silk scarves all types of ways on TikTok. Who knew a scarf could function as ten different tops?\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(casual)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been meaning to get myself a straw hat for this summer. Any recs would be appreciated! \n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I\'ve been meaning to get myself a straw hat for this summer. Any recs would be greatly appreciated!\n `': 'choice_acessory_transition'
 			},
 			'[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
-				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. \n `': 'choice_acessory_transition'
+				'#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. I\'m dying to know where it was from.\n `': 'choice_acessory_transition'
 			},
 
 			# if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
@@ -1989,8 +1989,8 @@ def main_dialogue() -> DialogueFlow:
 	choice_acessory_transition = {
 		'state': 'choice_acessory_transition',
 		'`Are you wearing any more accessories?`': {
-			'<yes>': 'get_current_accessory_transition',
-			'<no>': 'return_outfit_recommendation_transition'
+			'{yes, yeah, yup, ye, yea, indeed, , yessir, [i am]}': 'get_current_accessory_transition',
+			'{no, nah, nope, [i am not], [i\'m not]}': 'return_current_outfit_advice_transition'
 		}
 	}
 
@@ -2006,10 +2006,10 @@ def main_dialogue() -> DialogueFlow:
 				# if the user's feedback is considered neutral
 				'#IF($USER_SENTIMENT=neutral)`I\'m not sure if my recommendation is something your\'re interested in, \U0001F937 but I\'m glad to hear you don\'t completely hate it!.\n '
 				'Would you like me to recommend you another outfit?`': {
-					'{yes, sure}': {
+					'{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
 						'`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
 					},
-					'no': {
+					'{no, nah, nope, [i\'m good], [not right now], [absolutely not], [i\'m done], [i\'m finished]}': {
 						'`Alright, I won\'t give you any more recommendations.`': 'end'
 					},
 					'error': {
@@ -2018,10 +2018,10 @@ def main_dialogue() -> DialogueFlow:
 				},
 				# if the user's feedback is considered negative
 				'#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t my recommendation. \U0001F616 Would you like me to recommend you another outfit?`': {
-					'{yes, sure}': {
+					'{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
 						'`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
 					},
-					'no': {
+					'{no, nah, nope, [i\'m good], [not right now], [absolutely not], [i\'m done], [i\'m finished]}': {
 						'`Alright, I won\'t give you any more recommendations.`': 'end'
 					},
 					'error': {
