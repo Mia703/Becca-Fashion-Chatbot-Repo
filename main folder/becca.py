@@ -39,40 +39,31 @@ last_recommendation = ''
 
 # saves and returns the user's name
 class MacroGetName(Macro):
-	def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-		global users_dictionary
-		global current_user
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
 
-		r = re.compile(r"(?:can|you|call|called|me|my|name|could|should|am|is|they|i|want|to|be|i'm|hey|hi|hello|\s)*(mr|mrs|ms|dr|prof)?(?:^|\s)([a-z'-]+)(?:\s([a-z'-]+))?(?:\s[a-z'?.!]?)*?")
-		m = r.search(ngrams.text())
-		if m is None: return False
+        prompt = "I asked a user to tell me their name. This was their response: " + ngrams.text() + "Respond with only their name. Do not put any periods or say anything else, only respond with their name."
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            temperature=0,
+            max_tokens=200,
+            messages=[
+                {'role': 'system', 'content': 'You are a chatbot'},
+                {'role': 'user', 'content': prompt},
+            ]
+        )
 
-		title, firstname, lastname = None, None, None
+        result = response['choices'][0]['message']['content'].strip()
 
-		if m.group(1):
-			title = m.group(1)
-			if m.group(3):
-				firstname = m.group(2)
-				lastname = m.group(3)
-			else:
-				firstname = m.group()
-		else:
-			if m.group(3):
-				firstname = m.group(2)
-				lastname = m.group(3)
-			else:
-				firstname = m.group()
+        # save the current user
+        current_user = result
 
-		# save the current user
-		current_user = firstname
+        vars['FIRSTNAME'] = result.capitalize() #firstname.capitalize()
 
-		vars['TITLE'] = title
-		vars['FIRSTNAME'] = firstname.capitalize()
-		vars['LASTNAME'] = lastname
+        vars['RETURN_USER'] = createUserCheck()
 
-		vars['RETURN_USER'] = createUserCheck()
-
-		return True
+        return True
 
 
 # saves the user's age
