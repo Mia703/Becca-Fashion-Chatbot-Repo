@@ -456,7 +456,7 @@ class MacroRecommendOutfit(Macro):
 
 		last_recommendation = outfit_recommendation
 
-		return 'I would recommend ' + outfit_recommendation.lower()
+		return 'To build an outfit, I would recommend ' + outfit_recommendation.lower()
 
 
 # gets, saves, and returns the user's sentiments about their recommendation
@@ -582,7 +582,7 @@ class MacroRecommentClothingItem(Macro):
         # remove the period? -- doesn't matter
         # outfit_recommendation_no_period = outfit_recommendation.replace('.', '')
 
-        return 'To build an outfit, I would recommend ' + outfit_recommendation.lower()
+        return 'I would recommend ' + outfit_recommendation.lower()
 
 
 # recommends a clothing item after the user's postive, neutral, or negative feedback
