@@ -43,7 +43,7 @@ class MacroGetName(Macro):
 		global users_dictionary
 		global current_user
 
-		r = re.compile(r"(mr|mrs|ms|dr)?(?:^|\s)([a-z']+)(?:\s([a-z']+))?")
+		r = re.compile(r"(?:can|you|call|called|me|my|name|could|should|am|is|they|i|want|to|be|i'm|hey|hi|hello|\s)*(mr|mrs|ms|dr|prof)?(?:^|\s)([a-z'-]+)(?:\s([a-z'-]+))?(?:\s[a-z'?.!]?)*?")
 		m = r.search(ngrams.text())
 		if m is None: return False
 
@@ -56,10 +56,12 @@ class MacroGetName(Macro):
 				lastname = m.group(3)
 			else:
 				firstname = m.group()
-				lastname = m.group(2)
 		else:
-			firstname = m.group(2)
-			lastname = m.group(3)
+			if m.group(3):
+				firstname = m.group(2)
+				lastname = m.group(3)
+			else:
+				firstname = m.group()
 
 		# save the current user
 		current_user = firstname
