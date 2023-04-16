@@ -1755,7 +1755,7 @@ def main_dialogue() -> DialogueFlow:
 							'yes': {
 								'`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
 							},
-							'{no, nah, nope, [I\'m good], [no thanks], [no thank you]}': {
+							'{no, nah, nope, I\'m good, I\'m ok}': {
 								'`Alright, I won\'t give you any more recommendations.`': 'end'
 							},
 							'error': {
