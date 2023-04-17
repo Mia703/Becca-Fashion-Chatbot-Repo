@@ -26,7 +26,7 @@ styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
 openai.api_key_path = './resources/openai_api.txt'
-#openai.api_key = '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'
+#openai.api_key = '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'
 
 
 # saves the user's feedback from recommendation
@@ -1552,7 +1552,7 @@ def main_dialogue() -> DialogueFlow:
     get_style_transition_one = {
         'state': 'get_style_transition_one',
         '`I\'d love to learn about your personal style!\n '
-        'Do you resonate with any particular fashion aesthetic? Or is there an item in your closet that you would say is representative of your personal style?`': {
+        'What kind of clothes do you often wear? I want to get a sense of your style, good or bad - and it\'s probably bad, before I start recommending you clothes!`': {
             '#GET_STYLE': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
@@ -1574,7 +1574,7 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's favourite styles #2
     get_style_transition_two = {
         'state': 'get_style_transition_two',
-        '`Is there another aesthetic you resonate with or another item in your closet that you couldn\'t live without?`': {
+        '`What other clothes are you wearing around? That can\'t be all!`': {
             '#GET_STYLE': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition',
