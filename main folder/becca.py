@@ -25,8 +25,8 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-# openai.api_key_path = './resources/openai_api.txt'
-openai.api_key = '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'
+openai.api_key_path = './resources/openai_api.txt'
+# openai.api_key = ''
 
 
 # saves the user's feedback from recommendation
