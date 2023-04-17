@@ -1,11 +1,11 @@
 Style,Clothing,Category
 sporty,sporty,sporty
-bohemian, bbohemian,bohemian
+bohemian,bohemian,bohemian
 grunge,grunge,grunge
 preppy,preppy,preppy
-punpunk,punk
-streetwear, strstreetwear,streetwear
-classic, classic,classic
+punk,punk,punk
+streetwear,streetwear,streetwear
+classic,classic,classic
 casual,casual,casual
 ethnic,ethnic,ethnic
 sporty,gym shoes,shoes
@@ -256,6 +256,32 @@ casual,skinny jeans,bottoms
 casual,cargo pants,bottoms
 casual,boat shoes,shoes
 casual,plaid shirts,top
+casual,shirt,top
+casual,socks,bottoms
+casual,robe,coat
+casual,slippers,shoes
+casual,sandals,shoes
+casual,flip flops,shoes
+casual,dresses,dress
+casual,skirts,bottoms
+casual,slacks,bottoms
+casual,long sleeve shirts,top
+casual,blazers,top
+casual,sweaters,top
+casual,pants,bottoms
+casual,ties,accessory
+casual,t-shirts,top
+casual,tank tops,top
+casual,jeans,bottoms
+casual,shorts,bottoms
+casual,polos,top
+casual,jackets,coat
+casual,coats,coat
+casual,raincoats,coat
+casual,hats,accessory
+casual,gloves,accessory
+casual,scarves,accessory
+casual,belts,accessory
 ethnic,Kaftans,top
 ethnic,sarees,dress
 ethnic,dashikis,top
