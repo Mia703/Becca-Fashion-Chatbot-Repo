@@ -25,8 +25,8 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-openai.api_key_path = './resources/openai_api.txt'
-#openai.api_key = ''
+#openai.api_key_path = './resources/openai_api.txt'
+openai.api_key = ''
 
 
 # saves the user's feedback from recommendation
@@ -722,7 +722,7 @@ def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_f
     return str(result)
 
 def getStyleName(input):
-    prompt = 'I asked a user about their clothing style. They may either state a clothing item they wear or their style. This is their response: ' + input + 'Classify the style as either sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, or ethnic. Your response needs to be only 1 of these words. Say nothing else except on of these styles I gave you. Do not put a period after the style. Your response can only be 1 word. If you cannot determine the correct style, output only the word casual.'
+    prompt = 'I asked a user about their clothing style. They may either state a clothing item they wear or their style. This is their response: ' + input + 'Classify the style as either sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, or ethnic. Your response needs to be only 1 of these words. Say nothing else except one of these styles I gave you. Do not put a period after the style. Your response can only be 1 word. If you cannot determine the correct style, output only the word casual.'
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
@@ -1552,7 +1552,8 @@ def main_dialogue() -> DialogueFlow:
     get_style_transition_one = {
         'state': 'get_style_transition_one',
         '`I\'d love to learn about your personal style!\n '
-        'Do you resonate with any particular fashion aesthetic? Or is there an item in your closet that you would say is representative of your personal style?`': {
+        'What kind of clothes do you wear around? I gotta get a sense of your style, good or bad - and I\'ll tell you if it\'s bad, '
+        'before I start recommending clothes for you!`': {
             '#GET_STYLE': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
@@ -1574,7 +1575,7 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's favourite styles #2
     get_style_transition_two = {
         'state': 'get_style_transition_two',
-        '`Is there another aesthetic you resonate with or another item in your closet that you couldn\'t live without?`': {
+        '`What else do you like to wear around?`': {
             '#GET_STYLE': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition',
