@@ -249,7 +249,7 @@ class MacroSaveNotFavoriteColor(Macro):
 
 
 # save the user's favourite styles
-class MacroSaveStyle(Macro):
+class MacroSaveStyleGPT(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
         global current_user
@@ -258,6 +258,7 @@ class MacroSaveStyle(Macro):
         # get the user's style or the clothing item associated with the style
         user_style_item = str(vars['USER_STYLE'])
         style = getStyleName(ngrams.text())
+        style = style.strip(string.punctuation)
         vars['USER_STYLE'] = str(style.lower())
 
         # access the user's dictionary
@@ -273,6 +274,35 @@ class MacroSaveStyle(Macro):
         return True
         #print(user_nested_dictionary[current_user])
 
+class MacroSaveStyle(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+        global styles_df
+
+        # get the user's style or the clothing item associated with the style
+        user_style_item = str(vars['USER_STYLE'])
+
+        # search the dataframe for the item
+        # -- returns a dataframe with the row of the item
+        df_results = styles_df.loc[styles_df['Clothing'] == user_style_item]
+        # print(df_results)
+
+        # get the index of the row
+        style_index = list(df_results.index.values)[0]
+
+        # return the style name
+        style_name = df_results['Style'][style_index]
+
+        # access the user's dictionary
+        user_nested_dictionary = users_dictionary[current_user]
+
+        # access the user's style list
+        user_nested_list = user_nested_dictionary['style_list']
+
+        # append the style name to the list
+        if (style_name not in user_nested_list):
+            user_nested_list.append(style_name)
 # print(users_dictionary)
 
 
@@ -906,9 +936,9 @@ def main_dialogue() -> DialogueFlow:
         '`Hi, what\'s your name?`': {
             '#GET_NAME': {
                 # they are a returning user
-                '#IF($RETURN_USER=yes)': 'return_user_transition',
+                '#IF($RETURN_USER=yes)': 'get_style_transition_one',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'new_user_transition'
+                '#IF($RETURN_USER=no)': 'get_style_transition_one'
             }
         }
     }
@@ -1610,10 +1640,37 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's favourite styles
     get_style_transition_one = {
         'state': 'get_style_transition_one',
-        '`I\'d love to learn about your personal style!\n '
-        'What kind of clothes do you wear around? I gotta get a sense of your style, good or bad - and I\'ll tell you if it\'s bad, '
-        'before I start recommending clothes for you!`': {
-            '#GET_STYLE': {
+        '`I\'d also love to learn about your personal style!\n '
+        'What kind of clothes to you wear? I gotta get a sense of your style - good or bad - and I\'ll tell you if it\'s bad, '
+        'before I can start recommending you clothes!`': {
+            '[$USER_STYLE=#ONT(sporty)]': {
+                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(bohemian)]': {
+                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(grunge)]': {
+                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(preppy)]': {
+                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(punk)]': {
+                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(streetwear)]': {
+                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(classic)]': {
+                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(casual)]': {
+                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(ethnic)]': {
+                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
+            },
+            '#GET_STYLE_GPT': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_style_transition_two',
@@ -1623,19 +1680,43 @@ def main_dialogue() -> DialogueFlow:
                 '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two',
                 '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two',
-                'error': {
-                '`Sorry, I don\'t understand`': 'get_style_transition_one'
             }
         }
     }
-}
 
 
     # -- gets the user's favourite styles #2
     get_style_transition_two = {
         'state': 'get_style_transition_two',
-        '`What else do you like to wear around?`': {
-            '#GET_STYLE': {
+        '`I\'m curious, what else do you like to wear?`': {
+            '[$USER_STYLE=#ONT(sporty)]': {
+                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(bohemian)]': {
+                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(grunge)]': {
+                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(preppy)]': {
+                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(punk)]': {
+                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(streetwear)]': {
+                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(classic)]': {
+                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(casual)]': {
+                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(ethnic)]': {
+                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition'
+            },
+            '#GET_STYLE_GPT': {
                 '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_fav_clothing_transition',
@@ -1645,10 +1726,7 @@ def main_dialogue() -> DialogueFlow:
                 '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_fav_clothing_transition',
                 '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition',
-                'error': {
-                '`Sorry, I don\'t understand`': 'get_style_transition_two'
             }
-        }
         }
     }
 
@@ -2077,6 +2155,7 @@ def main_dialogue() -> DialogueFlow:
         'GET_HOBBY': MacroSaveHobby(),
         'GET_FAV_COLOR': MacroSaveFavoriteColor(),
         'GET_NOT_FAV_COLOR': MacroSaveNotFavoriteColor(),
+        'GET_STYLE_GPT': MacroSaveStyleGPT(),
         'GET_STYLE': MacroSaveStyle(),
         'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
         'GET_FAV_CLOTHING_GPT': MacroSaveFavoriteClothingGPT(),
