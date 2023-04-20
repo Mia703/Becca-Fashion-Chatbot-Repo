@@ -346,6 +346,7 @@ class MacroSaveFavoriteClothingGPT(Macro):
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
 
+        print(user_nested_list)
         return True
 
 class MacroSaveNotFavoriteClothingGPT(Macro):
@@ -367,6 +368,7 @@ class MacroSaveNotFavoriteClothingGPT(Macro):
         # append the clothing item to the list
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
+        print(user_nested_list)
 
         return True
 
@@ -1762,7 +1764,7 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'choice_get_fav_clothing_transition'
             },
             '#GET_FAV_CLOTHING_GPT': {
-                '`Great! Can\'t go wrong with `$USER_FAV_CLOTHING_ITEM': 'choice_get_fav_clothing_transition'
+                '`Great! Can\'t go wrong with a `$USER_FAV_CLOTHING_ITEM': 'choice_get_fav_clothing_transition'
             }
         }
     }
@@ -1820,7 +1822,8 @@ def main_dialogue() -> DialogueFlow:
         'state': 'choice_get_not_fav_clothing_transition',
         '`Are there any more clothing items that you would never wear?`': {
             '{yes, absolutely, affirmative, certainly, "of course", sure, yup, yeah, "uh-huh", roger, aye, okay, agreed, indeed, right, positively, "you bet", correct, definitely, "absolutely right", indubitably}': 'get_not_fav_clothing_transition',
-            '{no, nope, “nuh-uh”, negative, “not at all”, “no way”, “absolutely not”, never, “not really”, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'choice_recommendation_transition',
+            #'{no, nope, negative, not at all, no way, absolutely not, never, not really, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'choice_recommendation_transition',
+            '<no>': 'choice_recommendation_transition',
             'error': {
                 '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'choice_get_not_fav_clothing_transition'
             }
