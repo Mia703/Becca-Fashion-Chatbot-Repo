@@ -39,13 +39,20 @@ last_recommendation = ''
 # macros ============================================
 
 # saves and returns the user's name
+# TODO: done
 class MacroGetName(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
         global current_user
 
-        prompt = "I asked a user to tell me their name. This was their response: " + ngrams.text() + "Respond with only their name. Do not put any periods or say anything else, only respond with their name."
-        response = openai.ChatCompletion.create(
+		firstname = None
+
+		# get the user's response
+		user_response = ngrams.text()
+
+        prompt = 'I asked a person to tell me their name. This was their response: \"' + user_response + '\". Respond with only their name. Do not put any periods or say anything else, only respond with their name.'
+        
+		response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             temperature=0,
             max_tokens=200,
@@ -55,12 +62,17 @@ class MacroGetName(Macro):
             ]
         )
 
+		# get the result from the api
         result = response['choices'][0]['message']['content'].strip()
 
-        # save the current user
-        current_user = result
+        # save the name without any punctuation
+		firstname = result.strip(string.punctuation)
 
-        vars['FIRSTNAME'] = result.capitalize()  # firstname.capitalize()
+		# save the current user -- in lowercase for name ID
+		current_user = firstname.lower()
+
+
+        vars['FIRSTNAME'] = firstname.capitalize()
 
         vars['RETURN_USER'] = createUserCheck()
 
@@ -670,6 +682,7 @@ def clear_dictionary(dict_name: Dict):
 # checks if the user is already in the user_dictionary
 # if not -- new user -- creates a empty dictionary with the users name
 # if is -- return user -- does nothing
+# TODO: DONE
 def createUserCheck():
     global users_dictionary
     global current_user
@@ -854,6 +867,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # they are a returning user
     return_user_transition = {
         'state': 'return_user_transition',
         '`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Bable\", jump right in to recommending, or update your preferences?`': {
@@ -874,6 +888,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # they are a new user
     new_user_transition = {
         'state': 'new_user_transition',
         '`Nice to meet you`$FIRSTNAME`. My name is Becca! '
