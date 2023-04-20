@@ -39,12 +39,19 @@ last_recommendation = ''
 # macros ============================================
 
 # saves and returns the user's name
+# TODO: done
 class MacroGetName(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
         global current_user
 
-        prompt = "I asked a user to tell me their name. This was their response: " + ngrams.text() + "Respond with only their name. Do not put any periods or say anything else, only respond with their name."
+        firstname = None
+
+        # get the user's response
+        user_response = ngrams.text()
+
+        prompt = 'I asked a person to tell me their name. This was their response: \"' + user_response + '\". Respond with only their name. Do not put any periods or say anything else, only respond with their name.'
+
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             temperature=0,
@@ -55,12 +62,17 @@ class MacroGetName(Macro):
             ]
         )
 
+        # get the result from the api
         result = response['choices'][0]['message']['content'].strip()
 
-        # save the current user
-        current_user = result
+        # save the name without any punctuation
+        firstname = result.strip(string.punctuation)
 
-        vars['FIRSTNAME'] = result.capitalize()  # firstname.capitalize()
+        # save the current user -- in lowercase for name ID
+        current_user = firstname.lower()
+
+
+        vars['FIRSTNAME'] = firstname.capitalize()
 
         vars['RETURN_USER'] = createUserCheck()
 
@@ -68,6 +80,7 @@ class MacroGetName(Macro):
 
 
 # saves the user's age
+# TODO: dnoe
 class MacroSaveAge(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
@@ -99,6 +112,7 @@ class MacroSaveAge(Macro):
 
 
 # returns a response to the user's age
+# TODO: done
 class MacroReturnAgeResponse(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
@@ -120,6 +134,7 @@ class MacroReturnAgeResponse(Macro):
 
 
 # save the user's occupation
+# TODO: done
 class MacroSaveOccupation(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
@@ -142,7 +157,10 @@ class MacroSaveOccupation(Macro):
         return str(random.choice(responses) + user_occupation + '.')
 
 
+# FIXME: maybe add gpt occupation backup?
+
 # randomly responds to the user's occupation
+# TODO: done
 class MacroOccupationResponse(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         # randomly return a response to push the conversation forward
@@ -159,6 +177,7 @@ class MacroOccupationResponse(Macro):
 
 
 # saves the user's hobbies
+# TODO: done
 class MacroSaveHobby(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global users_dictionary
@@ -177,8 +196,40 @@ class MacroSaveHobby(Macro):
         if (user_hobby not in user_nested_list):
             user_nested_list.append(user_hobby)
 
-# print(users_dictionary)
+        # print(users_dictionary)
 
+
+# if the hobby is not in the hobbies ontology, use GPT to get the hobby
+# found in error statement
+# TODO: done
+class MacroSaveHobbyAPI(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's respose
+        # because this is a macro found the in the error message, 
+        # we have to use 'user utterance' rather than ngrams.text()
+        user_response = vars['__user_utterance__']
+        # print(user_response)
+
+        # return the user's hobby
+        hobby_return = getHobby(user_response=user_response)
+
+        # remove any puncuation
+        user_hobby = hobby_return.strip(string.punctuation)
+
+        # access the user's dictionary
+        user_nested_dictionary = users_dictionary[current_user]
+
+        # access the user's hobby list
+        user_nested_list = user_nested_dictionary['hobbies_list']
+
+		# append the hobby to the list
+        if (user_hobby not in user_nested_list):
+            user_nested_list.append(user_hobby)
+
+		# print(users_dictionary)
 
 # save the user's favourite colours
 class MacroSaveFavoriteColor(Macro):
@@ -670,6 +721,7 @@ def clear_dictionary(dict_name: Dict):
 # checks if the user is already in the user_dictionary
 # if not -- new user -- creates a empty dictionary with the users name
 # if is -- return user -- does nothing
+# TODO: DONE
 def createUserCheck():
     global users_dictionary
     global current_user
@@ -702,6 +754,24 @@ def createUserCheck():
         # print("A returning user: " + current_user)
         return 'yes'
 
+
+# return's the users hobby
+# TODO: done
+def getHobby(user_response):
+    prompt = 'I asked the user for their hobby. This was their response \"' + user_response + '\". Respond with only their hobby. Do not put any periods or say anything else, only respond with their hobby.'
+
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=100,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+    return str(result.lower())
 
 # recommendation functions ============================================
 # recommens an outfit to the user
@@ -854,6 +924,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # they are a returning user
     return_user_transition = {
         'state': 'return_user_transition',
         '`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Bable\", jump right in to recommending, or update your preferences?`': {
@@ -874,6 +945,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # they are a new user
     new_user_transition = {
         'state': 'new_user_transition',
         '`Nice to meet you`$FIRSTNAME`. My name is Becca! '
@@ -1341,7 +1413,7 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
             },
             'error': {
-                '`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_one'
+                '#GET_HOBBY_API`I\'m not familiar with that hobby, but I\'ll add it to the list of new things to try!`': 'get_hobby_transition_two'
             }
         }
     }
@@ -1387,7 +1459,7 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_HOBBY`Oooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`for fun.\n `': 'get_hobby_transition_three'
             },
             'error': {
-                '`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_two'
+                '#GET_HOBBY_API`I don\'t know this hobby either. I\'ve got another hobby to add to my list of things to try!`': 'get_hobby_transition_three'
             }
         }
     }
@@ -1433,7 +1505,7 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_HOBBY`Great!`': 'get_fav_color_transition_one'
             },
             'error': {
-                '`I\'m sorry, I don\'t understand. Do you mind answering this question again?`': 'get_hobby_transition_three'
+                '#GET_HOBBY_API`Wow, you\'re doing a lot of unique things. I\'ll add it to my new hobbies list.`': 'get_fav_color_transition_one'
             }
         }
     }
@@ -2003,6 +2075,7 @@ def main_dialogue() -> DialogueFlow:
         'GET_OCCUPATION': MacroSaveOccupation(),
         'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
         'GET_HOBBY': MacroSaveHobby(),
+        'GET_HOBBY_API': MacroSaveHobbyAPI(),
         'GET_FAV_COLOR': MacroSaveFavoriteColor(),
         'GET_NOT_FAV_COLOR': MacroSaveNotFavoriteColor(),
         'GET_STYLE': MacroSaveStyle(),
