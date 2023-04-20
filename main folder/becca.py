@@ -346,7 +346,7 @@ class MacroSaveFavoriteClothingGPT(Macro):
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
 
-        print(user_nested_list)
+        #print(user_nested_list)
         return True
 
 class MacroSaveNotFavoriteClothingGPT(Macro):
@@ -368,7 +368,7 @@ class MacroSaveNotFavoriteClothingGPT(Macro):
         # append the clothing item to the list
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
-        print(user_nested_list)
+        #print(user_nested_list)
 
         return True
 
