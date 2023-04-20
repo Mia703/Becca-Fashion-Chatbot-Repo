@@ -390,7 +390,21 @@ class MacroSaveFavoriteClothing(Macro):
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
 
-# print(users_dictionary)
+        # print(users_dictionary)
+
+
+# save the user's favourite clothing items -- if not matched by ontology
+# FIXME: here
+class MacroSaveFavoriteClothingAPI(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's response
+        user_response = vars['__user_utterance__']
+
+        # get the clothing item
+
 
 
 # saves the user's not favourite clothing items
@@ -835,6 +849,12 @@ def getStyle(user_response):
 
     result = response['choices'][0]['message']['content'].strip()
     return str(result.lower())
+
+
+
+# FIXME: here
+def getClothingItem(user_response):
+    
 
 
 # recommendation functions ============================================
