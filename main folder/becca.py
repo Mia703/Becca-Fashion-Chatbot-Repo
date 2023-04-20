@@ -28,7 +28,6 @@ styles_df = pd.read_csv('./resources/styles.csv')
 #openai.api_key_path = './resources/openai_api.txt'
 openai.api_key = ''
 
-
 # saves the user's feedback from recommendation
 user_feedback = ''
 
@@ -260,6 +259,7 @@ class MacroSaveStyle(Macro):
         user_style_item = str(vars['USER_STYLE'])
         style = getStyleName(ngrams.text())
         vars['USER_STYLE'] = str(style.lower())
+
         # access the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
 
@@ -295,7 +295,51 @@ class MacroSaveFavoriteClothing(Macro):
         if (user_fav_item not in user_nested_list):
             user_nested_list.append(user_fav_item)
 
-# print(users_dictionary)
+
+class MacroSaveFavoriteClothingGPT(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's clothing item
+        # user_fav_item = str(vars['USER_FAV_CLOTHING_ITEM'])
+        user_fav_item = getClothingItem(ngrams.text())
+        vars['USER_FAV_CLOTHING_ITEM'] = user_fav_item
+
+        # access the user's dictionary
+        user_nested_dictionary = users_dictionary[current_user]
+
+        # access the user's favourite cltohes list
+        user_nested_list = user_nested_dictionary['fav_clothes_list']
+
+        # append the clothing item to the list
+        if (user_fav_item not in user_nested_list):
+            user_nested_list.append(user_fav_item)
+
+        return True
+
+class MacroSaveNotFavoriteClothingGPT(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's clothing item
+        # user_fav_item = str(vars['USER_FAV_CLOTHING_ITEM'])
+        user_fav_item = getClothingItem(ngrams.text())
+        vars['USER_NOT_FAV_CLOTHING_ITEM'] = user_fav_item
+
+        # access the user's dictionary
+        user_nested_dictionary = users_dictionary[current_user]
+
+        # access the user's favourite cltohes list
+        user_nested_list = user_nested_dictionary['not_fav_clothes_list']
+
+        # append the clothing item to the list
+        if (user_fav_item not in user_nested_list):
+            user_nested_list.append(user_fav_item)
+
+        return True
+
 
 
 # saves the user's not favourite clothing items
@@ -736,6 +780,21 @@ def getStyleName(input):
     result = response['choices'][0]['message']['content'].strip()
     return str(result)
 
+def getClothingItem(input):
+    prompt = 'I asked the user to tell me about either their favorite or least favorite clothing item. This is their response: ' + input + ". Output their clothing item, but say nothing else besides the clothing item. If they listed multiple clothing items, output only the first clothing item. Your output should be in this form: clothing item. Example output: Sweater. Say absolutely nothing else besides the clothing item in this form."
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=20,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+    return str(result).lower()
+
 # returns the user's feedback as a postivie, neutral, or negative (=sentiment)
 def returnUserFeedbackSentiment(feedback):
     prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
@@ -847,9 +906,9 @@ def main_dialogue() -> DialogueFlow:
         '`Hi, what\'s your name?`': {
             '#GET_NAME': {
                 # they are a returning user
-                '#IF($RETURN_USER=yes)': 'return_user_transition',
+                '#IF($RETURN_USER=yes)': 'get_fav_clothing_transition',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'new_user_transition'
+                '#IF($RETURN_USER=no)': 'get_fav_clothing_transition'
             }
         }
     }
@@ -1555,15 +1614,15 @@ def main_dialogue() -> DialogueFlow:
         'What kind of clothes do you wear around? I gotta get a sense of your style, good or bad - and I\'ll tell you if it\'s bad, '
         'before I start recommending clothes for you!`': {
             '#GET_STYLE': {
-                '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=preppy) `Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=punk) `I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=streetwear) `Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=preppy) `Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=punk) `I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=streetwear) `Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_one',
                 'error': {
                 '`Sorry, I don\'t understand`': 'get_style_transition_one'
             }
@@ -1598,42 +1657,44 @@ def main_dialogue() -> DialogueFlow:
         'state': 'get_fav_clothing_transition',
         '`What is a staple item in your closet that you just can\'t get enough of?`': {
             '[$USER_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-                '#GET_FAV_CLOTHING`Oh so you either workout or trick people into thinking you workout by wearing athletic clothes.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`Oh so you either workout or trick people into thinking you workout by wearing athletic clothes.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-                '#GET_FAV_CLOTHING`I could imagine myself frolicking through a prairie in a long flowy dress.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`I could imagine myself frolicking through a prairie in a long flowy dress.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-                '#GET_FAV_CLOTHING`So you probably also like plaid then. I\'m not the biggest plaid fan tbh.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`So you probably also like plaid then. I\'m not the biggest plaid fan tbh.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-                '#GET_FAV_CLOTHING`I know you\'ll get this reference then: Serena or Blair? Team Serena all the way.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`I know you\'ll get this reference then: Serena or Blair? Team Serena all the way.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-                '#GET_FAV_CLOTHING`Ok you must also own a lot of leather then. I\'m a simple creature. I like to stick to my trusty black leather jacket and pants.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`Ok you must also own a lot of leather then. I\'m a simple creature. I like to stick to my trusty black leather jacket and pants.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-                '#GET_FAV_CLOTHING`I see you over there with that model off duty style. Pop off queen.`': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`I see you over there with that model off duty style. Pop off queen.`': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-                '#GET_FAV_CLOTHING`So you like to dress like you\'re going to work all the time? Sorry that might have been a little mean.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`So you like to dress like you\'re going to work all the time? Sorry that might have been a little mean.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-                '#GET_FAV_CLOTHING`Fair answer. I spend most of my time in my Aritzia sweat suits.\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`Fair answer. I spend most of my time in my Aritzia sweat suits.\n `': 'choice_get_fav_clothing_transition'
             },
             '[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-                '#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'get_not_fav_clothing_transition'
+                '#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'choice_get_fav_clothing_transition'
             },
-            'error': {
-                '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'get_fav_clothing_transition'
+            '#GET_FAV_CLOTHING_GPT': {
+                '`Great! Can\'t go wrong with `$USER_FAV_CLOTHING_ITEM': 'choice_get_fav_clothing_transition'
             }
         }
     }
 
     choice_get_fav_clothing_transition = {
+        'state': 'choice_get_fav_clothing_transition',
         '`Do you have any more clothing items you\'d like to add?`': {
             '{yes, absolutely, affirmative, certainly, "of course", sure, yup, yeah, "uh-huh", roger, aye, okay, agreed, indeed, right, positively, "you bet", correct, definitely, "absolutely right", indubitably}': 'get_fav_clothing_transition',
-            '{no, nope, “nuh-uh”, negative, “not at all”, “no way”, “absolutely not”, never, “not really”, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'get_not_fav_clothing_transition',
+            #'{no, nope, “nuh-uh”, negative, “not at all”, “no way”, “absolutely not”, never, “not really”, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'get_not_fav_clothing_transition',
+            '<no>': 'get_not_fav_clothing_transition',
             'error': {
                 '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'choice_get_fav_clothing_transition'
             }
@@ -1645,34 +1706,45 @@ def main_dialogue() -> DialogueFlow:
         'state': 'get_not_fav_clothing_transition',
         '`What about a clothing item that you would never wear?`': {
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. I only wear athleisure when I\'m too lazy to put together an outfit.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. I only wear athleisure when I\'m too lazy to put together an outfit.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(bohemian)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. Fringed, flowy, and frayed is dfinitely not for everyone.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. Fringed, flowy, and frayed is dfinitely not for everyone.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(grunge)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. I\'m not quite into the whole distressing everything vibe.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. I\'m not quite into the whole distressing everything vibe.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(preppy)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. Whenever I put on a polo, I don\'t quite feel like myself.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. Whenever I put on a polo, I don\'t quite feel like myself.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(punk)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. Fish nets, studded belts, and chokers aren\'t really my cup of tea either.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. Fish nets, studded belts, and chokers aren\'t really my cup of tea either.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(streetwear)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you, but honestly you\'re missing out. I\'m an oversized, cargo, and low rise fanatic.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you, but honestly you\'re missing out. I\'m an oversized, cargo, and low rise fanatic.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(classic)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. The only time you\'ll catch me in clothes that look like I\'m going to work when I\'m actually going to work. Or if it\'s Chanel tweed ofc.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. The only time you\'ll catch me in clothes that look like I\'m going to work when I\'m actually going to work. Or if it\'s Chanel tweed ofc.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(casual)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. I am quite the over dresser myself. You\'re way better overdressed than under in my humble opinion.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. I am quite the over dresser myself. You\'re way better overdressed than under in my humble opinion.\n `': 'choice_get_not_fav_clothing_transition'
             },
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
-                '#GET_NOT_FAV_CLOTHING`I feel you. I don\'t wear too much of that either.\n `': 'choice_recommendation_transition'
+                '#GET_NOT_FAV_CLOTHING`I feel you. I don\'t wear too much of that either.\n `': 'choice_get_not_fav_clothing_transition'
             },
+            '#GET_NOT_FAV_CLOTHING_GPT': {
+                '`Fair enough. I can\'t seeing you wearing a `$USER_NOT_FAV_CLOTHING_ITEM': 'choice_get_not_fav_clothing_transition'
+            }
+        }
+    }
+
+    choice_get_not_fav_clothing_transition = {
+        'state': 'choice_get_not_fav_clothing_transition',
+        '`Are there any more clothing items that you would never wear?`': {
+            '{yes, absolutely, affirmative, certainly, "of course", sure, yup, yeah, "uh-huh", roger, aye, okay, agreed, indeed, right, positively, "you bet", correct, definitely, "absolutely right", indubitably}': 'get_not_fav_clothing_transition',
+            '{no, nope, “nuh-uh”, negative, “not at all”, “no way”, “absolutely not”, never, “not really”, “i\’m afraid not”, “sorry, no”, “no chance”, “i don\'t think so”, “not a chance”, “unlikely”, “definitely not”, “no thanks”, nay, refusal, rejection, veto}': 'choice_recommendation_transition',
             'error': {
-                '`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
+                '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'choice_get_not_fav_clothing_transition'
             }
         }
     }
@@ -1941,7 +2013,7 @@ def main_dialogue() -> DialogueFlow:
         'state': 'choice_acessory_transition',
         '`Are you wearing any more accessories?`': {
             '{yes, yeah, yup, ye, yea, indeed, , yessir, [i am]}': 'get_current_accessory_transition',
-            '{no, nah, nope, [i am not], [i\'m not]}': 'return_current_outfit_advice_transition'
+            '{no, nah, nope, [i am not], [i\'m not]}': 'return_outfit_recommendation_transition'
         }
     }
 
@@ -2007,7 +2079,9 @@ def main_dialogue() -> DialogueFlow:
         'GET_NOT_FAV_COLOR': MacroSaveNotFavoriteColor(),
         'GET_STYLE': MacroSaveStyle(),
         'GET_FAV_CLOTHING': MacroSaveFavoriteClothing(),
+        'GET_FAV_CLOTHING_GPT': MacroSaveFavoriteClothingGPT(),
         'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
+        'GET_NOT_FAV_CLOTHING_GPT': MacroSaveNotFavoriteClothingGPT(),
         'GET_CURR_OUTFIT': MacroSaveOutfit(),
         # macros for talking about the movie ============================================
         'GET_WATCH_STATUS': MacroReturnWatchStatus(),
@@ -2068,6 +2142,7 @@ def main_dialogue() -> DialogueFlow:
     df.load_transitions(get_not_fav_clothing_transition)
 
     df.load_transitions(choice_get_fav_clothing_transition)
+    df.load_transitions(choice_get_not_fav_clothing_transition)
 
     # get the user's current outfit
     df.load_transitions(get_current_top_transition)
