@@ -906,9 +906,9 @@ def main_dialogue() -> DialogueFlow:
         '`Hi, what\'s your name?`': {
             '#GET_NAME': {
                 # they are a returning user
-                '#IF($RETURN_USER=yes)': 'get_fav_clothing_transition',
+                '#IF($RETURN_USER=yes)': 'return_user_transition',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'get_fav_clothing_transition'
+                '#IF($RETURN_USER=no)': 'new_user_transition'
             }
         }
     }
@@ -1614,15 +1614,15 @@ def main_dialogue() -> DialogueFlow:
         'What kind of clothes do you wear around? I gotta get a sense of your style, good or bad - and I\'ll tell you if it\'s bad, '
         'before I start recommending clothes for you!`': {
             '#GET_STYLE': {
-                '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=preppy) `Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=punk) `I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=streetwear) `Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_one',
-                '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_one',
+                '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=preppy) `Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=punk) `I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=streetwear) `Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two',
+                '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two',
                 'error': {
                 '`Sorry, I don\'t understand`': 'get_style_transition_one'
             }
