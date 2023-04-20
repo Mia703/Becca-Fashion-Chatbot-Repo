@@ -799,7 +799,7 @@ def createUserCheck():
         return 'yes'
 
 
-# return's the users hobby
+# returns the user's hobby
 # TODO: done
 def getHobby(user_response):
     prompt = 'I asked the user for their hobby. This was their response \"' + user_response + '\". Respond with only their hobby. Do not put any periods or say anything else, only respond with their hobby.'
@@ -818,6 +818,8 @@ def getHobby(user_response):
     return str(result.lower())
 
 
+# returns the user's style
+# TODO: done
 def getStyle(user_response):
     prompt = 'I asked a person about their clothing style. They may either state a clothing item they wear or their style. This is their response: \"' + input + '\". Classify the style as either sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, or ethnic. Your response needs to be only 1 of these words. Say nothing else except one of these styles I gave you. Do not put a period after the style. Your response can only be 1 word. If you cannot determine the correct style, output only the word casual.'
     
