@@ -45,14 +45,14 @@ class MacroGetName(Macro):
         global users_dictionary
         global current_user
 
-		firstname = None
+        firstname = None
 
-		# get the user's response
-		user_response = ngrams.text()
+        # get the user's response
+        user_response = ngrams.text()
 
         prompt = 'I asked a person to tell me their name. This was their response: \"' + user_response + '\". Respond with only their name. Do not put any periods or say anything else, only respond with their name.'
-        
-		response = openai.ChatCompletion.create(
+
+        response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             temperature=0,
             max_tokens=200,
@@ -62,14 +62,14 @@ class MacroGetName(Macro):
             ]
         )
 
-		# get the result from the api
+        # get the result from the api
         result = response['choices'][0]['message']['content'].strip()
 
         # save the name without any punctuation
-		firstname = result.strip(string.punctuation)
+        firstname = result.strip(string.punctuation)
 
-		# save the current user -- in lowercase for name ID
-		current_user = firstname.lower()
+        # save the current user -- in lowercase for name ID
+        current_user = firstname.lower()
 
 
         vars['FIRSTNAME'] = firstname.capitalize()
@@ -226,8 +226,8 @@ class MacroSaveHobbyAPI(Macro):
         user_nested_list = user_nested_dictionary['hobbies_list']
 
 		# append the hobby to the list
-		if (user_hobby not in user_nested_list):
-			user_nested_list.append(user_hobby)
+        if (user_hobby not in user_nested_list):
+            user_nested_list.append(user_hobby)
 
 		# print(users_dictionary)
 
