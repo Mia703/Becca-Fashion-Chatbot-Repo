@@ -936,9 +936,9 @@ def main_dialogue() -> DialogueFlow:
         '`Hi, what\'s your name?`': {
             '#GET_NAME': {
                 # they are a returning user
-                '#IF($RETURN_USER=yes)': 'get_style_transition_one',
+                '#IF($RETURN_USER=yes)': 'return_user_transition',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'get_style_transition_one'
+                '#IF($RETURN_USER=no)': 'new_user_transition'
             }
         }
     }
