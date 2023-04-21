@@ -1246,7 +1246,7 @@ def main_dialogue() -> DialogueFlow:
                 # they are a returning user
                 '#IF($RETURN_USER=yes)': 'return_user_transition',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'get_fav_clothing_transition'
+                '#IF($RETURN_USER=no)': 'new_user_transition'
             }
         }
     }
@@ -2056,6 +2056,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # -- determines whether the user has more clothing items to add or not
     choice_get_fav_clothing_transition = {
         'state': 'choice_get_fav_clothing_transition',
         '`Do you have any more clothing items you\'d like to add?`': {
@@ -2106,6 +2107,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # -- determines whether the user has more clothing items they don't like to add or not
     choice_get_not_fav_clothing_transition = {
         'state': 'choice_get_not_fav_clothing_transition',
         '`Do you have any more clothing items you hate you\'d like to add?`': {
@@ -2367,7 +2369,6 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. I\'m dying to know where it was from.\n `': 'choice_acessory_transition'
             },
-
             # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
             '<skip>': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
