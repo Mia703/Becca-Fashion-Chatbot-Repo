@@ -474,14 +474,14 @@ class MacroSaveFavoriteClothingAPI(Macro):
         global current_user
 
         # get the user's response
-        # user_response = vars['__user_utterance__']
-        user_response = ngrams.text()
+        user_response = vars['__user_utterance__']
+        # user_response = ngrams.text()
 
         # get the clothing item
         clothing_item_return = getClothingItem(user_response=user_response)
 
         # remove an puncuation
-        clothing_item = clothing_item_return.strip(string.punctuation)
+        clothing_item = clothing_item_return.strip(string.punctuation).lower()
         # print(clothing_item)
 
         # update variable
@@ -1246,7 +1246,7 @@ def main_dialogue() -> DialogueFlow:
                 # they are a returning user
                 '#IF($RETURN_USER=yes)': 'return_user_transition',
                 # they are a new user
-                '#IF($RETURN_USER=no)': 'get_style_transition_one'
+                '#IF($RETURN_USER=no)': 'get_fav_clothing_transition'
             }
         }
     }
@@ -2050,11 +2050,8 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
                 '#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'choice_get_fav_clothing_transition'
             },
-            '#GET_FAV_CLOTHING_API': {
-                '`Great! Can\'t go wrong with a`$USER_FAV_CLOTHING_ITEM`!`': 'choice_get_fav_clothing_transition'
-            },
             'error': {
-                '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'get_fav_clothing_transition'
+                '#GET_FAV_CLOTHING_API`Great! Can\'t go wrong with a`$USER_FAV_CLOTHING_ITEM`!`': 'choice_get_fav_clothing_transition'
             }
         }
     }
@@ -2103,11 +2100,8 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
                 '#GET_NOT_FAV_CLOTHING`I feel you. I don\'t wear too much of that either.\n `': 'choice_get_not_fav_clothing_transition'
             },
-            '#GET_NOT_FAV_CLOTHING_API': {
-                '`Understood, you don\'t like`$USER_NOT_FAV_CLOTHING_ITEM`.`': 'choice_get_not_fav_clothing_transition'
-            },
             'error': {
-                '`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
+                '#GET_NOT_FAV_CLOTHING_API`Understood, you don\'t like`$USER_NOT_FAV_CLOTHING_ITEM`.`': 'choice_get_not_fav_clothing_transition'
             }
         }
     }
