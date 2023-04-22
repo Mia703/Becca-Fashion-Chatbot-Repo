@@ -25,7 +25,7 @@ styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
 # openai.api_key_path = './resources/openai_api.txt'
-openai.api_key = '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'
+openai.api_key = ''
 
 
 # saves the user's feedback from recommendation
@@ -281,7 +281,7 @@ class MacroSaveHobbyAPI(Macro):
         if (user_hobby not in user_nested_list):
             user_nested_list.append(user_hobby)
 
-        print(users_dictionary)
+        # print(users_dictionary)
 
         # is this needed?
         return True
@@ -1984,37 +1984,37 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's favourite styles #2
     get_style_transition_two = {
         'state': 'get_style_transition_two',
-        '`I know I love to wear jean jackets. It\'s such a simple but versitle item!\n '
+        '`I know I love to wear jean jackets. It\'s such a simple but versatile item!\n '
         'Jean jackets can be used from casual to formal settings and give off a fun and laid-back feel. But I\'m curious, what else do you like to wear?`': {
             '[$USER_STYLE=#ONT(sporty)]': {
-                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
+                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(bohemian)]': {
-                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
+                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(grunge)]': {
-                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
+                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(preppy)]': {
-                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
+                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(punk)]': {
-                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
+                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(streetwear)]': {
-                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
+                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(classic)]': {
-                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
+                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(casual)]': {
-                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
+                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_fav_clothing_transition'
             },
             '[$USER_STYLE=#ONT(ethnic)]': {
-                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
+                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition'
             },
             'error': {
-                '#GET_STYLE_API': 'get_style_transition_two'
+                '#GET_STYLE_API': 'get_fav_clothing_transition'
             }
         }
     }
@@ -2141,7 +2141,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
                             },
                             '{no, nope, [not, really], [no, thanks]}': {
-                                '`Alright, I won\'t give you any more recommendations.`': 'end'
+                                '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
                                 '`Sorry, I don\'t understand.`': 'end'
@@ -2153,7 +2153,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
                             },
                             '{no, nope, [not, really], [no, thanks]}': {
-                                '`Alright, I won\'t give you any more recommendations.`': 'end'
+                                '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
                                 '`Sorry, I don\'t understand.`': 'end'
@@ -2403,7 +2403,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
                     },
                     '{no, nope, [not, really], [no, thanks]}': {
-                        '`Alright, I won\'t give you any more recommendations.`': 'end'
+                        '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
                         '`Sorry, I don\'t understand.`': 'end'
@@ -2415,7 +2415,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
                     },
                     '{no, nope, [not, really], [no, thanks]}': {
-                        '`Alright, I won\'t give you any more recommendations.`': 'end'
+                        '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
                         '`Sorry, I don\'t understand.`': 'end'
