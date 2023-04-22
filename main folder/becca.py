@@ -652,7 +652,7 @@ class MacroDeleteDictContents(Macro):
         # delete contents of dictionary
         clear_dictionary(dict_name=user_nested_current_outfit_dictionary)
 
-        print(users_dictionary)
+        # print(users_dictionary)
 
 
 # recommendation macros ============================================
@@ -668,6 +668,12 @@ class MacroRecommendOutfit(Macro):
         # select the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
 
+        # access the user's age
+        user_age = user_nested_dictionary['age']
+
+        # access the user's occupation
+        user_occupation = user_nested_dictionary['occupation']
+
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_fav_colors_list = user_nested_dictionary['fav_colors_list']
@@ -680,18 +686,21 @@ class MacroRecommendOutfit(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(
-            0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(
-            0, len(user_not_fav_colors_list) - 1)
+
+        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
+
+        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(
-            0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(
-            0, len(user_not_fav_clothes_list) - 1)
+
+        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
+
+        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendOutfit(
+            age=str(user_age),
+            occupation=user_occupation,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
             not_fav_color=user_not_fav_colors_list[random_not_fav_color_index],
@@ -733,6 +742,12 @@ class MacroRecommendOutfitAfterFeedback(Macro):
         # select the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
 
+        # access the user's age
+        user_age = user_nested_dictionary['age']
+
+        # access the user's occupation
+        user_occupation = user_nested_dictionary['occupation']
+
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_fav_colors_list = user_nested_dictionary['fav_colors_list']
@@ -745,18 +760,21 @@ class MacroRecommendOutfitAfterFeedback(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(
-            0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(
-            0, len(user_not_fav_colors_list) - 1)
+
+        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
+
+        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(
-            0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(
-            0, len(user_not_fav_clothes_list) - 1)
+
+        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
+
+        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendOutfitAfterFeedback(
+            age=str(user_age),
+            occupation=user_occupation,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
             not_fav_color=user_not_fav_colors_list[random_not_fav_color_index],
@@ -1106,8 +1124,8 @@ def getClothingItem(user_response):
 
 # recommendation functions ============================================
 # recommens an outfit to the user
-def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
+def recommendOutfit(age, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
         '. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -1150,9 +1168,9 @@ def returnUserFeedbackSentiment(feedback):
 
 
 # recommends an outfit after the user's positive, neutral, or negative feedback
-def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
+def recommendOutfitAfterFeedback(age, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
                                  sentiment):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and is a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
         feedback + '. Give a new outfit recommendation. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -2133,7 +2151,17 @@ def main_dialogue() -> DialogueFlow:
                     'state': 'return_to_feedback_choice_rec_transition',
                     '#GET_FEEDBACK': {
                         # if the user's feedback is considered postitve
-                        '#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F`': 'end',
+                        '#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F Would you like me to recommend you another outfit?`': {
+                            '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
+                                '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
+                            },
+                            '{no, nope, [not, really], [no, thanks]}': {
+                                '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
+                            },
+                            'error': {
+                                '`Sorry, I don\'t understand.`': 'end'
+                            }
+                        },
                         # if the user's feedback is considered neutral
                         '#IF($USER_SENTIMENT=neutral)`I\'m not sure if my recommendation is something your\'re interested in, \U0001F937 but I\'m glad to hear you don\'t completely hate it!.\n '
                         'Would you like me to recommend you another outfit?`': {
@@ -2549,5 +2577,5 @@ def main_dialogue() -> DialogueFlow:
 
 # run dialogue ======================================================
 if __name__ == '__main__':
-    save(main_dialogue(), 'users-pickle.pkl')
-    # load(main_dialogue(), 'users-pickle.pkl')
+    # save(main_dialogue(), 'users-pickle.pkl')
+    load(main_dialogue(), 'users-pickle.pkl')
