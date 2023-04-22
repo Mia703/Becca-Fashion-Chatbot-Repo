@@ -31,7 +31,7 @@ bohemian,floral maxi skirts,bottoms
 bohemian,crochet tops,top
 bohemian,crochet dresses,dress
 bohemian,bell-bottom pants,bottoms
-bohemian,Kimonos,dress
+bohemian,kimonos,dress
 bohemian,duster jackets,coat
 bohemian,off-the-shoulder tops,top
 bohemian,off-the-shoulder dresses,dress
@@ -116,8 +116,8 @@ preppy,button-up shirts,top
 preppy,polo shirts,top
 preppy,tailored blazers,coat
 preppy,sweaters,top
-preppy,Khaki pants,bottoms
-preppy,Khaki skirts,bottoms
+preppy,khaki pants,bottoms
+preppy,khaki skirts,bottoms
 preppy,bermuda shorts,bottoms
 preppy,penny loafers,shoes
 preppy,boat shoes,shoes
@@ -214,7 +214,7 @@ classic,ballet flats,shoes
 classic,peacoats,coat
 classic,turtleneck sweaters,top
 classic,tote bags,accessory
-classic,Knee-length skirts,bottoms
+classic,knee-length skirts,bottoms
 classic,creneck sweaters,top
 classic,wool coats,coat
 classic,button-up cardigans,coat
@@ -282,15 +282,15 @@ casual,hats,accessory
 casual,gloves,accessory
 casual,scarves,accessory
 casual,belts,accessory
-ethnic,Kaftans,top
+ethnic,kaftans,top
 ethnic,sarees,dress
 ethnic,dashikis,top
-ethnic,Kente cloth shirts,top
-ethnic,Kente cloth pants,bottoms
-ethnic,Kente cloth skirts,bottoms
-ethnic,Kente cloth dresses,dress
+ethnic,kente cloth shirts,top
+ethnic,kente cloth pants,bottoms
+ethnic,kente cloth skirts,bottoms
+ethnic,kente cloth dresses,dress
 ethnic,harem pants,bottoms
-ethnic,Kimonos,dress
+ethnic,kimonos,dress
 ethnic,ponchos,coat
 ethnic,djellabas,dress
 ethnic,embroidered tunics,top
@@ -300,6 +300,6 @@ ethnic,cheongsams,dress
 ethnic,sarongs,bottoms
 ethnic,thawbs,dress
 ethnic,abayas,dress
-ethnic,Kanzus,dress
+ethnic,kanzus,dress
 ethnic,huipils,top
 ethnic,thobes,dress

@@ -24,7 +24,7 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-#openai.api_key_path = './resources/openai_api.txt'
+# openai.api_key_path = './resources/openai_api.txt'
 openai.api_key = ''
 
 
@@ -48,7 +48,8 @@ class MacroGetName(Macro):
         # get the user's response
         user_response = ngrams.text()
 
-        prompt = 'I asked a person to tell me their name. This was their response: \"' + user_response + '\". Respond with only their name. Do not put any periods or say anything else, only respond with their name.'
+        prompt = 'I asked a person to tell me their name. This was their response: \"' + user_response + \
+            '\". Respond with only their name. Do not put any periods or say anything else, only respond with their name.'
 
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
@@ -68,7 +69,6 @@ class MacroGetName(Macro):
 
         # save the current user -- in lowercase for name ID
         current_user = firstname.lower()
-
 
         vars['FIRSTNAME'] = firstname.capitalize()
 
@@ -139,7 +139,8 @@ class MacroSaveOccupation(Macro):
         user_occupation = vars['USER_OCCUPATION']
 
         # save the user's occupation
-        users_dictionary[current_user]['occupation'] = str(user_occupation).lower()
+        users_dictionary[current_user]['occupation'] = str(
+            user_occupation).lower()
         # print(users_dictionary)
 
         # return a random response to the user's occupation
@@ -152,23 +153,77 @@ class MacroSaveOccupation(Macro):
         return str(random.choice(responses) + user_occupation + '.')
 
 
-# FIXME: maybe add gpt occupation backup?
+# returns the user's occupation -- if ontology doesn't match
+class MacroSaveOccupationAPI(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's response
+        user_response = vars['__user_utterance__']
+
+        # return the user's occupation
+        occupation_return = getOccupation(user_response=user_response)
+
+        # remove any puncuation
+        user_occupation = occupation_return.strip(string.punctuation)
+
+        # save the user's occupation
+        users_dictionary[current_user]['occupation'] = str(
+            user_occupation).lower()
+
+        # return a random response to the user's occupation
+        responses = ['Oh, cool! You\'re a ',
+                     'That\'s interesting! You work as a ',
+                     'I\'ve always been fascinated by being a ',
+                     'I bet you see and do a lot of interesting things as a ',
+                     'That sound like a really important job, as a ']
+
+        return str(random.choice(responses) + user_occupation.lower() + '.')
 
 
 # randomly responds to the user's occupation
 class MacroOccupationResponse(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        # randomly return a response to push the conversation forward
-        responses = ['What is your favorite part of your job?',
-                     'What do you do at work on a daily basis?',
-                     'What\'s the best thing about your job?',
-                     'Can you tell me more about what you do?',
-                     'How did you get into that field?']
+        # get the user's response
+        user_response = vars['__user_utterance__']
 
-        # tell me more...
-        return str('Oh, okay! For me, I love my job!\n '
-                   'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
-                   'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
+        # determine whether the user hates their job or not
+        user_sentiment = returnOccupationSentiment(user_response=user_response)
+
+        if user_sentiment == 'positive':
+            # randomly return a response to push the conversation forward
+            responses = ['What is your favorite part of your job?',
+                        'What do you do at work on a daily basis?',
+                        'What\'s the best thing about your job?',
+                        'Can you tell me more about what you do?',
+                        'How did you get into that field?']
+
+            # tell me more...
+            return str('Oh, okay! For me, I love my job!\n '
+                    'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
+                    'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
+
+        elif user_sentiment == 'negative':
+            # randomly return a response to push the conversation forward
+            responses = ['Do you have a favorite part of your job?',
+                        'What do you do at work on a daily basis?',
+                        'Can you tell me more about what you do?',
+                        'How did you get into that field?']
+
+            return str('Oh, I\'m sorry you don\'t like your job. \U0001F623 Hopefully you find an occupation you like later on. ' + random.choice(responses))
+        else:
+            # randomly return a response to push the conversation forward
+            responses = ['What is your favorite part of your job?',
+                        'What do you do at work on a daily basis?',
+                        'What\'s the best thing about your job?',
+                        'Can you tell me more about what you do?',
+                        'How did you get into that field?']
+
+            # tell me more...
+            return str('Hummmm, I can\'t tell if you like your job or not. Bor me, I love my job!\n '
+                    'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
+                    'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
 
 # saves the user's hobbies
@@ -201,7 +256,7 @@ class MacroSaveHobbyAPI(Macro):
         global current_user
 
         # get the user's respose
-        # because this is a macro found the in the error message, 
+        # because this is a macro found the in the error message,
         # we have to use 'user utterance' rather than ngrams.text()
         user_response = vars['__user_utterance__']
         # user_response = ngrams.text()
@@ -222,11 +277,11 @@ class MacroSaveHobbyAPI(Macro):
         # access the user's hobby list
         user_nested_list = user_nested_dictionary['hobbies_list']
 
-		# append the hobby to the list
+        # append the hobby to the list
         if (user_hobby not in user_nested_list):
             user_nested_list.append(user_hobby)
 
-        print(users_dictionary)
+        # print(users_dictionary)
 
         # is this needed?
         return True
@@ -244,7 +299,8 @@ class MacroSaveFavoriteColor(Macro):
 
         # search the dataframe for colour name
         # -- returns a dataframe with the row of the colour
-        df_results = color_names_df.loc[color_names_df['Name'] == user_color_name]
+        df_results = color_names_df.loc[color_names_df['Name']
+                                        == user_color_name]
         # print(df_results)
 
         # get the index of the row
@@ -280,7 +336,8 @@ class MacroSaveNotFavoriteColor(Macro):
 
         # search the dataframe for colour name
         # -- returns a dataframe with the row of the colour
-        df_results = color_names_df.loc[color_names_df['Name'] == user_colour_name]
+        df_results = color_names_df.loc[color_names_df['Name']
+                                        == user_colour_name]
 
         # get the index of the row
         color_index = list(df_results.index.values)[0]
@@ -354,7 +411,7 @@ class MacroSaveStyleAPI(Macro):
         # print(user_style)
 
         # update the variable
-        vars['USER_STYLE'] = str(user_style.lower())
+        vars['USER_STYLE'] = str(user_style)
 
         # access the user's dictionary
         user_nested_dictionary = users_dictionary[current_user]
@@ -368,7 +425,24 @@ class MacroSaveStyleAPI(Macro):
 
         # print(users_dictionary)
 
-        return True
+        if user_style == 'sporty':
+            return str('I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n ')
+        elif user_style == 'bohemian':
+            return str('I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n ')
+        elif user_style == 'grunge':
+            return str('The grunge style is so fun and edgy.\n ')
+        elif user_style == 'preppy':
+            return str('Lol, the preppy style is so \"academic\" of you! \U0001F602 \n ')
+        elif user_style == 'punk':
+            return str('I\'m a fan of the punk style too! Ik, surprising right?\n ')
+        elif user_style == 'streetwear':
+            return str('Streetwear is such a popular aesthetic these days, very cool you like it.\n ')
+        elif user_style == 'classic':
+            return str('Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n ')
+        elif user_style == 'ethnic':
+            return str('Pretty awesome how you represent your ethnicity in your clothes.\n ')
+        else:
+            return str('Oh, so you like dressing casually? That\'s fun too.\n ')
 
 
 # saves the user's favourite clothing items
@@ -400,14 +474,14 @@ class MacroSaveFavoriteClothingAPI(Macro):
         global current_user
 
         # get the user's response
-        # user_response = vars['__user_utterance__']
-        user_response = ngrams.text()
+        user_response = vars['__user_utterance__']
+        # user_response = ngrams.text()
 
         # get the clothing item
         clothing_item_return = getClothingItem(user_response=user_response)
 
         # remove an puncuation
-        clothing_item = clothing_item_return.strip(string.punctuation)
+        clothing_item = clothing_item_return.strip(string.punctuation).lower()
         # print(clothing_item)
 
         # update variable
@@ -526,7 +600,8 @@ class MacroSaveOutfit(Macro):
         # if the clothing item is already in the dictionary, just exit
         for item in user_nested_current_outfit_dictionary:
             # for each clothing_item  (=item) in user_nested_current_outfit_dictionary
-            nested_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
+            nested_item = user_nested_current_outfit_dictionary[item].get(
+                'clothing_item')
             # if the item is already in the dictionary
             if nested_item == user_item:
                 # just exit
@@ -557,7 +632,8 @@ class MacroReturnWatchStatus(Macro):
         user_response = ngrams.text()
 
         # pass the response to gpt
-        vars['USER_WATCH_STATUS'] = determineWatchStatus(response=user_response)
+        vars['USER_WATCH_STATUS'] = determineWatchStatus(
+            response=user_response)
         return True
 
 
@@ -604,11 +680,15 @@ class MacroRecommendOutfit(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+        random_fav_color_index = random.randint(
+            0, len(user_fav_colors_list) - 1)
+        random_not_fav_color_index = random.randint(
+            0, len(user_not_fav_colors_list) - 1)
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
+        random_fav_clothes_index = random.randint(
+            0, len(user_fav_clothes_list) - 1)
+        random_not_fav_clothes_index = random.randint(
+            0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendOutfit(
@@ -665,11 +745,15 @@ class MacroRecommendOutfitAfterFeedback(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+        random_fav_color_index = random.randint(
+            0, len(user_fav_colors_list) - 1)
+        random_not_fav_color_index = random.randint(
+            0, len(user_not_fav_colors_list) - 1)
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
+        random_fav_clothes_index = random.randint(
+            0, len(user_fav_clothes_list) - 1)
+        random_not_fav_clothes_index = random.randint(
+            0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendOutfitAfterFeedback(
@@ -705,14 +789,18 @@ class MacroRecommentClothingItem(Macro):
         clothing_item_sentence = ''
         # iterate through the user's current outfit dictionary
         for item in user_nested_current_outfit_dictionary:
-            clothing_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
-            clothing_item_style = user_nested_current_outfit_dictionary[item].get('clothing_style')
+            clothing_item = user_nested_current_outfit_dictionary[item].get(
+                'clothing_item')
+            clothing_item_style = user_nested_current_outfit_dictionary[item].get(
+                'clothing_style')
 
             # if not the last item in the list, append with comma
             if item == len(user_nested_current_outfit_dictionary):
-                clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item)
+                clothing_item_sentence += str(clothing_item_style) + \
+                    ' ' + str(clothing_item)
             else:
-                clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item) + ', '
+                clothing_item_sentence += str(clothing_item_style) + \
+                    ' ' + str(clothing_item) + ', '
 
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
@@ -726,11 +814,15 @@ class MacroRecommentClothingItem(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+        random_fav_color_index = random.randint(
+            0, len(user_fav_colors_list) - 1)
+        random_not_fav_color_index = random.randint(
+            0, len(user_not_fav_colors_list) - 1)
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
+        random_fav_clothes_index = random.randint(
+            0, len(user_fav_clothes_list) - 1)
+        random_not_fav_clothes_index = random.randint(
+            0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendClothingItem(
@@ -769,14 +861,18 @@ class MacroRecommendClothingItemAfterFeedback(Macro):
         clothing_item_sentence = ''
         # iterate through the user's current outfit dictionary
         for item in user_nested_current_outfit_dictionary:
-            clothing_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
-            clothing_item_style = user_nested_current_outfit_dictionary[item].get('clothing_style')
+            clothing_item = user_nested_current_outfit_dictionary[item].get(
+                'clothing_item')
+            clothing_item_style = user_nested_current_outfit_dictionary[item].get(
+                'clothing_style')
 
             # if not the last item in the list, append with comma
             if item == len(user_nested_current_outfit_dictionary):
-                clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item)
+                clothing_item_sentence += str(clothing_item_style) + \
+                    ' ' + str(clothing_item)
             else:
-                clothing_item_sentence += str(clothing_item_style) + ' ' + str(clothing_item) + ', '
+                clothing_item_sentence += str(clothing_item_style) + \
+                    ' ' + str(clothing_item) + ', '
 
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
@@ -790,11 +886,15 @@ class MacroRecommendClothingItemAfterFeedback(Macro):
         # an empty list causes an error
         # randomly select an item from each list
         random_hobby_index = random.randint(0, len(user_hobbies_list) - 1)
-        random_fav_color_index = random.randint(0, len(user_fav_colors_list) - 1)
-        random_not_fav_color_index = random.randint(0, len(user_not_fav_colors_list) - 1)
+        random_fav_color_index = random.randint(
+            0, len(user_fav_colors_list) - 1)
+        random_not_fav_color_index = random.randint(
+            0, len(user_not_fav_colors_list) - 1)
         random_style_index = random.randint(0, len(user_style_list) - 1)
-        random_fav_clothes_index = random.randint(0, len(user_fav_clothes_list) - 1)
-        random_not_fav_clothes_index = random.randint(0, len(user_not_fav_clothes_list) - 1)
+        random_fav_clothes_index = random.randint(
+            0, len(user_fav_clothes_list) - 1)
+        random_not_fav_clothes_index = random.randint(
+            0, len(user_not_fav_clothes_list) - 1)
 
         # call function
         outfit_recommendation = recommendClothingItemAfterFeedback(
@@ -885,9 +985,54 @@ def createUserCheck():
         return 'yes'
 
 
+# returns the user's occupation
+def getOccupation(user_response):
+    prompt = 'I asked the user for their occupation. This was their response: \"' + user_response + \
+        '\". Respond with only their occupation and nothing else. Do not put any periods.'
+
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=100,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+    return str(result.lower())
+
+
+# return the user's sentiment about their job
+def returnOccupationSentiment(user_response):
+    prompt = 'I asked the user for their occupation and how they like their occupation. This was their response: \"' + user_response + \
+        '\". Is their response positive, neutral, or negative? Give a one word response. Only say positive or negative, and nothing else. '
+
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=100,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+
+    if result == "Negative" or result == "negative" or result == "Negative." or result == "negative.":
+        return 'negative'
+    elif result == "Positive" or result == "positive" or result == "Positive." or result == "positive.":
+        return 'positive'
+    else:
+        return 'neutral'
+
+
 # returns the user's hobby
 def getHobby(user_response):
-    prompt = 'I asked the user for their hobby. This was their response \"' + user_response + '\". Respond with only their hobby in the second person. Do not put any periods or say anything else, only respond with their hobby.'
+    prompt = 'I asked the user for their hobby. This was their respons: \"' + user_response + \
+        '\". Respond with only their hobby in the second person. Do not put any periods or say anything else, only respond with their hobby.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -905,8 +1050,9 @@ def getHobby(user_response):
 
 # returns the user's style
 def getStyle(user_response):
-    prompt = 'I asked a person about their clothing style. They may either state a clothing item they wear or their style. This is their response: \"' + user_response + '\". Classify the style as either sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, or ethnic. Your response needs to be only 1 of these words. Say nothing else except one of these styles I gave you. Do not put a period after the style. Your response can only be 1 word. If you cannot determine the correct style, output only the word casual.'
-    
+    prompt = 'I asked a person about their clothing style. They may either state a clothing item they wear or their style. This is their response: \"' + user_response + \
+        '\". Classify the style as either sporty, bohemian, grunge, preppy, punk, streetwear, classic, casual, or ethnic. Your response needs to be only 1 of these words. Say nothing else except one of these styles I gave you. Do not put a period after the style. Your response can only be 1 word. If you cannot determine the correct style, output only the word casual.'
+
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
@@ -918,14 +1064,32 @@ def getStyle(user_response):
     )
 
     result = response['choices'][0]['message']['content'].strip()
-    return str(result.lower())
-
+    
+    if result == 'Sporty' or result == 'sporty' or result == 'Sporty.' or result == 'sporty.':
+        return 'sporty'
+    elif result == 'Bohemian' or result == 'bohemian' or result == 'Bohemian.' or result == 'bohemian.':
+        return 'bohemian'
+    elif result == 'Grunge' or result == 'grunge' or result == 'Grunge.' or result == 'grunge.':
+        return 'grunge'
+    elif result == 'Preppy' or result == 'preppy' or result == 'Preppy.' or result == 'preppy.':
+        return 'preppy'
+    elif result == 'Punk' or result == 'punk' or result == 'Punk.' or result == 'punk.':
+        return 'punk'
+    elif result == 'Streetwear' or result == 'streetwear' or result == 'Streetwear.' or result == 'streetwear.':
+        return 'streetwear'
+    elif result == 'Classic' or result == 'classic' or result == 'Classic.' or result == 'classic.':
+        return 'classic'
+    elif result == 'Ethnic' or result == 'ethnic' or result == 'Ethnic.' or result == 'ethnic':
+        return 'ethnic'
+    else:
+        return 'casual'
 
 
 # returns the user's clothing item
 def getClothingItem(user_response):
-    prompt = 'I asked a person to tell me about either their favorite or least favorite clothing item. This is their response: \"' + user_response + '\". Output their clothing item and say nothing else besides the clothing item. If they listed multiple clothing items, output only the first clothing item. Your output should be in this form: clothing item. Example output: Sweater. Say absolutely nothing else besides the clothing item in this form.'
-    
+    prompt = 'I asked a person to tell me about either their favorite or least favorite clothing item. This is their response: \"' + user_response + \
+        '\". Output their clothing item and say nothing else besides the clothing item. If they listed multiple clothing items, output only the first clothing item. Your output should be in this form: clothing item. Example output: Sweater. Say absolutely nothing else besides the clothing item in this form.'
+
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
@@ -940,11 +1104,11 @@ def getClothingItem(user_response):
     return str(result)
 
 
-
 # recommendation functions ============================================
 # recommens an outfit to the user
 def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
+        '. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -962,7 +1126,8 @@ def recommendOutfit(hobby, fav_color, not_fav_color, user_style, fav_item, not_f
 
 # returns the user's feedback as a postivie, neutral, or negative (=sentiment)
 def returnUserFeedbackSentiment(feedback):
-    prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
+    prompt = 'You are a bot that determines if feedback is positive, neutral, or negative. I just recommended a piece of clothing to a person. This is their response: \"' + feedback + \
+        '\". Is the sentiment of this response positive, neutral, or negative? Give a one word response. Do not put a period at the end of your response. Only say positive, neutral, or negative, and say nothing else.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -987,7 +1152,8 @@ def returnUserFeedbackSentiment(feedback):
 # recommends an outfit after the user's positive, neutral, or negative feedback
 def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
                                  sentiment):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + feedback + '. Give a new outfit recommendation. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
+        feedback + '. Give a new outfit recommendation. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -1005,7 +1171,10 @@ def recommendOutfitAfterFeedback(hobby, fav_color, not_fav_color, user_style, fa
 
 # recommends a clothing item to the user based on their current outfit
 def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit):
-    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Put your response in a sentence. Don\'t explain.'
+    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + \
+        ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + \
+        ', and doesn\'t like to wear ' + not_fav_item + \
+        '. Put your response in a sentence. Don\'t explain.'
 
     # recommend a ... 
     response = openai.ChatCompletion.create(
@@ -1025,7 +1194,10 @@ def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item,
 # recommends a clothing item after the user's positive, neutral, or negative feedback
 def recommendClothingItemAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit,
                                        feedback, sentiment):
-    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was:' + last_recommendation + ' and that person gave the following ' + sentiment + ' feedback: ' + feedback + '. Put your response in a sentence. Don\'t explain.'
+    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + \
+        fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was:' + last_recommendation + \
+        ' and that person gave the following ' + sentiment + ' feedback: ' + \
+        feedback + '. Put your response in a sentence. Don\'t explain.'
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
@@ -1041,7 +1213,8 @@ def recommendClothingItemAfterFeedback(hobby, fav_color, not_fav_color, user_sty
 
 
 def determineWatchStatus(response):
-    prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Bable?\", the response is as follows: \"' + response + '\". Determine if the person has watched the movie, if the person has watched the movie return \"yes\" only, if not return \"no\" only, and nothing else. Do not explain.'
+    prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Bable?\", the response is as follows: \"' + \
+        response + '\". Determine if the person has watched the movie, if the person has watched the movie return \"yes\" only, if not return \"no\" only, and nothing else. Do not explain.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -1279,8 +1452,6 @@ def main_dialogue() -> DialogueFlow:
         '`Can I ask for your occupation too? If you\'re a student, you can just say student.`': {
             '[$USER_OCCUPATION=#ONT(administrative)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
-                    # TODO: what happens if the user says they hate their job???
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1291,7 +1462,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(engineering)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1302,7 +1472,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(arts)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1313,7 +1482,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(business)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1324,7 +1492,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(community)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1335,7 +1502,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(computer)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1346,7 +1512,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(construction)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1357,7 +1522,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(education)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1368,7 +1532,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(farming)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1379,7 +1542,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(food)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1390,7 +1552,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(healthcare)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1401,7 +1562,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(installation)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1412,7 +1572,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(legal)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1423,7 +1582,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(life)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1434,7 +1592,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(maintenance)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1445,7 +1602,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(management)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1456,7 +1612,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(military)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1467,7 +1622,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(production)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1478,7 +1632,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(protection)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1489,7 +1642,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(sales)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1500,7 +1652,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(services)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1511,7 +1662,6 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_OCCUPATION=#ONT(transportation)]': {
                 '#GET_OCCUPATION`How do you like it?`': {
-                    # don't really care what the user says here
                     'error': {
                         '#RETURN_OCC_RESPONSE': {
                             # don't really care what the user says here either
@@ -1521,8 +1671,14 @@ def main_dialogue() -> DialogueFlow:
                 }
             },
             'error': {
-                # TODO: should we add this occupation to anyway
-                '`I\'m sorry, I\'m not familiar with this field, but it sounds like you must have a lot of expertise!`': 'get_occupation_transition'
+                '#GET_OCCUPATION_API`I\'m not familiar with this field, but it sounds like you must have a lot of expertise! How do you like it?`': {
+                    'error': {
+                        '#RETURN_OCC_RESPONSE': {
+                            # don't really care what the user says here either
+                            'error': 'get_hobby_transition_one'
+                        }
+                    }
+                }
             }
         }
     }
@@ -1530,7 +1686,7 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's hobby 1
     get_hobby_transition_one = {
         'state': 'get_hobby_transition_one',
-        '`Ah, I see! Speaking of... what do you do when you\'re not working?`': {
+        '`Ah, I see. Speaking of... what do you do when you\'re not working?`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
                 '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
@@ -1676,7 +1832,6 @@ def main_dialogue() -> DialogueFlow:
     }
 
     # -- gets the user's favourite colour #1
-
     get_fav_color_transition_one = {
         'state': 'get_fav_color_transition_one',
         '`While on the subject of things we like, it just occurred to me that I don\'t know your favorite color?!\n '
@@ -1794,95 +1949,73 @@ def main_dialogue() -> DialogueFlow:
         'What kind of clothes to you wear? I gotta get a sense of your style - good or bad - and I\'ll tell you if it\'s bad, '
         'before I can start recommending you clothes!`': {
             '[$USER_STYLE=#ONT(sporty)]': {
-				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(bohemian)]': {
-				'#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(grunge)]': {
-				'#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(preppy)]': {
-				'#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(punk)]': {
-				'#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(classic)]': {
-				'#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(casual)]': {
-				'#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
-			},
-            '#GET_STYLE_API': {
-                '#IF($USER_STYLE=sporty)`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=bohemian)`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=grunge)`The grunge style is so fun and edgy.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=preppy)`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=punk)`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=streetwear)`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=classic)`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=casual)`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two',
-                '#IF($USER_STYLE=ethnic)`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two',
+                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
             },
-			'error': {
-				'`Wow, I\'m not familiar with that style. It sounds interesting though!`': 'get_style_transition_one'
-			}
+            '[$USER_STYLE=#ONT(bohemian)]': {
+                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(grunge)]': {
+                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(preppy)]': {
+                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(punk)]': {
+                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(streetwear)]': {
+                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(classic)]': {
+                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(casual)]': {
+                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
+            },
+            '[$USER_STYLE=#ONT(ethnic)]': {
+                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
+            },
+            'error': {
+                '#GET_STYLE_API': 'get_style_transition_two'
+            }
         }
     }
 
     # -- gets the user's favourite styles #2
     get_style_transition_two = {
         'state': 'get_style_transition_two',
-        '`I know I love to wear jean jackets. It\'s such a simple but versitle item!\n '
+        '`I know I love to wear jean jackets. It\'s such a simple but versatile item!\n '
         'Jean jackets can be used from casual to formal settings and give off a fun and laid-back feel. But I\'m curious, what else do you like to wear?`': {
             '[$USER_STYLE=#ONT(sporty)]': {
-				'#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(bohemian)]': {
-				'#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(grunge)]': {
-				'#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(preppy)]': {
-				'#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(punk)]': {
-				'#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(streetwear)]': {
-				'#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(classic)]': {
-				'#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(casual)]': {
-				'#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_style_transition_two'
-			},
-			'[$USER_STYLE=#ONT(ethnic)]': {
-				'#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_style_transition_two'
-			},
-            '#GET_STYLE_API': {
-                '#IF($USER_STYLE=sporty) `I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=bohemian) `I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=grunge) `The grunge style is so fun and edgy.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=preppy) `Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=punk) `I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=streetwear) `Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=classic) `Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=casual) `Oh, so you like dressing casually? That\'s fun too.\n `': 'get_fav_clothing_transition',
-                '#IF($USER_STYLE=ethnic) `Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition',
+                '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition'
             },
-			'error': {
-				'`Wow, I don\'t know that style. It sound interesting though!`': 'get_style_transition_two'
-			}
+            '[$USER_STYLE=#ONT(bohemian)]': {
+                '#GET_STYLE`I\'m not really a fan of the boheamian style, but I do love how cool people who dress in this style look.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(grunge)]': {
+                '#GET_STYLE`The grunge style is so fun and edgy.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(preppy)]': {
+                '#GET_STYLE`Lol, the preppy style is so \"academic\" of you! \U0001F602 \n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(punk)]': {
+                '#GET_STYLE`I\'m a fan of the punk style too! Ik, surprising right?\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(streetwear)]': {
+                '#GET_STYLE`Streetwear is such a popular aesthetic these days, very cool you like it.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(classic)]': {
+                '#GET_STYLE`Quite the \"classic\" person, huh? (See my joke there) Pretty cool how you like this style.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(casual)]': {
+                '#GET_STYLE`Oh, so you like dressing casually? That\'s fun too.\n `': 'get_fav_clothing_transition'
+            },
+            '[$USER_STYLE=#ONT(ethnic)]': {
+                '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition'
+            },
+            'error': {
+                '#GET_STYLE_API': 'get_fav_clothing_transition'
+            }
         }
     }
 
@@ -1917,16 +2050,13 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
                 '#GET_FAV_CLOTHING`That\'s cool. I don\'t have one of those!\n `': 'choice_get_fav_clothing_transition'
             },
-            '#GET_FAV_CLOTHING_API': {
-                '`Great! Can\'t go wrong with a`$USER_FAV_CLOTHING_ITEM`!`': 'choice_get_fav_clothing_transition'
-            },
             'error': {
-                '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'get_fav_clothing_transition'
+                '#GET_FAV_CLOTHING_API`Great! Can\'t go wrong with a`$USER_FAV_CLOTHING_ITEM`!`': 'choice_get_fav_clothing_transition'
             }
         }
     }
 
-    
+    # -- determines whether the user has more clothing items to add or not
     choice_get_fav_clothing_transition = {
         'state': 'choice_get_fav_clothing_transition',
         '`Do you have any more clothing items you\'d like to add?`': {
@@ -1971,15 +2101,13 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(ethnic)]': {
                 '#GET_NOT_FAV_CLOTHING`I feel you. I don\'t wear too much of that either.\n `': 'choice_get_not_fav_clothing_transition'
             },
-            '#GET_NOT_FAV_CLOTHING_API': {
-                '`Understood, you don\'t like`$USER_NOT_FAV_CLOTHING_ITEM`.`': 'choice_get_not_fav_clothing_transition'
-            },
             'error': {
-                '`Sorry, I don\'t understand`': 'get_not_fav_clothing_transition'
+                '#GET_NOT_FAV_CLOTHING_API`Understood, you don\'t like`$USER_NOT_FAV_CLOTHING_ITEM`.`': 'choice_get_not_fav_clothing_transition'
             }
         }
     }
 
+    # -- determines whether the user has more clothing items they don't like to add or not
     choice_get_not_fav_clothing_transition = {
         'state': 'choice_get_not_fav_clothing_transition',
         '`Do you have any more clothing items you hate you\'d like to add?`': {
@@ -2013,7 +2141,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
                             },
                             '{no, nope, [not, really], [no, thanks]}': {
-                                '`Alright, I won\'t give you any more recommendations.`': 'end'
+                                '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
                                 '`Sorry, I don\'t understand.`': 'end'
@@ -2025,7 +2153,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
                             },
                             '{no, nope, [not, really], [no, thanks]}': {
-                                '`Alright, I won\'t give you any more recommendations.`': 'end'
+                                '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
                                 '`Sorry, I don\'t understand.`': 'end'
@@ -2241,7 +2369,6 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. I\'m dying to know where it was from.\n `': 'choice_acessory_transition'
             },
-
             # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
             '<skip>': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
@@ -2276,7 +2403,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
                     },
                     '{no, nope, [not, really], [no, thanks]}': {
-                        '`Alright, I won\'t give you any more recommendations.`': 'end'
+                        '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
                         '`Sorry, I don\'t understand.`': 'end'
@@ -2288,7 +2415,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
                     },
                     '{no, nope, [not, really], [no, thanks]}': {
-                        '`Alright, I won\'t give you any more recommendations.`': 'end'
+                        '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
                         '`Sorry, I don\'t understand.`': 'end'
@@ -2317,6 +2444,7 @@ def main_dialogue() -> DialogueFlow:
         'GET_AGE': MacroSaveAge(),
         'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
         'GET_OCCUPATION': MacroSaveOccupation(),
+        'GET_OCCUPATION_API': MacroSaveOccupationAPI(),
         'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
         'GET_HOBBY': MacroSaveHobby(),
         'GET_HOBBY_API': MacroSaveHobbyAPI(),
