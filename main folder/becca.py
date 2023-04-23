@@ -1483,9 +1483,9 @@ def main_dialogue() -> DialogueFlow:
     # they are a returning user
     return_user_transition = {
         'state': 'return_user_transition',
-        '`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Bable\", jump right in to recommending, or update your preferences?`': {
-            '<bable>': {
-                '`Okay, we can talk about the movie \"Bable\"!`': 'babel_transition'
+        '`Welcome back`$FIRSTNAME`! Would you like to talk about the movie \"Babel\", jump right in to recommending, or update your preferences?`': {
+            '<babel>': {
+                '`Okay, we can talk about the movie \"Babel\"!`': 'babel_transition'
             },
             # Get started recommending
             '<{recommend, recommending}>': {
@@ -1508,9 +1508,9 @@ def main_dialogue() -> DialogueFlow:
         'I\'m your personal stylist bot created just for you.\n '
         'I\'m here to help you look good and feel good about yourself and your clothes.\n '
         'And just an F.Y.I the information you share with me will stay with me. \U0001F92B\n '
-        'So, let\'s get started! Would you like to talk about the movie \"Bable\" or shall we talk about you and your clothes?`': {
-            '<bable>': {
-                '`Okay, we can talk about the movie \"Bable\"!`': 'babel_transition'
+        'So, let\'s get started! Would you like to talk about the movie \"Babel\" or shall we talk about you and your clothes?`': {
+            '<babel>': {
+                '`Okay, we can talk about the movie \"Babel\"!`': 'babel_transition'
             },
             # Let's talk about clothes
             '<clothes>': {
@@ -1526,7 +1526,7 @@ def main_dialogue() -> DialogueFlow:
     # FIXME: fix
     babel_transition = {
         'state': 'babel_transition',
-        '`I guess I should ask first if you have already watched the movie \"Bable\" or would you like to learn more about the film?`': {
+        '`I guess I should ask first if you have already watched the movie \"Babel\" or would you like to learn more about the film?`': {
             # returns wheither or not the user watchced the movie
             '#GET_WATCH_STATUS': {
                 # yes, the user watched the film
