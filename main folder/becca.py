@@ -144,11 +144,11 @@ class MacroSaveGender(Macro):
         #print(user_gender)
 
         if user_gender == 'none':
-            users_dictionary[current_user]['gender'] = 'mulitgendered'
+            users_dictionary[current_user]['gender'] = 'multigendered'
             #print(users_dictionary)
             return True
 
-        # save the gneder to the user's dictionary
+        # save the gender to the user's dictionary
         users_dictionary[current_user]['gender'] = user_gender
         #print(users_dictionary)
         return True
