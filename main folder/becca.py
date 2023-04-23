@@ -133,6 +133,60 @@ class MacroReturnAgeResponse(Macro):
             return str('Omg, you\'re so old! Ah, I mean, you\'re so mature...\n I can still help you though.\n')
 
 
+# saves the user's gender
+class MacroSaveGender(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's response
+        user_gender = vars['USER_GENDER']
+        print(user_gender)
+
+        if user_gender == 'none':
+            users_dictionary[current_user]['gender'] = 'mulitgendered'
+            print(users_dictionary)
+            return True
+
+        # save the gneder to the user's dictionary
+        users_dictionary[current_user]['gender'] = user_gender
+        print(users_dictionary)
+        return True
+
+
+# saves the user's gender -- if no matching
+class MacroSaveGenderAPI(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's response
+        user_response = vars['__user_utterance__']
+
+        if user_response == 'none':
+            user_gender = 'multigendered'
+            vars['USER_GENDER'] = user_gender
+            users_dictionary[current_user]['gender'] = user_gender
+            print(users_dictionary)
+            return True
+
+
+        # get the user's gender
+        user_gender_return = getGender(user_response=user_response)
+
+        # remove puncuation
+        user_gender = user_gender_return.strip(string.punctuation).lower()
+
+        # save gender to variable
+        vars['USER_GENDER'] = user_gender
+
+        # save the user's gender to their dictionary
+        users_dictionary[current_user]['gender'] = user_gender
+
+        return True
+
+
+
 # save the user's occupation
 class MacroSaveOccupation(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -649,7 +703,7 @@ class MacroSaveOutfitAPI(Macro):
         # print(clothing_item)
 
         # return item to var
-        vars['USER_CURR_ITEM'] = clothing_item
+        vars['USER_CURR_ITEM'] = clothing_item.lower()
 
         # get the user's style
         # clothing_style_return = getStyle(user_response=user_response)
@@ -747,6 +801,9 @@ class MacroRecommendOutfit(Macro):
         # access the user's age
         user_age = user_nested_dictionary['age']
 
+        # access the user's gender
+        user_gender = user_nested_dictionary['gender']
+
         # access the user's occupation
         user_occupation = user_nested_dictionary['occupation']
 
@@ -776,6 +833,7 @@ class MacroRecommendOutfit(Macro):
         # call function
         outfit_recommendation = recommendOutfit(
             age=str(user_age),
+            gender=user_gender,
             occupation=user_occupation,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
@@ -821,6 +879,9 @@ class MacroRecommendOutfitAfterFeedback(Macro):
         # access the user's age
         user_age = user_nested_dictionary['age']
 
+        # access the user's gender
+        user_gender = user_nested_dictionary['gender']
+
         # access the user's occupation
         user_occupation = user_nested_dictionary['occupation']
 
@@ -850,6 +911,7 @@ class MacroRecommendOutfitAfterFeedback(Macro):
         # call function
         outfit_recommendation = recommendOutfitAfterFeedback(
             age=str(user_age),
+            gender=user_gender,
             occupation=user_occupation,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
@@ -896,6 +958,9 @@ class MacroRecommentClothingItem(Macro):
                 clothing_item_sentence += str(clothing_item_style) + \
                     ' ' + str(clothing_item) + ', '
 
+        # access the user's age
+        user_gender = user_nested_dictionary['gender']
+
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_fav_colors_list = user_nested_dictionary['fav_colors_list']
@@ -920,6 +985,7 @@ class MacroRecommentClothingItem(Macro):
 
         # call function
         outfit_recommendation = recommendClothingItem(
+            gender=user_gender,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
             not_fav_color=user_not_fav_colors_list[random_not_fav_color_index],
@@ -968,6 +1034,9 @@ class MacroRecommendClothingItemAfterFeedback(Macro):
                 clothing_item_sentence += str(clothing_item_style) + \
                     ' ' + str(clothing_item) + ', '
 
+        # access the user's gender
+        user_gender = user_nested_dictionary['gender']
+
         # access the user's lists
         user_hobbies_list = user_nested_dictionary['hobbies_list']
         user_fav_colors_list = user_nested_dictionary['fav_colors_list']
@@ -992,6 +1061,7 @@ class MacroRecommendClothingItemAfterFeedback(Macro):
 
         # call function
         outfit_recommendation = recommendClothingItemAfterFeedback(
+            gender=user_gender,
             hobby=user_hobbies_list[random_hobby_index],
             fav_color=user_fav_colors_list[random_fav_color_index],
             not_fav_color=user_not_fav_colors_list[random_not_fav_color_index],
@@ -1060,6 +1130,7 @@ def createUserCheck():
         users_dictionary[current_user] = dict(
             name=str(current_user.capitalize()),
             age=0,
+            gender="",
             occupation="",
             hobbies_list=[],
             fav_colors_list=[],
@@ -1078,6 +1149,25 @@ def createUserCheck():
         # print("A returning user: " + current_user)
         return 'yes'
 
+
+# returns the user's gdner
+def getGender(user_response):
+    prompt = 'I asked a person for their gender. This is their response: \"' + user_response + '\". Return in a single word the gender the person identifies with. Do not add punctuation. Do not explain.'
+
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=100,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+    return str(result.lower())
+
+    
 
 # returns the user's occupation
 def getOccupation(user_response):
@@ -1244,8 +1334,8 @@ def completions_with_backoff_two(user_input):
 
 # recommendation functions ============================================
 # recommens an outfit to the user
-def recommendOutfit(age, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
+def recommendOutfit(age, gender, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and a ' + gender + ' and a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
         '. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -1288,9 +1378,9 @@ def returnUserFeedbackSentiment(feedback):
 
 
 # recommends an outfit after the user's positive, neutral, or negative feedback
-def recommendOutfitAfterFeedback(age, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
+def recommendOutfitAfterFeedback(age, gender, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
                                  sentiment):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and is a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
+    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old a ' + gender + ' and is a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
         feedback + '. Give a new outfit recommendation. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -1308,11 +1398,11 @@ def recommendOutfitAfterFeedback(age, occupation, hobby, fav_color, not_fav_colo
 
 
 # recommends a clothing item to the user based on their current outfit
-def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit):
+def recommendClothingItem(gender, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit):
     prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + \
         ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + \
         ', and doesn\'t like to wear ' + not_fav_item + \
-        '. Put your response in a sentence. Don\'t explain.'
+        ' and is a ' + gender + '. Put your response in a sentence. Don\'t explain.'
 
     # recommend a ... 
     response = openai.ChatCompletion.create(
@@ -1330,12 +1420,13 @@ def recommendClothingItem(hobby, fav_color, not_fav_color, user_style, fav_item,
 
 
 # recommends a clothing item after the user's positive, neutral, or negative feedback
-def recommendClothingItemAfterFeedback(hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit,
+def recommendClothingItemAfterFeedback(gender, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit,
                                        feedback, sentiment):
     prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + \
-        fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was:' + last_recommendation + \
+        fav_item + ', and doesn\'t like to wear ' + not_fav_item + ' and is a ' + gender + '. Your last recommendation was:' + last_recommendation + \
         ' and that person gave the following ' + sentiment + ' feedback: ' + \
         feedback + '. Put your response in a sentence. Don\'t explain.'
+    
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
@@ -1576,10 +1667,22 @@ def main_dialogue() -> DialogueFlow:
         'state': 'get_age_transition',
         '`To be direct, how old are you?`': {
             '#GET_AGE': {
-                '#RETURN_AGE_RESPONSE': 'get_occupation_transition'
+                '#RETURN_AGE_RESPONSE': 'get_gender_transition'
             },
             'error': {
                 '`I don\'t think I got your age correctly. Let me ask again.\n `': 'get_age_transition'
+            }
+        }
+    }
+
+    get_gender_transition = {
+        'state': 'get_gender_transition',
+        '`To be direct again, do you mind if I ask for your gender? If you don\'t identify with any gender, just type \"none\".`': {
+            '[$USER_GENDER={male, female, none}]': {
+                '#GET_GENDER`Thank you for answering the question.`': 'get_occupation_transition'
+            },
+            'error': {
+                '#GET_GENDER_API`Thank you for answering the question.`': 'get_occupation_transition'
             }
         }
     }
@@ -2368,7 +2471,7 @@ def main_dialogue() -> DialogueFlow:
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_bottoms_transition'
             },
             'error': {
-                '#GET_CURR_OUTFIT_API`Okie doki. I\'m sure`$USER_CURR_ITEM`is a beauitful garment. Let\'s move on to the next item of clothing.\n `': 'get_current_top_transition'
+                '#GET_CURR_OUTFIT_API`Okie doki. I\'m sure`$USER_CURR_ITEM`is a beauitful garment. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
             }
         }
     }
@@ -2615,6 +2718,8 @@ def main_dialogue() -> DialogueFlow:
         'GET_NAME': MacroGetName(),
         'GET_AGE': MacroSaveAge(),
         'RETURN_AGE_RESPONSE': MacroReturnAgeResponse(),
+        'GET_GENDER': MacroSaveGender(),
+        'GET_GENDER_API': MacroSaveGenderAPI(),
         'GET_OCCUPATION': MacroSaveOccupation(),
         'GET_OCCUPATION_API': MacroSaveOccupationAPI(),
         'RETURN_OCC_RESPONSE': MacroOccupationResponse(),
@@ -2663,6 +2768,9 @@ def main_dialogue() -> DialogueFlow:
 
     # get the user's age
     df.load_transitions(get_age_transition)
+
+    # get the user's gender
+    df.load_transitions(get_gender_transition)
 
     # get the users occupation
     df.load_transitions(get_occupation_transition)
