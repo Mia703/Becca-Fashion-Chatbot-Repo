@@ -26,8 +26,9 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-# openai.api_key_path = './resources/openai_api.txt'
+#openai.api_key_path = './resources/openai_api.txt'
 openai.api_key = ''
+
 
 
 # saves the user's feedback from recommendation
@@ -71,6 +72,7 @@ class MacroGetName(Macro):
 
         # save the current user -- in lowercase for name ID
         current_user = firstname.lower()
+
 
         vars['FIRSTNAME'] = firstname.capitalize()
 
@@ -223,7 +225,7 @@ class MacroOccupationResponse(Macro):
                         'How did you get into that field?']
 
             # tell me more...
-            return str('Hummmm, I can\'t tell if you like your job or not. Bor me, I love my job!\n '
+            return str('Hummmm, I can\'t tell if you like your job or not. For me, I love my job!\n '
                     'As a fashion bot, I\'m always looking for new ways to communicate better and connect with my users,\n '
                     'especially since I was born like a month ago. \U0001F609 ' + random.choice(responses))
 
@@ -1027,8 +1029,8 @@ def load(df: DialogueFlow, varfile: str):
         users_dictionary = pickle.load(handle)
 
         # print(users_dictionary)
-        pretty = json.dumps(users_dictionary, indent=4)
-        print(pretty)
+        #pretty = json.dumps(users_dictionary, indent=4)
+        #print(pretty)
 
         df.run()
         save(df, varfile)
@@ -1156,7 +1158,7 @@ def getStyle(user_response):
     )
 
     result = response['choices'][0]['message']['content'].strip()
-    
+
     if result == 'Sporty' or result == 'sporty' or result == 'Sporty.' or result == 'sporty.':
         return 'sporty'
     elif result == 'Bohemian' or result == 'bohemian' or result == 'Bohemian.' or result == 'bohemian.':
@@ -1825,39 +1827,39 @@ def main_dialogue() -> DialogueFlow:
         '`Ah, I see. Speaking of... what do you do when you\'re not working?`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # sports = a physical activity
             '[$USER_HOBBY=#ONT(sports)]': {
-                '#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Interesting! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # games = card/board games and the like
             '[$USER_HOBBY=#ONT(games)]': {
-                '#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # creative = creating something; an artistic hobby
             '[$USER_HOBBY=#ONT(creative)]': {
-                '#GET_HOBBY`That\'s interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`That\'s interesting! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # collecting = anything a person could collect
             '[$USER_HOBBY=#ONT(collecting)]': {
-                '#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Interesting! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # domestic = chores that are hobbies
             '[$USER_HOBBY=#ONT(domestic)]': {
-                '#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh wow! That sounds fun! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # making = making an object; tinkering
             '[$USER_HOBBY=#ONT(making)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # outdoor = hobbies that happen outdoors; that aren't sports
             '[$USER_HOBBY=#ONT(outdoor)]': {
-                '#GET_HOBBY`Interesting! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Interesting! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # observation = hobbies that involve just looking at something
             '[$USER_HOBBY=#ONT(observation)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read syfy-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # '#GET_HOBBY_API': {
             #     '`You like to do`$USER_HOBBY`? That\'s cool!\n `': 'get_hobby_transition_two'
@@ -2308,7 +2310,7 @@ def main_dialogue() -> DialogueFlow:
                             }
                         },
                         # if the user's feedback is considered negative
-                        '#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t my recommendation. \U0001F61E Would you like me to recommend you another outfit?`': {
+                        '#IF($USER_SENTIMENT=negative)`I\'m sorry you don\'t like my recommendation. \U0001F61E Would you like me to recommend you another outfit?`': {
                             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
                                 '`Okay, I can recommend you another outfit!`#REC_OUTFIT_AF_FEEDBACK`What do you think?`': 'return_to_feedback_choice_rec_transition'
                             },
