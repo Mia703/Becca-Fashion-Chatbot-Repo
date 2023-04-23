@@ -26,8 +26,8 @@ color_names_df = pd.read_csv('./resources/color_names.csv')
 styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
-#openai.api_key_path = './resources/openai_api.txt'
-openai.api_key = ''
+openai.api_key_path = './resources/openai_api.txt'
+#openai.api_key = ''
 
 
 
@@ -141,16 +141,16 @@ class MacroSaveGender(Macro):
 
         # get the user's response
         user_gender = vars['USER_GENDER']
-        print(user_gender)
+        #print(user_gender)
 
         if user_gender == 'none':
             users_dictionary[current_user]['gender'] = 'mulitgendered'
-            print(users_dictionary)
+            #print(users_dictionary)
             return True
 
         # save the gneder to the user's dictionary
         users_dictionary[current_user]['gender'] = user_gender
-        print(users_dictionary)
+        #print(users_dictionary)
         return True
 
 
@@ -167,7 +167,7 @@ class MacroSaveGenderAPI(Macro):
             user_gender = 'multigendered'
             vars['USER_GENDER'] = user_gender
             users_dictionary[current_user]['gender'] = user_gender
-            print(users_dictionary)
+            #print(users_dictionary)
             return True
 
 
@@ -1442,7 +1442,7 @@ def recommendClothingItemAfterFeedback(gender, hobby, fav_color, not_fav_color, 
 
 
 def determineWatchStatus(response):
-    prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Bable?\", the response is as follows: \"' + \
+    prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Babel?\", the response is as follows: \"' + \
         response + '\". Determine if the person has watched the movie, if the person has watched the movie return \"yes\" only, if not return \"no\" only, and nothing else. Do not explain.'
 
     response = openai.ChatCompletion.create(
@@ -2199,7 +2199,7 @@ def main_dialogue() -> DialogueFlow:
     get_style_transition_one = {
         'state': 'get_style_transition_one',
         '`I\'d also love to learn about your personal style!\n '
-        'What kind of clothes to you wear? I gotta get a sense of your style - good or bad - and I\'ll tell you if it\'s bad, '
+        'What kind of clothes do you wear? I gotta get a sense of your style - good or bad - and I\'ll tell you if it\'s bad, '
         'before I can start recommending you clothes!`': {
             '[$USER_STYLE=#ONT(sporty)]': {
                 '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_style_transition_two'
@@ -2696,7 +2696,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
-                        '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
+                        '`I\'m not really sure what you said. Would you like me to recommend you another outfit?`': 'return_to_feedback_outfit_rec'
                     }
                 }
             }
@@ -2706,7 +2706,7 @@ def main_dialogue() -> DialogueFlow:
     exit_transition = {
         'state': 'exit_transition',
         '`Well that\'s all I really have for you!\n '
-        'I\'d really apprecate if if you would take a quick survey on my performance. Would you be willing to do so?`': {
+        'I\'d really appreciate if if you would take a quick survey on my performance. Would you be willing to do so?`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
                 '#DEL_DICT_CONTENTS`Okay, great! The link to the survey is here: "https://forms.gle/jJGy46m3PSQdZwiC8" I hope you have a wonderful and stylish day!`': 'end'
             },
