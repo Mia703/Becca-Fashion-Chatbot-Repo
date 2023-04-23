@@ -5,9 +5,11 @@ import random
 import json
 import string
 import pandas as pd
+import backoff
 # API ============================================
 import openai
 import nltk
+# nltk.download('omw-1.4')
 # ============================================
 from typing import Dict, Any, List
 from collections import defaultdict
@@ -625,6 +627,78 @@ class MacroSaveOutfit(Macro):
         # print(user_nested_current_outfit_dictionary)
 
 
+# saves the user's current outfit -- if not matched by the ontology
+# this macro causes 'rate limit error'
+# how to handle rate limit errors -- https://github.com/openai/openai-cookbook/blob/main/examples/How_to_handle_rate_limits.ipynb
+# try not to use often, very very slow
+class MacroSaveOutfitAPI(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global users_dictionary
+        global current_user
+
+        # get the user's response
+        user_response = vars['__user_utterance__']
+
+        # get the user's clothing item 
+        clothing_item_return = getClothingItem(user_response=user_response)
+
+        # remove puncuation
+        clothing_item = clothing_item_return.strip(string.punctuation)
+        # print(clothing_item)
+
+        # return item to var
+        vars['USER_CURR_ITEM'] = clothing_item
+
+        # get the user's style
+        # clothing_style_return = getStyle(user_response=user_response)
+        clothing_style_return = completions_with_backoff(user_input=user_response)
+        # print(clothing_style_return)
+
+        # remove puncuation
+        clothing_style = clothing_style_return.strip(string.punctuation)
+        # print(clothing_style)
+
+        # get the user's category
+        # clothing_category_return = getClothingCategory(user_response=user_response)
+        clothing_category_return = completions_with_backoff_two(user_input=user_response)
+        # print(clothing_category_return)
+
+        # remove puncuation
+        clothing_category = clothing_category_return.strip(string.punctuation)
+        # print(clothing_category)
+
+        # access the user's dictionary
+        user_nested_dictionary = users_dictionary[current_user]
+
+        # access the user's current outfit dictionary
+        user_nested_current_outfit_dictionary = user_nested_dictionary['current_outfit_dict']
+
+        # if the clothing item is already in the dictionary, just exit
+        for item in user_nested_current_outfit_dictionary:
+            nested_item = user_nested_current_outfit_dictionary[item].get('clothing_item')
+            if nested_item == user_response:
+                return
+
+
+        # else, add the item to the dicionary
+        # get the size of the current outfit dictionary
+        dict_index = len(user_nested_current_outfit_dictionary)
+
+        # add +1 to index, to start at 1
+        dict_index += 1
+        # print('current outfit dictionary size: ' + str(dict_index))
+
+        # add the clothing item, category, and style to the user's current outfit dictinoary
+        user_nested_current_outfit_dictionary[dict_index] = dict(
+            clothing_item=str(clothing_item.lower()),
+            clothing_category=str(clothing_category.lower()),
+            clothing_style=str(clothing_style.lower())
+        )
+
+        # print(user_nested_current_outfit_dictionary)
+        return True
+
+
 # returns whether or not the user has watched the movie
 class MacroReturnWatchStatus(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -1049,7 +1123,7 @@ def returnOccupationSentiment(user_response):
 
 # returns the user's hobby
 def getHobby(user_response):
-    prompt = 'I asked the user for their hobby. This was their respons: \"' + user_response + \
+    prompt = 'I asked the user for their hobby. This was their response: \"' + user_response + \
         '\". Respond with only their hobby in the second person. Do not put any periods or say anything else, only respond with their hobby.'
 
     response = openai.ChatCompletion.create(
@@ -1074,7 +1148,7 @@ def getStyle(user_response):
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
-        max_tokens=200,
+        max_tokens=150,
         messages=[
             {'role': 'system', 'content': 'You are a chatbot'},
             {'role': 'user', 'content': prompt},
@@ -1111,7 +1185,7 @@ def getClothingItem(user_response):
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         temperature=0,
-        max_tokens=20,
+        max_tokens=100,
         messages=[
             {'role': 'system', 'content': 'You are a chatbot'},
             {'role': 'user', 'content': prompt},
@@ -1121,6 +1195,50 @@ def getClothingItem(user_response):
     result = response['choices'][0]['message']['content'].strip()
     return str(result)
 
+
+# returns the clothing item's cateogry
+def getClothingCategory(user_response):
+    prompt = 'I asked a person about a clothing item. This is there response: \"' + user_response + \
+        '\". Classify the clothing item as either top, bottoms, coat, dress, shoes, or accessory. Your response needs to be only 1 of these words. Say nothing else except one of these categories I gave you. Do not put a period after the category. Your response can only be 1 word. If you cannot determine the correct category, output only the word \"none\".'
+
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        temperature=0,
+        max_tokens=150,
+        messages=[
+            {'role': 'system', 'content': 'You are a chatbot'},
+            {'role': 'user', 'content': prompt},
+        ]
+    )
+
+    result = response['choices'][0]['message']['content'].strip()
+
+    if result == 'Top' or result == 'top' or result == 'Top.' or result == 'top.':
+        return 'top'
+    elif result == 'Bottoms' or result == 'bottoms' or result == 'Bottoms.' or result == 'bottoms.':
+        return 'bottoms'
+    elif result == 'Coat' or result == 'coat' or result == 'Coat.' or result == 'coat.':
+        return 'coat'
+    elif result == 'Dress' or result == 'dress' or result == 'Dress.' or result == 'dress.':
+        return 'dress'
+    elif result == 'Shoes' or result == 'shoes' or result == 'Shoes.' or result == 'shoes.':
+        return 'shoes'
+    elif result == 'Accessory' or result == 'accessory' or result == 'Accessory.' or result == 'accessory':
+        return 'accessory'
+    else:
+        return 'none'
+
+
+# returns the clothing item's style after waiting an unspecified amount of time
+@backoff.on_exception(backoff.expo, openai.error.RateLimitError)
+def completions_with_backoff(user_input):
+    return getStyle(user_response=user_input)
+
+
+# returns the clothing item's category after waiting an unspecified amount of time
+@backoff.on_exception(backoff.expo, openai.error.RateLimitError)
+def completions_with_backoff_two(user_input):
+    return getClothingCategory(user_response=user_input)
 
 # recommendation functions ============================================
 # recommens an outfit to the user
@@ -1285,7 +1403,7 @@ def main_dialogue() -> DialogueFlow:
                 '`Okay, let\'s start updating your preferences.`': 'clothing_transition'
             },
             'error': {
-                '`Sorry, I don\'t understand.`': 'return_user_transition'
+                '`Sorry, I don\'t understand. Let me ask the question again.\n `': 'return_user_transition'
             }
         }
     }
@@ -1306,7 +1424,7 @@ def main_dialogue() -> DialogueFlow:
                 '`Okay, we can talk about clothes!\n`': 'clothing_transition'
             },
             'error': {
-                '`Sorry, I don\'t understand.`': 'new_user_transition'
+                '`Sorry, I don\'t understand. Let me ask the question again.\n `': 'new_user_transition'
             }
         }
     }
@@ -1459,7 +1577,7 @@ def main_dialogue() -> DialogueFlow:
                 '#RETURN_AGE_RESPONSE': 'get_occupation_transition'
             },
             'error': {
-                '`Sorry, I don\'t understand.`': 'get_age_transition'
+                '`I don\'t think I got your age correctly. Let me ask again.\n `': 'get_age_transition'
             }
         }
     }
@@ -1753,7 +1871,7 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's hobby 2
     get_hobby_transition_two = {
         'state': 'get_hobby_transition_two',
-        '`What other activities do you like to do for fun?`': {
+        '`What other activities do you like to do for fun? If you don\'t have any more hobbies, just say \"skip\".`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
                 '#GET_HOBBY`Ooooo, that\'s cool. I know a lot of people who do`$USER_HOBBY`for fun.\n `': 'get_hobby_transition_three'
@@ -1794,6 +1912,9 @@ def main_dialogue() -> DialogueFlow:
             # '#GET_HOBBY_API': {
             #     '`You also like to do`$USER_HOBBY`? That\'s fun too.`': 'get_hobby_transition_three'
             # },
+            'skip': {
+                '`Alrighty, so you don\'t have another hobby. Okay, moving on...`': 'get_hobby_transition_three'
+            },
             'error': {
                 '#GET_HOBBY_API`You also like to`$USER_HOBBY`. That\'s fun too!\n `': 'get_hobby_transition_three'
             }
@@ -1803,7 +1924,8 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's hobby 3
     get_hobby_transition_three = {
         'state': 'get_hobby_transition_three',
-        '`I looooove photography! It\'s one of my favorite hobbies. Are there any other hobbies you\'re really passionate about?`': {
+        '`I looooove photography! It\'s one of my favorite hobbies. Are there any other hobbies you\'re really passionate about?\n '
+        'If you can\'t think of another hobby, just say \"skip\".`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
                 '#GET_HOBBY`Nice! `': 'get_fav_color_transition_one'
@@ -1843,6 +1965,9 @@ def main_dialogue() -> DialogueFlow:
             # '#GET_HOBBY_API': {
             #     '`Annnddd you like to do`$USER_HOBBY`?! Wow, you\'re amazing!`': 'get_fav_color_transition_one'
             # },
+            'skip': {
+                '`Understood, you can\'t think of another hobby. Okay, moving on...`': 'get_fav_color_transition_one'
+            },
             'error': {
                 '#GET_HOBBY_API`Wow, you have a lot of unique hobbies. I\'ll add`$USER_HOBBY`to my list of hobbies try.`': 'get_fav_color_transition_one'
             }
@@ -1879,7 +2004,7 @@ def main_dialogue() -> DialogueFlow:
                 'It\'s so cute and works for a variety of fashion situations.\n`': 'get_fav_color_transition_two'
             },
             'error': {
-                '`Sorry, I don\'t understand.`': 'get_fav_color_transition_one'
+                '`Sorry, I\'ve never heard of that color before. Is there another name for it? Let me ask the question again.`': 'get_fav_color_transition_one'
             }
         }
     }
@@ -1913,9 +2038,11 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_FAV_COLOR`Lol, nice. '
                 'I like`$USER_COLOR`too, it always stands out to me, but I never know how to style it!`': 'get_not_fav_color_transition'
             },
-            '<skip>': 'get_not_fav_color_transition',
+            '<skip>': {
+                '`Gotcha, you\'d like to skip. Then let\'s move on...`': 'get_not_fav_color_transition'
+            },
             'error': {
-                '`Sorry, I don\'t understand.`': 'get_fav_color_transition_two'
+                '`Sorry, I\'ve never heard of that color before. Is there another name for it? Let me ask the question again.`': 'get_fav_color_transition_two'
             }
         }
     }
@@ -1923,39 +2050,39 @@ def main_dialogue() -> DialogueFlow:
     # -- get user's not favourite colours # 1
     get_not_fav_color_transition = {
         'state': 'get_not_fav_color_transition',
-        '`Out of curiosity, are there any color that you really dislike or wouldn\'t wear?`': {
+        '`Out of curiosity, are there any color that you really dislike or would not or refuse wear?`': {
             '[$USER_NOT_COLOR=#ONT(red)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors,\n '
+                'To be honest, I\'m not that picky about colors, '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             '[$USER_NOT_COLOR=#ONT(orange)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors,\n '
+                'To be honest, I\'m not that picky about colors, '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             '[$USER_NOT_COLOR=#ONT(yellow)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors\n '
+                'To be honest, I\'m not that picky about colors '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             '[$USER_NOT_COLOR=#ONT(green)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors,\n '
+                'To be honest, I\'m not that picky about colors, '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             '[$USER_NOT_COLOR=#ONT(blue)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors,\n '
+                'To be honest, I\'m not that picky about colors, '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             '[$USER_NOT_COLOR=#ONT(violet)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
-                'To be honest, I\'m not that picky about colors,\n '
+                'To be honest, I\'m not that picky about colors, '
                 'but I always try to avoid bright oranges and neons.\n`': 'get_style_transition_one'
             },
             'error': {
-                '`Sorry, I don\'t understand.`': 'get_not_fav_color_transition'
+                '`Sorry, I\'ve never heard of that color before. Is there another name for it? Let me ask the question again.`': 'get_not_fav_color_transition'
             }
         }
     }
@@ -2003,7 +2130,8 @@ def main_dialogue() -> DialogueFlow:
     get_style_transition_two = {
         'state': 'get_style_transition_two',
         '`I know I love to wear jean jackets. It\'s such a simple but versatile item!\n '
-        'Jean jackets can be used from casual to formal settings and give off a fun and laid-back feel. But I\'m curious, what else do you like to wear?`': {
+        'Jean jackets can be used from casual to formal settings and give off a fun and laid-back feel. But I\'m curious, what else do you like to wear?\n '
+        'If you can\'t really think of anything, just say \"skip\".`': {
             '[$USER_STYLE=#ONT(sporty)]': {
                 '#GET_STYLE`I\'m a fan of the sporty style too! People who dress sporty are effortlessly chic.\n `': 'get_fav_clothing_transition'
             },
@@ -2030,6 +2158,9 @@ def main_dialogue() -> DialogueFlow:
             },
             '[$USER_STYLE=#ONT(ethnic)]': {
                 '#GET_STYLE`Pretty awesome how you represent your ethnicity in your clothes.\n `': 'get_fav_clothing_transition'
+            },
+            'skip': {
+                '`Alright, moving on then...`': 'get_fav_clothing_transition'
             },
             'error': {
                 '#GET_STYLE_API': 'get_fav_clothing_transition'
@@ -2077,10 +2208,11 @@ def main_dialogue() -> DialogueFlow:
     # -- determines whether the user has more clothing items to add or not
     choice_get_fav_clothing_transition = {
         'state': 'choice_get_fav_clothing_transition',
-        '`Do you have any more clothing items you\'d like to add?`': {
+        '`Are there any more clothing items you\'d like that you want to share with me?\n '
+        'Note that the more you share, the more diverse my recommendations will be in the end!`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': 'get_fav_clothing_transition',
             '{no, nope, [not, really], [no, thanks]}': {
-                '`Okay, well...`': 'get_not_fav_clothing_transition'
+                '`Okie doki, well I\'ve got another question for you.`': 'get_not_fav_clothing_transition'
             },
             'error': {
                 '`Sorry, I don\'t understand. Do you mind answering the question again?`': 'choice_get_fav_clothing_transition'
@@ -2091,7 +2223,7 @@ def main_dialogue() -> DialogueFlow:
     # -- get user's not preferred clothing items
     get_not_fav_clothing_transition = {
         'state': 'get_not_fav_clothing_transition',
-        '`What about a clothing item that you would never wear?`': {
+        '`Is there a clothing item that you would never wear?`': {
             '[$USER_NOT_FAV_CLOTHING_ITEM=#ONT(sporty)]': {
                 '#GET_NOT_FAV_CLOTHING`I feel you. I only wear athleisure when I\'m too lazy to put together an outfit.\n `': 'choice_get_not_fav_clothing_transition'
             },
@@ -2128,7 +2260,7 @@ def main_dialogue() -> DialogueFlow:
     # -- determines whether the user has more clothing items they don't like to add or not
     choice_get_not_fav_clothing_transition = {
         'state': 'choice_get_not_fav_clothing_transition',
-        '`Do you have any more clothing items you hate you\'d like to add?`': {
+        '`Are there any more clothing items you hate you\'d like to share with me?`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': 'get_not_fav_clothing_transition',
             '{no, nope, [not, really], [no, thanks]}': {
                 '`Okie dokie.`': 'choice_recommendation_transition'
@@ -2159,7 +2291,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
-                                '`Sorry, I don\'t understand.`': 'end'
+                                '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
                             }
                         },
                         # if the user's feedback is considered neutral
@@ -2172,7 +2304,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
-                                '`Sorry, I don\'t understand.`': 'end'
+                                '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
                             }
                         },
                         # if the user's feedback is considered negative
@@ -2184,7 +2316,7 @@ def main_dialogue() -> DialogueFlow:
                                 '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                             },
                             'error': {
-                                '`Sorry, I don\'t understand.`': 'end'
+                                '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
                             }
                         }
                     }
@@ -2229,12 +2361,12 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ITEM=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Got it, nice! I\'m sure it\'s a beautiful garment. Let\'s move on to the next item of clothing.\n `': 'get_current_bottoms_transition'
             },
-            # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-            '<skip>': {
+            # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
+            'skip': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_bottoms_transition'
             },
             'error': {
-                '`I\'m not sure I understand.`': 'get_current_top_transition'
+                '#GET_CURR_OUTFIT_API`Okie doki. I\'m sure`$USER_CURR_ITEM`is a beauitful garment. Let\'s move on to the next item of clothing.\n `': 'get_current_top_transition'
             }
         }
     }
@@ -2271,12 +2403,12 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ITEM=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Understood. Ralph Lauren\'s 2009 Harem pants were iconic. Moving on to the next item.\n `': 'get_current_coat_transition'
             },
-            # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-            '<skip>': {
+            # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
+            'skip': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_coat_transition'
             },
             'error': {
-                '`I\'m not sure I understand.`': 'get_current_bottoms_transition'
+                '#GET_CURR_OUTFIT_API`Alrighty, adding`$USER_CURR_ITEM`to your outfit. Moving on to the next item.\n `': 'get_current_coat_transition'
             }
         }
     }
@@ -2313,12 +2445,12 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ITEM=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Cool! I saw the most beautiful embroidered tunic the other day. And now...\n `': 'get_current_shoes_transition'
             },
-            # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-            '<skip>': {
+            # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
+            'skip': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_shoes_transition'
             },
             'error': {
-                '`I\'m not sure I understand.`': 'get_current_coat_transition'
+                '#GET_CURR_OUTFIT_API`Cool!`$USER_CURR_ITEM`is added to your outfit. And now...\n `': 'get_current_shoes_transition'
             }
         }
     }
@@ -2355,12 +2487,12 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ITEM=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Great. That\'s so cool. I\'d love to learn more about the different types of shoes worn around the world. Also, one last thing...\n `': 'get_current_accessory_transition'
             },
-            # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-            '<skip>': {
+            # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
+            'skip': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'get_current_accessory_transition'
             },
             'error': {
-                '`I\'m not sure I understand.`': 'get_current_shoes_transition'
+                '#GET_CURR_OUTFIT_API`Nice!`$USER_CURR_ITEM`is added to your outfit. Also, one last thing...\n `': 'get_current_accessory_transition'
             }
         }
     }
@@ -2397,12 +2529,12 @@ def main_dialogue() -> DialogueFlow:
             '[$USER_CURR_ACCSRY=#ONT(ethnic)]': {
                 '#GET_CURR_OUTFIT`Awesome, thanks! I saw someone wearing the most beautiful traditional jewelry the other day. I\'m dying to know where it was from.\n `': 'choice_acessory_transition'
             },
-            # if the user is wearing nothing, or something similar to nothing, return don't do anythgin in the current outfit dict
-            '<skip>': {
+            # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
+            'skip': {
                 '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
             },
             'error': {
-                '`I\'m not sure I understand.`': 'get_current_accessory_transition'
+                '#GET_CURR_OUTFIT_API`Awesome, thanks!`$USER_CURR_ITEM`is added to your outfit.\n `': 'choice_acessory_transition'
             }
         }
     }
@@ -2423,7 +2555,17 @@ def main_dialogue() -> DialogueFlow:
             'state': 'return_to_feedback_outfit_rec',
             '#GET_FEEDBACK': {
                 # if the user's feedback is considered positive
-                '#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F`': 'end',
+                '#IF($USER_SENTIMENT=positive)`I\'m happy you like my recommendation! \U0001F44F Would you like me to recommend you another outfit?`': {
+                    '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
+                        '`Okay, I can recommend you another outfit!`#REC_CLOTHING_ITEM_AF_FEEDBACK`What do you think?`': 'return_to_feedback_outfit_rec'
+                    },
+                    '{no, nope, [not, really], [no, thanks]}': {
+                        '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
+                    },
+                    'error': {
+                        '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
+                    }
+                },
                 # if the user's feedback is considered neutral
                 '#IF($USER_SENTIMENT=neutral)`I\'m not sure if my recommendation is something your\'re interested in, \U0001F937 but I\'m glad to hear you don\'t completely hate it!.\n '
                 'Would you like me to recommend you another outfit?`': {
@@ -2434,7 +2576,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
-                        '`Sorry, I don\'t understand.`': 'end'
+                        '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
                     }
                 },
                 # if the user's feedback is considered negative
@@ -2446,7 +2588,7 @@ def main_dialogue() -> DialogueFlow:
                         '`Alright, I won\'t give you any more recommendations.`': 'exit_transition'
                     },
                     'error': {
-                        '`Sorry, I don\'t understand.`': 'end'
+                        '`I\'m not really sure what you said just now, but unfortunately I\'ll have to take that as a no.`': 'exit_transition'
                     }
                 }
             }
@@ -2455,7 +2597,7 @@ def main_dialogue() -> DialogueFlow:
 
     exit_transition = {
         'state': 'exit_transition',
-        '`Well that\'s all I really have for you.\n '
+        '`Well that\'s all I really have for you!\n '
         'I\'d really apprecate if if you would take a quick survey on my performance. Would you be willing to do so?`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
                 '#DEL_DICT_CONTENTS`Okay, great! The link to the survey is here: "https://forms.gle/jJGy46m3PSQdZwiC8" I hope you have a wonderful and stylish day!`': 'end'
@@ -2485,6 +2627,7 @@ def main_dialogue() -> DialogueFlow:
         'GET_NOT_FAV_CLOTHING': MacroSaveNotFavoriteClothing(),
         'GET_NOT_FAV_CLOTHING_API': MacroSaveNotFavoriteClothingAPI(),
         'GET_CURR_OUTFIT': MacroSaveOutfit(),
+        'GET_CURR_OUTFIT_API': MacroSaveOutfitAPI(),
         # macros for talking about the movie ============================================
         'GET_WATCH_STATUS': MacroReturnWatchStatus(),
         # macros for recommending clothes ============================================
