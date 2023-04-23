@@ -1653,11 +1653,14 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+
     # let's talk about clothing
     clothing_transition = {
         'state': 'clothing_transition',
-        '`As a fashion bot, my main function is to recommend you clothes based on your preferences and lifestyle.\n '
-        'To give you good recommendations, I need to get to know you first.\n '
+        '`As a fashion bot, my two main functions are to:\n '
+        '(1) suggest outfits that match your preferences and lifestyle and\n '
+        '(2) recommend clothing items that go well with what you\'re already wearing.\n '
+        'But in order to give you good recommendations, I need to get to know you first!\n '
         'Note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n`': 'get_age_transition'
     }
 
