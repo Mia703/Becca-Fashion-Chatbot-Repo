@@ -1536,7 +1536,7 @@ def main_dialogue() -> DialogueFlow:
                             'error': {
                                 '`Oooo very intersting. I like the points you\'ve made. I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
                                 'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
-                                'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+                                'Yousef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
                                 'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
                                 'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
                                 'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
@@ -1551,13 +1551,13 @@ def main_dialogue() -> DialogueFlow:
                                         'but she also lost her job and was deported from the U.S. for working illegally.\n '
                                         'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
                                         'Would you like to go back and talk about clothing?`': {
-                                            '{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+                                            '{yes, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
                                                 # they are a return user
                                                 '#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
                                                 # they are a new user
                                                 '#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
                                             },
-                                            '{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+                                            '{no, [no, thanks], [i\'m, good], [do, not]}': {
                                                 '`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
                                             }
                                         }
@@ -1572,7 +1572,7 @@ def main_dialogue() -> DialogueFlow:
                             'error': {
                                 '`Yeah, I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
                                 'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
-                                'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+                                'Yousef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
                                 'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
                                 'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
                                 'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
@@ -1587,13 +1587,13 @@ def main_dialogue() -> DialogueFlow:
                                         'but she also lost her job and was deported from the U.S. for working illegally.\n '
                                         'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
                                         'Would you like to go back and talk about clothing?`': {
-                                            '{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+                                            '{yes, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
                                                 # they are a return user
                                                 '#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
                                                 # they are a new user
                                                 '#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
                                             },
-                                            '{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+                                            '{no, [no, thanks], [i\'m, good], [do, not]}': {
                                                 '`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
                                             }
                                         }
@@ -1608,7 +1608,7 @@ def main_dialogue() -> DialogueFlow:
                             'error': {
                                 '`Yeah, I believe the fundamental premise of this film is that cultural and linguistic boundaries can lead to misunderstandings with serious repercussions.\n '
                                 'None of the characters in this film had malicious intentions, but things quickly get out of hand because of misunderstandings.\n '
-                                'Yussef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
+                                'Yousef and Ahmed both underestimated the risks and range of the rifle, resulting in the unintentional shooting of an American tourist.\n '
                                 'Due of the stereotype connected with Morocco, Americans incorrectly identified the incident as an act of terror.\n '
                                 'As a result, Yasujiro was investigated in Japan for lending the pistol to Hasan - Yussef and Ahmed\'s father - during their hunting expedition in Morocco.\n '
                                 'Yasujiro was accused of trading in the black market and was suspected of being involved in the Moroccan terror incident.\n '
