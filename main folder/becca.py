@@ -2630,7 +2630,7 @@ def main_dialogue() -> DialogueFlow:
             },
             # if the user is wearing nothing, or something similar to nothing, return don't do anything in the current outfit dict
             'skip': {
-                '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'choice_acessory_transition'
+                '$USER_CURR_ITEM=""#GET_CURR_OUTFIT`Okay, so you\'re not wearing that item. I can work with that.\n `': 'return_outfit_recommendation_transition'
             },
             'error': {
                 '#GET_CURR_OUTFIT_API`Awesome, thanks!`$USER_CURR_ITEM`is added to your outfit.\n `': 'choice_acessory_transition'
