@@ -27,8 +27,6 @@ styles_df = pd.read_csv('./resources/styles.csv')
 
 # imports api key for openai
 openai.api_key_path = './resources/openai_api.txt'
-#openai.api_key = ''
-
 
 
 # saves the user's feedback from recommendation
@@ -184,7 +182,6 @@ class MacroSaveGenderAPI(Macro):
         users_dictionary[current_user]['gender'] = user_gender
 
         return True
-
 
 
 # save the user's occupation
@@ -1152,7 +1149,8 @@ def createUserCheck():
 
 # returns the user's gdner
 def getGender(user_response):
-    prompt = 'I asked a person for their gender. This is their response: \"' + user_response + '\". Return in a single word the gender the person identifies with. Do not add punctuation. Do not explain.'
+    prompt = 'I asked a person for their gender. This is their response: \"' + user_response + \
+        '\". Return in a single word the gender the person identifies with. Do not add punctuation. Do not explain.'
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -1167,7 +1165,6 @@ def getGender(user_response):
     result = response['choices'][0]['message']['content'].strip()
     return str(result.lower())
 
-    
 
 # returns the user's occupation
 def getOccupation(user_response):
@@ -1441,6 +1438,7 @@ def recommendClothingItemAfterFeedback(gender, hobby, fav_color, not_fav_color, 
     return str(result)
 
 
+# determine if the user watched the movie
 def determineWatchStatus(response):
     prompt = 'You are a bot that determines whether a person has watched a movie. The question is as follows: \"Have you watched the movie Babel?\", the response is as follows: \"' + \
         response + '\". Determine if the person has watched the movie, if the person has watched the movie return \"yes\" only, if not return \"no\" only, and nothing else. Do not explain.'
@@ -1678,6 +1676,7 @@ def main_dialogue() -> DialogueFlow:
         }
     }
 
+    # -- get user's gender
     get_gender_transition = {
         'state': 'get_gender_transition',
         '`To be direct again, do you mind if I ask for your gender? If you don\'t identify with any gender, just type \"none\".`': {
@@ -2316,6 +2315,7 @@ def main_dialogue() -> DialogueFlow:
     # -- determines whether the user has more clothing items to add or not
     choice_get_fav_clothing_transition = {
         'state': 'choice_get_fav_clothing_transition',
+        # TODO: refactor question to say 'y' or 'no'
         '`Are there any more clothing items you\'d like that you want to share with me?\n '
         'Note that the more you share, the more diverse my recommendations will be in the end!`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': 'get_fav_clothing_transition',
@@ -2747,7 +2747,6 @@ def main_dialogue() -> DialogueFlow:
         'REC_CLOTHING_ITEM': MacroRecommentClothingItem(),
         'REC_CLOTHING_ITEM_AF_FEEDBACK': MacroRecommendClothingItemAfterFeedback(),
         'DEL_DICT_CONTENTS': MacroDeleteDictContents(),
-
     }
 
     # ============================================
