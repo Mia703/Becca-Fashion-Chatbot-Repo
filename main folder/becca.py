@@ -1929,7 +1929,7 @@ def main_dialogue() -> DialogueFlow:
     # -- gets the user's hobby 1
     get_hobby_transition_one = {
         'state': 'get_hobby_transition_one',
-        '`Ah, I see, that sound really cool! Speaking of... what do you do when you\'re not working?`': {
+        '`Ah, I see, that sounds really cool! Speaking of... what do you do when you\'re not working?`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
                 '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
