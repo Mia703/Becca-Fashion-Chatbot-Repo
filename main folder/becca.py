@@ -1502,7 +1502,7 @@ def main_dialogue() -> DialogueFlow:
     # they are a new user
     new_user_transition = {
         'state': 'new_user_transition',
-        '`Nice to meet you`$FIRSTNAME`. My name is Becca! I\'m your personal stylist bot created just for you.\n '
+        '`Nice to meet you`$FIRSTNAME`. My name is Becca! I\'m a personal stylist bot created just for you.\n '
         'I\'m here to help you look good and feel good about yourself and your clothes.\n '
         'And just an F.Y.I. the information you share with me will stay with me. \U0001F92B \n '
         'So, let\'s get started! Would you like to talk about the movie \"Babel\" or shall we talk about you and your clothes?`': {
@@ -1658,14 +1658,14 @@ def main_dialogue() -> DialogueFlow:
         '(1) suggest outfits that match your preferences and lifestyle and,\n '
         '(2) recommend clothing items that go well with what you\'re already wearing.\n '
         'But in order to give you good recommendations, I need to get to know you first!\n '
-        'Please also note, anything you share will affect my recommendation later, but anyway, let\'s get started!\n`': 'get_age_transition'
+        'Please also note, anything you share will affect my recommendations later, but anyway, let\'s get started!\n`': 'get_age_transition'
     }
 
     # personal information -- basic questions
     # -- get user's age
     get_age_transition = {
         'state': 'get_age_transition',
-        '`To be direct, may I ask old you are?`': {
+        '`To be direct, may I ask how old you are?`': {
             '#GET_AGE': {
                 '#RETURN_AGE_RESPONSE': 'get_gender_transition'
             },
@@ -1932,7 +1932,7 @@ def main_dialogue() -> DialogueFlow:
         '`Ah, I see, that sounds really cool! Speaking of... what do you do when you\'re not working?`': {
             # learning = things that someone would learn for fun
             '[$USER_HOBBY=#ONT(learning)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sounds so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # sports = a physical activity
             '[$USER_HOBBY=#ONT(sports)]': {
@@ -1956,7 +1956,7 @@ def main_dialogue() -> DialogueFlow:
             },
             # making = making an object; tinkering
             '[$USER_HOBBY=#ONT(making)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sounds so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             # outdoor = hobbies that happen outdoors; that aren't sports
             '[$USER_HOBBY=#ONT(outdoor)]': {
@@ -1964,7 +1964,7 @@ def main_dialogue() -> DialogueFlow:
             },
             # observation = hobbies that involve just looking at something
             '[$USER_HOBBY=#ONT(observation)]': {
-                '#GET_HOBBY`Oh really? That sound so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
+                '#GET_HOBBY`Oh really? That sounds so cool! When I\'m not working I love to read sci-fi-romance books.\n `': 'get_hobby_transition_two'
             },
             'error': {
                 '#GET_HOBBY_API`Your hobby is to`$USER_HOBBY`. That sounds so fun!\n `': 'get_hobby_transition_two'
@@ -2109,7 +2109,7 @@ def main_dialogue() -> DialogueFlow:
     get_fav_color_transition_two = {
         'state': 'get_fav_color_transition_two',
         # favourite colour #2
-        '`Is there another color you lover? Espeically a color you\'d love to wear? If you don\'t have another color just say \"skip\".`': {
+        '`Is there another color you love? Especially a color you\'d love to wear? If you don\'t have another color just say \"skip\".`': {
             '[$USER_COLOR=#ONT(red)]': {
                 '#GET_FAV_COLOR`Lol, nice. '
                 'I like`$USER_COLOR`too! It always stands out to me.`': 'get_not_fav_color_transition'
@@ -2146,7 +2146,7 @@ def main_dialogue() -> DialogueFlow:
     # -- get user's not favourite colours # 1
     get_not_fav_color_transition = {
         'state': 'get_not_fav_color_transition',
-        '`Out of curiosity, are there any color that you really dislike, hate, or would refuse wear?`': {
+        '`Out of curiosity, is there any color that you really dislike, hate, or would refuse wear?`': {
             '[$USER_NOT_COLOR=#ONT(red)]': {
                 '#GET_NOT_FAV_COLOR`Oh, really, you don\'t like`$USER_NOT_COLOR`? '
                 'To be honest, I\'m not that picky about colors, '
@@ -2376,7 +2376,7 @@ def main_dialogue() -> DialogueFlow:
     choice_recommendation_transition = {
         'state': 'choice_recommendation_transition',
         '`Now that I\'ve collected all this information about you.\n '
-        'Would you like me to recommend you an outfit? Or would you like me to give you some styling advice for an outfit your currently wearing?`': {
+        'Would you like me to recommend you an outfit? Or would you like me to give you some styling advice for an outfit you\'re currently wearing?`': {
             '{<recommend>, <outfit>}': {
                 '`Alright! I can recommend you an outfit.\n `#REC_OUTFIT`What do you think?`': {
                     # get the user's feedback about Becca's first recommendation
@@ -2566,7 +2566,7 @@ def main_dialogue() -> DialogueFlow:
                 '#GET_CURR_OUTFIT`Great. I recently bought a pair of fringed sandals from Target for summer I\'m super excited to wear them. Also, one last thing...\n `': 'get_current_accessory_transition'
             },
             '[$USER_CURR_ITEM=#ONT(grunge)]': {
-                '#GET_CURR_OUTFIT`Great. I\'ve been wanting to style my combat boots. I got them awile ago and haven\'t worn them for a long time. Also, one last thing...\n `': 'get_current_accessory_transition'
+                '#GET_CURR_OUTFIT`Great. I\'ve been wanting to style my combat boots. I got them a while ago and haven\'t worn them for a long time. Also, one last thing...\n `': 'get_current_accessory_transition'
             },
             '[$USER_CURR_ITEM=#ONT(preppy)]': {
                 '#GET_CURR_OUTFIT`Great. I\'ve really been wanting a pair of Golden Goose. I\'ve seen a lot of people wearing them. Also, one last thing...\n `': 'get_current_accessory_transition'
@@ -2700,7 +2700,7 @@ def main_dialogue() -> DialogueFlow:
     exit_transition = {
         'state': 'exit_transition',
         '`Well that\'s all I really have for you! I really want to thank you for taking time out of your day to talk with me.\n '
-        'I\'d also really appreciate if you would take a quick survey on my performance. Would you be willing to do so?`': {
+        'I\'d also really appreciate it if you would take a quick survey on my performance. Would you be willing to do so?`': {
             '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
                 '#DEL_DICT_CONTENTS`Okay, great! The link to the survey is here: "https://forms.gle/jJGy46m3PSQdZwiC8" I hope you have a wonderful and stylish day!`': 'end'
             },
