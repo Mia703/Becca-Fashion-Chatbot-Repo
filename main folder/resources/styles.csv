@@ -13,7 +13,7 @@ sporty,joggers,bottoms
 sporty,sweatpants,bottoms
 sporty,leggings,bottoms
 sporty,racerback tank tops,top
-sporty,athletic t-shirts,top
+sporty,athletic tshirts,top
 sporty,crewnecks,top
 sporty,athletic shorts,bottoms
 sporty,baseball caps,accessory
@@ -33,8 +33,8 @@ bohemian,crochet dresses,dress
 bohemian,bell-bottom pants,bottoms
 bohemian,kimonos,dress
 bohemian,duster jackets,coat
-bohemian,off-the-shoulder tops,top
-bohemian,off-the-shoulder dresses,dress
+bohemian,off the shoulder tops,top
+bohemian,off the shoulder dresses,dress
 bohemian,fringe shirts,top
 bohemian,fringe pants,bottoms
 bohemian,fringe skirts,bottoms
@@ -70,7 +70,7 @@ bohemian,geometric pants,bottoms
 bohemian,geometric dresses,dress
 bohemian,geometric skirts,bottoms
 bohemian,maxi rompers,dress
-bohemian,jumpsuit,dress
+bohemian,jumpsuits,dress
 bohemian,fedoras,accessory
 bohemian,tassel shirts,top
 bohemian,tassel pants,bottoms
@@ -78,18 +78,18 @@ bohemian,tassel skirts,bottoms
 bohemian,fringed vests,top
 bohemian,embroidered denim jackets,coat
 bohemian,moccasin style shoes,shoes
-bohemian,wide-leg pants,bottoms
-bohemian,lace-up sandals,shoes
+bohemian,wide leg pants,bottoms
+bohemian,lace up sandals,shoes
 bohemian,layered necklaces,accessory
 bohemian,crop tops,top
 bohemian,patchwork bags,accessory
 bohemian,patchwork jeans,bottoms
 bohemian,patchwork jackets,coat
 bohemian,printed headscarves,accessory
-bohemian,tie-dye dresses,dress
-bohemian,tie-dye shirts,top
-bohemian,tie-dye skirts,bottoms
-bohemian,tie-dye pants,bottoms
+bohemian,tie dye dresses,dress
+bohemian,tie dye shirts,top
+bohemian,tie dye skirts,bottoms
+bohemian,tie dye pants,bottoms
 grunge,flannel shirts,top
 grunge,oversized ripped t-shirts,top
 grunge,combat boots,shoes
@@ -98,21 +98,21 @@ grunge,beanie hats,accessory
 grunge,fishnet stockings,bottoms
 grunge,oversized knit sweaters,top
 grunge,plaid skirts,bottoms
-grunge,vintage band t-shirts,top
+grunge,vintage band tshirts,top
 grunge,denim jackets,coat
 grunge,high-top sneakers,shoes
 grunge,doc marten boots,shoes
 grunge,acid wash denim jackets,coat
 grunge,acid wash denim jeans,bottoms
 grunge,leather pants,bottoms
-grunge,distressed band t-shirts,top
+grunge,distressed band tshirts,top
 grunge,bandanas,accessory
 grunge,ripped fishnet tights,bottoms
 grunge,distressed hoodies,top
 grunge,distressed denim shorts,bottoms
 grunge,oversized flannel jackets,coat
 grunge,military jackets,coat
-preppy,button-up shirts,top
+preppy,buttonup shirts,top
 preppy,polo shirts,top
 preppy,tailored blazers,coat
 preppy,sweaters,top
@@ -121,7 +121,7 @@ preppy,khaki skirts,bottoms
 preppy,bermuda shorts,bottoms
 preppy,penny loafers,shoes
 preppy,boat shoes,shoes
-preppy,trench coat,coat
+preppy,trench coats,coat
 preppy,pleated skirt,bottoms
 preppy,cardigans,top
 preppy,chinos,shoes
@@ -137,10 +137,10 @@ preppy,capri pants,bottoms
 preppy,boatneck shirts,top
 preppy,boatneck dresses,dress
 punk,metal chains,accessory
-punk,band t-shirts,top
+punk,band tshirts,top
 punk,combat boots,shoes
 punk,ripped jeans,bottoms
-punk,graphic t-shirts,top
+punk,graphic tshirts,top
 punk,fishnet stockings,bottoms
 punk,plaid shirts,top
 punk,studded belts,accessory
@@ -150,7 +150,7 @@ punk,biker jackets,coat
 punk,choker necklaces,accessory
 punk,hoodies,top
 punk,military jackets,coat
-punk,distressed t-shirts,top
+punk,distressed tshirts,top
 punk,leather skirts,bottoms
 punk,high top sneakers,shoes
 punk,black denim jakcets,coat
@@ -160,12 +160,12 @@ punk,sleeveless shirts,top
 punk,biker boots,shoes
 streetwear,drawstring hoodies,top
 streetwear,colorful sneakers,shoes
-streetwear,logo t-shirts,top
+streetwear,logo tshirts,top
 streetwear,cargo joggers,bottoms
 streetwear,denim jackets,coat
 streetwear,snapback hats,accessory
 streetwear,cargo pants,bottoms
-streetwear,oversized t-shirts,top
+streetwear,oversized tshirts,top
 streetwear,tracksuits,dress
 streetwear,graphic sweatshirts,top
 streetwear,high-top sneakers,shoes
@@ -174,7 +174,7 @@ streetwear,bomber jackets,coat
 streetwear,bucket hats,accessory
 streetwear,skate shoes,shoes
 streetwear,oversized hoodies,top
-streetwear,graphic t-shirts,top
+streetwear,graphic tshirts,top
 streetwear,cargo shorts,bottoms
 streetwear,cargo jackets,coat
 streetwear,cargo skirts,bottoms
@@ -188,7 +188,7 @@ streetwear,camouflage pants,bottoms
 streetwear,camouflage skirts,bottoms
 streetwear,patchwork jackets,coat
 streetwear,patchwork jeans,bottoms
-streetwear,vintage t-shirts,top
+streetwear,vintage tshirts,top
 streetwear,basketball shorts,bottoms
 streetwear,track pants,bottoms
 streetwear,baggy jeans,bottoms
@@ -204,20 +204,20 @@ classic,trench coats,coat
 classic,pearl jewelry,accessory
 classic,shift dresses,dress
 classic,penny loafers,shoes
-classic,wide-leg trousers,bottoms
+classic,wide leg trousers,bottoms
 classic,tailored trousers,bottoms
 classic,slacks,bottoms
-classic,button-up shirts,top
+classic,button up shirts,top
 classic,pencil skirts,bottoms
 classic,oxford shirts,top
 classic,ballet flats,shoes
 classic,peacoats,coat
 classic,turtleneck sweaters,top
 classic,tote bags,accessory
-classic,knee-length skirts,bottoms
+classic,knee length skirts,bottoms
 classic,creneck sweaters,top
 classic,wool coats,coat
-classic,button-up cardigans,coat
+classic,button up cardigans,coat
 classic,wrap dresses,dress
 classic,leather belts,accessory
 classic,trench coats,coat
@@ -233,8 +233,8 @@ classic,pinstripe trousers,bottoms
 classic,pinstripe blazer,coat
 classic,stilettos,shoes
 classic,pumps,shoes
-classic,a-line dresses,dress
-casual,white t-shirts,top
+classic,a line dresses,dress
+casual,white tshirts,top
 casual,jeans with holes,bottoms
 casual,hooded sweatshirts,top
 casual,low top sneakers,shoes
@@ -248,7 +248,7 @@ casual,baseball jackets,coat
 casual,backpacks,accessory
 casual,canvas sneakers,shoes
 casual,graphic sweatshirts,top
-casual,graphic t-shirts,top
+casual,graphic tshirts,top
 casual,slip-on shoes,shoes
 casual,boot cut jeans,bottoms
 casual,boyfriend jeans,bottoms
@@ -256,21 +256,21 @@ casual,skinny jeans,bottoms
 casual,cargo pants,bottoms
 casual,boat shoes,shoes
 casual,plaid shirts,top
-casual,shirt,top
+casual,shirts,top
 casual,socks,bottoms
-casual,robe,coat
+casual,robes,coat
 casual,slippers,shoes
 casual,sandals,shoes
 casual,flip flops,shoes
 casual,dresses,dress
-casual,skirtl,bottoms
-casual,slackl,bottoms
-casual,long sleeve shirtl,top
-casual,blazerl,top
-casual,sweaterl,top
+casual,skirts,bottoms
+casual,slacks,bottoms
+casual,long sleeve shirts,top
+casual,blazers,top
+casual,sweaters,top
 casual,pants,bottoms
 casual,ties,accessory
-casual,t-shirts,top
+casual,tshirts,top
 casual,tank tops,top
 casual,jeans,bottoms
 casual,shorts,bottoms
