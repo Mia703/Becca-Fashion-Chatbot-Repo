@@ -1332,7 +1332,7 @@ def completions_with_backoff_two(user_input):
 # recommendation functions ============================================
 # recommens an outfit to the user
 def recommendOutfit(age, gender, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and a ' + gender + ' and a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
+    prompt = 'Recommend a full outfit with at least 3 specific clothing items for someone who is ' + age + ' years old and a ' + gender + ' and a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + \
         '. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -1377,7 +1377,7 @@ def returnUserFeedbackSentiment(feedback):
 # recommends an outfit after the user's positive, neutral, or negative feedback
 def recommendOutfitAfterFeedback(age, gender, occupation, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, feedback,
                                  sentiment):
-    prompt = 'Recommend an outfit with at least 3 specific clothing items for someone who is ' + age + ' years old a ' + gender + ' and is a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
+    prompt = 'Recommend a full outfit with at least 3 specific clothing items for someone who is ' + age + ' years old a ' + gender + ' and is a ' + occupation + ' and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + ', and doesn\'t like to wear ' + not_fav_item + '. Your last recommendation was: ' + last_recommendation + ' and that person gave the following feedback ' + \
         feedback + '. Give a new outfit recommendation. Put your response in this form: Athleta\'s Speedlight Skirt in the color Blue Tropics, Lululemon Fast and Free Skirt in Aquatic Green, and Nike Epic Luxe Running Tights in the color Night Sky. Make sure the clothing items are different so they can form a complete outfit. Say nothing else except the 3 clothing items you recommend in this form. Don\'t explain.'
 
     response = openai.ChatCompletion.create(
@@ -1396,7 +1396,7 @@ def recommendOutfitAfterFeedback(age, gender, occupation, hobby, fav_color, not_
 
 # recommends a clothing item to the user based on their current outfit
 def recommendClothingItem(gender, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit):
-    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + \
+    prompt = 'Recommend a real clothing item and accessory that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + \
         ', dresses in the ' + user_style + ' style, likes to wear ' + fav_item + \
         ', and doesn\'t like to wear ' + not_fav_item + \
         ' and is a ' + gender + '. Put your response in a sentence. Don\'t explain.'
@@ -1419,7 +1419,7 @@ def recommendClothingItem(gender, hobby, fav_color, not_fav_color, user_style, f
 # recommends a clothing item after the user's positive, neutral, or negative feedback
 def recommendClothingItemAfterFeedback(gender, hobby, fav_color, not_fav_color, user_style, fav_item, not_fav_item, outfit,
                                        feedback, sentiment):
-    prompt = 'Recommend a real clothing item that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + \
+    prompt = 'Recommend a real clothing item and accessory that matches the following outfit: \"' + outfit + '\" and likes ' + hobby + ', the color ' + fav_color + ', hates the color ' + not_fav_color + ', dresses in the ' + user_style + ' style, likes to wear ' + \
         fav_item + ', and doesn\'t like to wear ' + not_fav_item + ' and is a ' + gender + '. Your last recommendation was:' + last_recommendation + \
         ' and that person gave the following ' + sentiment + ' feedback: ' + \
         feedback + '. Put your response in a sentence. Don\'t explain.'
@@ -1471,7 +1471,7 @@ def main_dialogue() -> DialogueFlow:
         '`Hi, what\'s your name?`': {
             '#GET_NAME': {
                 # they are a returning user
-                '#IF($RETURN_USER=yes)': 'return_user_transition',
+                '#IF($RETURN_USER=yes)': 'choice_recommendation_transition',
                 # they are a new user
                 '#IF($RETURN_USER=no)': 'new_user_transition'
             }
@@ -2376,8 +2376,8 @@ def main_dialogue() -> DialogueFlow:
     choice_recommendation_transition = {
         'state': 'choice_recommendation_transition',
         '`Now that I\'ve collected all this information about you.\n '
-        'Would you like me to recommend you an outfit? Or would you like me to give you some styling advice for an outfit you\'re currently wearing?`': {
-            '{<recommend>, <outfit>}': {
+        'Would you like me to recommend you an outfit? Or would you like me to recommend a clothing item for an outfit you\'re currently wearing?`': {
+            '<outfit>': {
                 '`Alright! I can recommend you an outfit.\n `#REC_OUTFIT`What do you think?`': {
                     # get the user's feedback about Becca's first recommendation
                     'state': 'return_to_feedback_choice_rec_transition',
@@ -2422,7 +2422,7 @@ def main_dialogue() -> DialogueFlow:
                     }
                 }
             },
-            '[styling, advice]': {
+            '<[clothing, item]>': {
                 '`Alright, I can give you some styling advice on your current outfit!\n '
                 'Before I can do that though, I gotta know what you\'re wearing!\n `': 'get_current_top_transition'
             }
