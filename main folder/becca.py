@@ -2426,7 +2426,9 @@ def main_dialogue() -> DialogueFlow:
                 '`Alright, I can give you some styling advice on your current outfit!\n '
                 'Before I can do that though, I gotta know what you\'re wearing!\n `': 'get_current_top_transition'
             },
-            
+            'error': {
+                '`Sorry, I don\'t understand your selection. I\'ll ask the question again.`': 'choice_recommendation_transition'
+            }
         }
     }
 
