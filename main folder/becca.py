@@ -1551,7 +1551,7 @@ def main_dialogue() -> DialogueFlow:
                                         'but she also lost her job and was deported from the U.S. for working illegally.\n '
                                         'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
                                         'Would you like to go back and talk about clothing?`': {
-                                            '{yes, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
+                                            '{yes, sure, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
                                                 # they are a return user
                                                 '#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
                                                 # they are a new user
@@ -1587,7 +1587,7 @@ def main_dialogue() -> DialogueFlow:
                                         'but she also lost her job and was deported from the U.S. for working illegally.\n '
                                         'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
                                         'Would you like to go back and talk about clothing?`': {
-                                            '{yes, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
+                                            '{yes, sure, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
                                                 # they are a return user
                                                 '#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
                                                 # they are a new user
@@ -1623,7 +1623,7 @@ def main_dialogue() -> DialogueFlow:
                                         'but she also lost her job and was deported from the U.S. for working illegally.\n '
                                         'Although this conversation was short, it was interesting. I had a great time talking with you.\n '
                                         'Would you like to go back and talk about clothing?`': {
-                                            '{yes, "of course", alright, okay, ok, <{clothes, clothing}>}': {
+                                            '{yes, sure, [of, course], alright, okay, ok, <{clothes, clothing}>}': {
                                                 # they are a return user
                                                 '#IF($RETURN_USER=yes)`Alrighty, sounds good.\n `': 'return_user_transition',
                                                 # they are a new user
