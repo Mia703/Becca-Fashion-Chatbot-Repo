@@ -2704,7 +2704,7 @@ def main_dialogue() -> DialogueFlow:
         'state': 'exit_transition',
         '`Well that\'s all I really have for you! I really want to thank you for taking time out of your day to talk with me.\n '
         'I\'d also really appreciate it if you would take a quick survey on my performance. Would you be willing to do so?`': {
-            '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine}': {
+            '{yes, yeah, yup, ye, yea, indeed, sure, ok, okay, fine, [for, sure]}': {
                 '#DEL_DICT_CONTENTS`Okay, great! The link to the survey is here: "https://forms.gle/jJGy46m3PSQdZwiC8" I hope you have a wonderful and stylish day!`': 'end'
             },
             '{no, nope, [not, really], [no, thanks]}': {
