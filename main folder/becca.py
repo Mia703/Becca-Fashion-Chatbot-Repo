@@ -1557,7 +1557,7 @@ def main_dialogue() -> DialogueFlow:
                                                 # they are a new user
                                                 '#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
                                             },
-                                            '{no, [no, thanks], [i\'m, good], [do, not]}': {
+                                            '{no, [no, thanks], [i, am, good], [do, not]}': {
                                                 '`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
                                             }
                                         }
@@ -1593,7 +1593,7 @@ def main_dialogue() -> DialogueFlow:
                                                 # they are a new user
                                                 '#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
                                             },
-                                            '{no, [no, thanks], [i\'m, good], [do, not]}': {
+                                            '{no, [no, thanks], [i, am, good], [do, not]}': {
                                                 '`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
                                             }
                                         }
@@ -1629,7 +1629,7 @@ def main_dialogue() -> DialogueFlow:
                                                 # they are a new user
                                                 '#IF($RETURN_USER=no)`Alright, sounds good.\n `': 'new_user_transition'
                                             },
-                                            '{no, "no thanks", "I\'m good", "don\'t", "do not"}': {
+                                            '{no, [no, thanks], [i , am, good], [do, not]}': {
                                                 '`Well, it was good talking with you. I hope you have a wonderful and stylish day!`': 'end'
                                             }
                                         }
