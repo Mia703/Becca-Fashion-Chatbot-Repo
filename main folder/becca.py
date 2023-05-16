@@ -1096,8 +1096,8 @@ def load(df: DialogueFlow, varfile: str):
         users_dictionary = pickle.load(handle)
 
         # print(users_dictionary)
-        pretty = json.dumps(users_dictionary, indent=4)
-        print(pretty)
+        # pretty = json.dumps(users_dictionary, indent=4)
+        # print(pretty)
 
         df.run()
         save(df, varfile)
