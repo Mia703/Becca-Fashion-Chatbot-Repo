@@ -41,3 +41,6 @@ In PyCharm, open the "becca.py" file.
 Click on the green "Run" button in the top right corner of the editor.
 
 PyCharm will run the project and you should see the output in the console.
+
+## PowerPoint Link
+PPT Link [here](https://www.canva.com/design/DAFgF4dkEtM/KAdjXQ1418dzx2l9Ipjo_A/edit?utm_content=DAFgF4dkEtM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
