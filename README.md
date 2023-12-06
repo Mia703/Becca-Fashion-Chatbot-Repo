@@ -32,7 +32,7 @@ Navigate to the directory where you cloned the "Becca-Fashion-Chatbot-Repo" repo
 
 PyCharm will then open the project and download any necessary dependencies.
 
-### Updating the OpenAI API Key
+### 3. Updating the OpenAI API Key
 You must first have an OpenAI API in order to proceed with our project, which utilizes OpenAI to enable communication with Becca. You can use the following instructions [here](https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/) to get an OpenAI API key, if you don't already have one.
 
 In the project, locate the "openai_api.txt" file.
@@ -41,7 +41,7 @@ Open the file and replace the existing text with your OpenAI API key.
 
 Save the changes and close the file.
 
-### 3. Running the PyCharm Project
+### 4. Running the PyCharm Project
 In PyCharm, open the "becca.py" file.
 
 Click on the green "Run" button in the top right corner of the editor.
